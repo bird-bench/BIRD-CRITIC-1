@@ -1,0 +1,9 @@
+{
+    "max_samples": 5,
+    "loc_file": "/app/agentless/data/all_data_clean.jsonl",
+    "model": "deepseek-chat",
+    "backend": "deepseek",
+    "output_folder": "/app/agentless/output/repair_output",
+    "num_threads": 8,
+    "output_file": "/app/agentless/output/repair_output/output.jsonl"
+}

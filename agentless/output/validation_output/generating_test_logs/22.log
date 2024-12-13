@@ -1,0 +1,308 @@
+2024-12-11 13:57:48,917 - INFO - ================ generating test for 22 ================
+2024-12-11 13:57:48,924 - INFO - prompting with message:
+We are currently solving the following issue within our repository. Here is the issue text:
+--- BEGIN ISSUE ---
+ I have a MySQL table named transactions_1k, from where I would like to retrieve top 3 data within a date range in decreasing order by amount. I write the SQL query as provided, ```sql
+
+SELECT * 
+FROM transactions_1k
+WHERE CONCAT(Date, ' ', TIME(Time)) 
+      BETWEEN Date('2012-08-22') AND Date('2012-08-23')
+ORDER BY amount DESC
+LIMIT 3;
+```
+ I have records in '2012-08-23', but the query returns an empty set. What am I doing wrong here? Thanks.
+--- END ISSUE ---
+
+Please generate a complete test that can be used to reproduce the issue.
+
+The complete test should contain the following:
+1. Code to reproduce the issue described in the issue text
+2. Print "Issue reproduced" if the outcome indicates that the issue is reproduced: either an exception is raised or the outcome is incorrect
+3. Print "Issue resolved" if the outcome indicates that the issue has been successfully resolved
+5. The name of the test function must be test_issue with two parameter sql and db
+
+Here is an example:
+```python
+def test_issue(sql, db) -> None:
+    try:
+        result, conn = perform_query_on_mysql_databases(sql, db)
+    except:
+        print("Issue reproduced")
+        return
+    try:
+        assert result[0] == ("HR",)
+        assert result[1] == ("Finance",)
+        print("Issue resolved")
+    except AssertionError:
+        print("Issue reproduced")
+        return
+```
+
+Please ensure the generated test reflects the issue described in the provided issue text.
+The generated test should be able to be used to both reproduce the issue as well as to verify the issue has been fixed.
+Wrap the complete test in ```python...```.
+2024-12-11 13:57:48,945 - INFO - Initializing a decoder model: deepseek-chat ...
+2024-12-11 13:57:49,194 - INFO - Creating API request
+2024-12-11 13:58:16,535 - INFO - API response ChatCompletion(id='28e6a97c-7d1a-4942-a85c-af36b7f354ae', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Perform the query on the MySQL database\n        result, conn = perform_query_on_mysql_databases(sql, db)\n        \n        # Check if the result is an empty set, which indicates the issue is reproduced\n        if not result:\n            print("Issue reproduced")\n        else:\n            # If the result is not empty, check if it contains the top 3 records in decreasing order by amount\n            # Assuming the result is a list of tuples where each tuple represents a row\n            expected_result = [\n                # Example expected result for top 3 records in decreasing order by amount\n                # Replace with actual expected data if known\n                ("2012-08-23", "12:34:56", 1000),\n                ("2012-08-23", "11:22:33", 900),\n                ("2012-08-23", "10:11:12", 800)\n            ]\n            \n            try:\n                # Compare the result with the expected result\n                assert result == expected_result\n                print("Issue resolved")\n            except AssertionError:\n                print("Issue reproduced")\n    except Exception as e:\n        # If an exception is raised, the issue is reproduced\n        print("Issue reproduced")\n        print(f"Exception: {e}")\n```\n\n### Explanation:\n1. **Code to reproduce the issue**: The test function `test_issue` takes two parameters: `sql` (the SQL query) and `db` (the database connection). It performs the query on the MySQL database using the `perform_query_on_mysql_databases` function.\n\n2. **Print "Issue reproduced"**: If the result of the query is an empty set, it prints "Issue reproduced". If an exception is raised during the query execution, it also prints "Issue reproduced".\n\n3. **Print "Issue resolved"**: If the result is not empty, it compares the result with an expected result (which should be the top 3 records in decreasing order by amount). If the result matches the expected result, it prints "Issue resolved".\n\n4. **Test function name and parameters**: The function is named `test_issue` and takes two parameters: `sql` and `db`.\n\nThis test can be used to both reproduce the issue and verify if the issue has been fixed by modifying the SQL query or the expected result.', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925470, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=565, prompt_tokens=456, total_tokens=1021, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=128, prompt_cache_miss_tokens=328))
+2024-12-11 13:58:16,538 - INFO - Initializing a decoder model: deepseek-chat ...
+2024-12-11 13:58:16,573 - INFO - Creating API request
+2024-12-11 13:58:40,283 - INFO - API response ChatCompletion(id='821eed54-2c18-487b-9eb8-bb53ff98485c', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Perform the query on the MySQL database\n        result, conn = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        # If an exception is raised, the issue is reproduced\n        print("Issue reproduced")\n        return\n    \n    try:\n        # Check if the result is as expected (non-empty)\n        assert len(result) == 3, "Expected 3 records but got an empty set or less than 3 records."\n        print("Issue resolved")\n    except AssertionError as e:\n        # If the assertion fails, the issue is reproduced\n        print("Issue reproduced")\n        return\n\n# Example usage:\n# sql = """\n# SELECT * \n# FROM transactions_1k\n# WHERE CONCAT(Date, \' \', TIME(Time)) \n#       BETWEEN Date(\'2012-08-22\') AND Date(\'2012-08-23\')\n# ORDER BY amount DESC\n# LIMIT 3;\n# """\n# db = "your_database_connection_info"\n# test_issue(sql, db)\n```\n\n### Explanation:\n1. **Code to reproduce the issue**: The test function `test_issue` takes two parameters: `sql` (the SQL query) and `db` (the database connection information). The function attempts to execute the query on the MySQL database.\n\n2. **Print "Issue reproduced"**: If an exception is raised during the query execution, the function prints "Issue reproduced". This indicates that the issue is still present.\n\n3. **Print "Issue resolved"**: If the query executes successfully and returns exactly 3 records, the function prints "Issue resolved". This indicates that the issue has been resolved.\n\n4. **Test function name and parameters**: The function is named `test_issue` and takes two parameters: `sql` and `db`.\n\n### Usage:\n- Replace `sql` with the actual SQL query you want to test.\n- Replace `db` with the actual database connection information.\n- Run the test function to check if the issue is reproduced or resolved.', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925496, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=489, prompt_tokens=456, total_tokens=945, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=448, prompt_cache_miss_tokens=8))
+2024-12-11 13:58:40,321 - INFO - Creating API request
+2024-12-11 14:01:17,331 - INFO - API response ChatCompletion(id='3bf561d8-3d9e-4384-88dd-ce21c504fd15', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Perform the query on the MySQL database\n        result, conn = perform_query_on_mysql_databases(sql, db)\n        \n        # Check if the result is an empty set, which indicates the issue is reproduced\n        if not result:\n            print("Issue reproduced")\n        else:\n            # If the result is not empty, check if it contains the top 3 records in decreasing order by amount\n            # Assuming the result is a list of tuples where each tuple represents a row\n            expected_result = [\n                # Example expected result for top 3 records in decreasing order by amount\n                # Replace with actual expected data if known\n                ("2012-08-23", "12:34:56", 1000),\n                ("2012-08-23", "11:22:33", 900),\n                ("2012-08-23", "10:11:12", 800)\n            ]\n            \n            try:\n                # Assert that the result matches the expected result\n                assert result == expected_result\n                print("Issue resolved")\n            except AssertionError:\n                print("Issue reproduced")\n    except Exception as e:\n        # If an exception is raised, the issue is reproduced\n        print("Issue reproduced")\n        print(f"Exception: {e}")\n```\n\nThis test function `test_issue` takes two parameters: `sql` (the SQL query to be executed) and `db` (the database connection or configuration). It attempts to execute the provided SQL query on the MySQL database and checks the result. If the result is an empty set, it prints "Issue reproduced". If the result is not empty, it compares the result with an expected result to verify if the issue has been resolved. If the result matches the expected result, it prints "Issue resolved"; otherwise, it prints "Issue reproduced".', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925656, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=449, prompt_tokens=456, total_tokens=905, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=448, prompt_cache_miss_tokens=8))
+2024-12-11 14:01:17,369 - INFO - Creating API request
+2024-12-11 14:01:43,246 - INFO - API response ChatCompletion(id='ab095b39-21c4-45cd-81b5-0c84d76e5607', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Perform the query on the MySQL database\n        result, conn = perform_query_on_mysql_databases(sql, db)\n        \n        # Check if the result is an empty set, which indicates the issue is reproduced\n        if not result:\n            print("Issue reproduced")\n        else:\n            # If the result is not empty, check if it contains the top 3 records in decreasing order by amount\n            # Assuming the result is a list of tuples where each tuple represents a row\n            expected_result = [\n                # Example expected result for top 3 records in decreasing order by amount\n                # Replace with actual expected data if known\n                ("2012-08-23", "12:34:56", 1000),\n                ("2012-08-23", "11:22:33", 950),\n                ("2012-08-23", "10:11:12", 900)\n            ]\n            \n            try:\n                # Compare the result with the expected result\n                assert result == expected_result\n                print("Issue resolved")\n            except AssertionError:\n                print("Issue reproduced")\n    except Exception as e:\n        # If an exception is raised, the issue is reproduced\n        print("Issue reproduced")\n        print(f"Exception: {e}")\n```\n\n### Explanation:\n1. **Reproducing the Issue**: The test function `test_issue` takes two parameters: `sql` (the SQL query) and `db` (the database connection). It attempts to execute the provided SQL query on the MySQL database.\n2. **Checking the Outcome**: If the query returns an empty set, it prints "Issue reproduced". If the query returns a non-empty set, it compares the result with an expected result (which should be the top 3 records in decreasing order by amount).\n3. **Handling Exceptions**: If an exception is raised during the query execution, it prints "Issue reproduced" along with the exception details.\n4. **Verifying the Fix**: If the result matches the expected result, it prints "Issue resolved". If not, it prints "Issue reproduced".\n\nThis test can be used to both reproduce the issue and verify if the issue has been fixed by modifying the SQL query or the database schema.', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925677, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=541, prompt_tokens=456, total_tokens=997, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=448, prompt_cache_miss_tokens=8))
+2024-12-11 14:01:43,283 - INFO - Creating API request
+2024-12-11 14:02:07,691 - INFO - API response ChatCompletion(id='31d4cf7b-79c5-4451-bbb3-d32ce58e2155', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Perform the query on the MySQL database\n        result, conn = perform_query_on_mysql_databases(sql, db)\n        \n        # Check if the result is an empty set, which indicates the issue is reproduced\n        if not result:\n            print("Issue reproduced")\n        else:\n            # If the result is not empty, check if the top 3 records are correctly retrieved\n            # Assuming the result is a list of tuples where each tuple represents a row\n            # and the \'amount\' column is the last column in the result\n            top_3_amounts = [row[-1] for row in result]\n            \n            # Check if the amounts are in decreasing order\n            if top_3_amounts == sorted(top_3_amounts, reverse=True):\n                print("Issue resolved")\n            else:\n                print("Issue reproduced")\n    except Exception as e:\n        # If an exception is raised, the issue is reproduced\n        print("Issue reproduced")\n        print(f"Exception: {e}")\n    finally:\n        # Close the database connection\n        conn.close()\n```\n\n### Explanation:\n1. **Reproducing the Issue**: The test function `test_issue` takes two parameters: `sql` (the SQL query) and `db` (the database connection). It attempts to execute the provided SQL query on the database.\n2. **Checking the Result**: If the result of the query is an empty set, it prints "Issue reproduced" because the query did not return the expected records.\n3. **Verifying the Fix**: If the result is not empty, it checks if the top 3 records are in decreasing order by the `amount` column. If they are, it prints "Issue resolved". If not, it prints "Issue reproduced".\n4. **Exception Handling**: If an exception is raised during the query execution, it prints "Issue reproduced" along with the exception details.\n5. **Database Connection**: The database connection is closed in the `finally` block to ensure it is always closed, regardless of whether an exception occurred.\n\nThis test can be used to both reproduce the issue and verify if the issue has been resolved by modifying the SQL query or database schema.', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925703, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=505, prompt_tokens=456, total_tokens=961, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=448, prompt_cache_miss_tokens=8))
+2024-12-11 14:02:11,546 - INFO - ================ normalizing tests for 22 ================
+2024-12-11 14:02:11,549 - INFO - normalized tests: ["def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n        if not result:\n            print('Issue reproduced')\n        else:\n            expected_result = [('2012-08-23', '12:34:56', 1000), ('2012-08-23', '11:22:33', 900), ('2012-08-23', '10:11:12', 800)]\n            try:\n                assert result == expected_result\n                print('Issue resolved')\n            except AssertionError:\n                print('Issue reproduced')\n    except Exception as e:\n        print('Issue reproduced')\n        print(f'Exception: {e}')", "def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print('Issue reproduced')\n        return\n    try:\n        assert len(result) == 3, 'Expected 3 records but got an empty set or less than 3 records.'\n        print('Issue resolved')\n    except AssertionError as e:\n        print('Issue reproduced')\n        return", "def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n        if not result:\n            print('Issue reproduced')\n        else:\n            expected_result = [('2012-08-23', '12:34:56', 1000), ('2012-08-23', '11:22:33', 900), ('2012-08-23', '10:11:12', 800)]\n            try:\n                assert result == expected_result\n                print('Issue resolved')\n            except AssertionError:\n                print('Issue reproduced')\n    except Exception as e:\n        print('Issue reproduced')\n        print(f'Exception: {e}')", "def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n        if not result:\n            print('Issue reproduced')\n        else:\n            expected_result = [('2012-08-23', '12:34:56', 1000), ('2012-08-23', '11:22:33', 950), ('2012-08-23', '10:11:12', 900)]\n            try:\n                assert result == expected_result\n                print('Issue resolved')\n            except AssertionError:\n                print('Issue reproduced')\n    except Exception as e:\n        print('Issue reproduced')\n        print(f'Exception: {e}')", "def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n        if not result:\n            print('Issue reproduced')\n        else:\n            top_3_amounts = [row[-1] for row in result]\n            if top_3_amounts == sorted(top_3_amounts, reverse=True):\n                print('Issue resolved')\n            else:\n                print('Issue reproduced')\n    except Exception as e:\n        print('Issue reproduced')\n        print(f'Exception: {e}')\n    finally:\n        conn.close()"]
+2024-12-11 14:02:32,354 - INFO - ================ filtering tests for 22 ================
+2024-12-11 14:02:32,355 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+        if not result:
+            print('Issue reproduced')
+        else:
+            expected_result = [('2012-08-23', '12:34:56', 1000), ('2012-08-23', '11:22:33', 900), ('2012-08-23', '10:11:12', 800)]
+            try:
+                assert result == expected_result
+                print('Issue resolved')
+            except AssertionError:
+                print('Issue reproduced')
+    except Exception as e:
+        print('Issue reproduced')
+        print(f'Exception: {e}')
+with command: test_func('SELECT * 
+FROM transactions_1k
+WHERE CONCAT(Date, ' ', TIME(Time)) 
+      BETWEEN Date('2012-08-22') AND Date('2012-08-23')
+ORDER BY amount DESC
+LIMIT 3;', 'debit_card_specializing')
+2024-12-11 14:02:32,355 - INFO - Test output:
+unterminated string literal (detected at line 16) (<string>, line 16)
+
+2024-12-11 14:02:32,355 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        assert len(result) == 3, 'Expected 3 records but got an empty set or less than 3 records.'
+        print('Issue resolved')
+    except AssertionError as e:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT * 
+FROM transactions_1k
+WHERE CONCAT(Date, ' ', TIME(Time)) 
+      BETWEEN Date('2012-08-22') AND Date('2012-08-23')
+ORDER BY amount DESC
+LIMIT 3;', 'debit_card_specializing')
+2024-12-11 14:02:32,355 - INFO - Test output:
+unterminated string literal (detected at line 13) (<string>, line 13)
+
+2024-12-11 14:02:32,355 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+        if not result:
+            print('Issue reproduced')
+        else:
+            expected_result = [('2012-08-23', '12:34:56', 1000), ('2012-08-23', '11:22:33', 900), ('2012-08-23', '10:11:12', 800)]
+            try:
+                assert result == expected_result
+                print('Issue resolved')
+            except AssertionError:
+                print('Issue reproduced')
+    except Exception as e:
+        print('Issue reproduced')
+        print(f'Exception: {e}')
+with command: test_func('SELECT * 
+FROM transactions_1k
+WHERE CONCAT(Date, ' ', TIME(Time)) 
+      BETWEEN Date('2012-08-22') AND Date('2012-08-23')
+ORDER BY amount DESC
+LIMIT 3;', 'debit_card_specializing')
+2024-12-11 14:02:32,355 - INFO - Test output:
+unterminated string literal (detected at line 16) (<string>, line 16)
+
+2024-12-11 14:02:32,355 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+        if not result:
+            print('Issue reproduced')
+        else:
+            expected_result = [('2012-08-23', '12:34:56', 1000), ('2012-08-23', '11:22:33', 950), ('2012-08-23', '10:11:12', 900)]
+            try:
+                assert result == expected_result
+                print('Issue resolved')
+            except AssertionError:
+                print('Issue reproduced')
+    except Exception as e:
+        print('Issue reproduced')
+        print(f'Exception: {e}')
+with command: test_func('SELECT * 
+FROM transactions_1k
+WHERE CONCAT(Date, ' ', TIME(Time)) 
+      BETWEEN Date('2012-08-22') AND Date('2012-08-23')
+ORDER BY amount DESC
+LIMIT 3;', 'debit_card_specializing')
+2024-12-11 14:02:32,356 - INFO - Test output:
+unterminated string literal (detected at line 16) (<string>, line 16)
+
+2024-12-11 14:02:32,356 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+        if not result:
+            print('Issue reproduced')
+        else:
+            top_3_amounts = [row[-1] for row in result]
+            if top_3_amounts == sorted(top_3_amounts, reverse=True):
+                print('Issue resolved')
+            else:
+                print('Issue reproduced')
+    except Exception as e:
+        print('Issue reproduced')
+        print(f'Exception: {e}')
+    finally:
+        conn.close()
+with command: test_func('SELECT * 
+FROM transactions_1k
+WHERE CONCAT(Date, ' ', TIME(Time)) 
+      BETWEEN Date('2012-08-22') AND Date('2012-08-23')
+ORDER BY amount DESC
+LIMIT 3;', 'debit_card_specializing')
+2024-12-11 14:02:32,356 - INFO - Test output:
+unterminated string literal (detected at line 17) (<string>, line 17)
+
+2024-12-11 14:02:32,356 - INFO - filtered tests: []
+2024-12-11 16:08:40,612 - INFO - ================ filtering tests for 22 ================
+2024-12-11 16:08:40,612 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+        if not result:
+            print('Issue reproduced')
+        else:
+            expected_result = [('2012-08-23', '12:34:56', 1000), ('2012-08-23', '11:22:33', 900), ('2012-08-23', '10:11:12', 800)]
+            try:
+                assert result == expected_result
+                print('Issue resolved')
+            except AssertionError:
+                print('Issue reproduced')
+    except Exception as e:
+        print('Issue reproduced')
+        print(f'Exception: {e}')
+with command: test_func('SELECT * 
+FROM transactions_1k
+WHERE CONCAT(Date, ' ', TIME(Time)) 
+      BETWEEN Date('2012-08-22') AND Date('2012-08-23')
+ORDER BY amount DESC
+LIMIT 3;', 'debit_card_specializing')
+2024-12-11 16:08:40,613 - INFO - Test output:
+unterminated string literal (detected at line 16) (<string>, line 16)
+
+2024-12-11 16:08:40,613 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        assert len(result) == 3, 'Expected 3 records but got an empty set or less than 3 records.'
+        print('Issue resolved')
+    except AssertionError as e:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT * 
+FROM transactions_1k
+WHERE CONCAT(Date, ' ', TIME(Time)) 
+      BETWEEN Date('2012-08-22') AND Date('2012-08-23')
+ORDER BY amount DESC
+LIMIT 3;', 'debit_card_specializing')
+2024-12-11 16:08:40,613 - INFO - Test output:
+unterminated string literal (detected at line 13) (<string>, line 13)
+
+2024-12-11 16:08:40,613 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+        if not result:
+            print('Issue reproduced')
+        else:
+            expected_result = [('2012-08-23', '12:34:56', 1000), ('2012-08-23', '11:22:33', 900), ('2012-08-23', '10:11:12', 800)]
+            try:
+                assert result == expected_result
+                print('Issue resolved')
+            except AssertionError:
+                print('Issue reproduced')
+    except Exception as e:
+        print('Issue reproduced')
+        print(f'Exception: {e}')
+with command: test_func('SELECT * 
+FROM transactions_1k
+WHERE CONCAT(Date, ' ', TIME(Time)) 
+      BETWEEN Date('2012-08-22') AND Date('2012-08-23')
+ORDER BY amount DESC
+LIMIT 3;', 'debit_card_specializing')
+2024-12-11 16:08:40,613 - INFO - Test output:
+unterminated string literal (detected at line 16) (<string>, line 16)
+
+2024-12-11 16:08:40,613 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+        if not result:
+            print('Issue reproduced')
+        else:
+            expected_result = [('2012-08-23', '12:34:56', 1000), ('2012-08-23', '11:22:33', 950), ('2012-08-23', '10:11:12', 900)]
+            try:
+                assert result == expected_result
+                print('Issue resolved')
+            except AssertionError:
+                print('Issue reproduced')
+    except Exception as e:
+        print('Issue reproduced')
+        print(f'Exception: {e}')
+with command: test_func('SELECT * 
+FROM transactions_1k
+WHERE CONCAT(Date, ' ', TIME(Time)) 
+      BETWEEN Date('2012-08-22') AND Date('2012-08-23')
+ORDER BY amount DESC
+LIMIT 3;', 'debit_card_specializing')
+2024-12-11 16:08:40,613 - INFO - Test output:
+unterminated string literal (detected at line 16) (<string>, line 16)
+
+2024-12-11 16:08:40,613 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+        if not result:
+            print('Issue reproduced')
+        else:
+            top_3_amounts = [row[-1] for row in result]
+            if top_3_amounts == sorted(top_3_amounts, reverse=True):
+                print('Issue resolved')
+            else:
+                print('Issue reproduced')
+    except Exception as e:
+        print('Issue reproduced')
+        print(f'Exception: {e}')
+    finally:
+        conn.close()
+with command: test_func('SELECT * 
+FROM transactions_1k
+WHERE CONCAT(Date, ' ', TIME(Time)) 
+      BETWEEN Date('2012-08-22') AND Date('2012-08-23')
+ORDER BY amount DESC
+LIMIT 3;', 'debit_card_specializing')
+2024-12-11 16:08:40,613 - INFO - Test output:
+unterminated string literal (detected at line 17) (<string>, line 17)
+
+2024-12-11 16:08:40,613 - INFO - filtered tests: []

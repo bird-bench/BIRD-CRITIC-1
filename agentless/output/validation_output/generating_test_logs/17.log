@@ -1,0 +1,263 @@
+2024-12-11 13:54:57,599 - INFO - ================ generating test for 17 ================
+2024-12-11 13:54:57,600 - INFO - prompting with message:
+We are currently solving the following issue within our repository. Here is the issue text:
+--- BEGIN ISSUE ---
+I'm trying to write a full-text search with the following SQL syntax:```sql
+SELECT s.member_id FROM member s WHERE s.position='Member' AND MATCH (s.email) AGAINST ('angela.sanders@lpu.edu' IN BOOLEAN MODE);``` I got the error: ```error
+(1064, "syntax error, unexpected '@', expecting $end")``` How can I fix this?
+--- END ISSUE ---
+
+Please generate a complete test that can be used to reproduce the issue.
+
+The complete test should contain the following:
+1. Code to reproduce the issue described in the issue text
+2. Print "Issue reproduced" if the outcome indicates that the issue is reproduced: either an exception is raised or the outcome is incorrect
+3. Print "Issue resolved" if the outcome indicates that the issue has been successfully resolved
+5. The name of the test function must be test_issue with two parameter sql and db
+
+Here is an example:
+```python
+def test_issue(sql, db) -> None:
+    try:
+        result, conn = perform_query_on_mysql_databases(sql, db)
+    except:
+        print("Issue reproduced")
+        return
+    try:
+        assert result[0] == ("HR",)
+        assert result[1] == ("Finance",)
+        print("Issue resolved")
+    except AssertionError:
+        print("Issue reproduced")
+        return
+```
+
+Please ensure the generated test reflects the issue described in the provided issue text.
+The generated test should be able to be used to both reproduce the issue as well as to verify the issue has been fixed.
+Wrap the complete test in ```python...```.
+2024-12-11 13:54:57,602 - INFO - Initializing a decoder model: deepseek-chat ...
+2024-12-11 13:54:57,635 - INFO - Creating API request
+2024-12-11 13:55:12,738 - INFO - API response ChatCompletion(id='f99da19a-7cb7-4a8e-a713-ed29a38b6d08', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Attempt to execute the SQL query\n        result, conn = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        # If an exception is raised, print "Issue reproduced"\n        if "syntax error, unexpected \'@\', expecting $end" in str(e):\n            print("Issue reproduced")\n        else:\n            print("Unexpected error:", str(e))\n        return\n    \n    try:\n        # Check if the result is as expected\n        # Assuming the expected result is a member_id for the given email\n        assert result and result[0][\'member_id\'] is not None, "No member_id found for the given email"\n        print("Issue resolved")\n    except AssertionError as ae:\n        # If the assertion fails, print "Issue reproduced"\n        print("Issue reproduced:", str(ae))\n        return\n```\n\nThis test function `test_issue` attempts to reproduce the issue described in the provided issue text. It executes the SQL query and checks for the expected error message. If the error message is found, it prints "Issue reproduced". If no error is encountered, it checks the result to ensure it contains the expected data. If the result is correct, it prints "Issue resolved". If the result is incorrect, it prints "Issue reproduced".', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925297, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=307, prompt_tokens=409, total_tokens=716, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=128, prompt_cache_miss_tokens=281))
+2024-12-11 13:55:12,740 - INFO - Initializing a decoder model: deepseek-chat ...
+2024-12-11 13:55:12,774 - INFO - Creating API request
+2024-12-11 13:55:39,858 - INFO - API response ChatCompletion(id='2fdc3db3-2f45-4286-b2a9-e14073eea4f6', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Attempt to execute the SQL query\n        result, conn = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        # If an exception is raised, print "Issue reproduced"\n        if "syntax error, unexpected \'@\', expecting $end" in str(e):\n            print("Issue reproduced")\n        else:\n            print("Unexpected error:", str(e))\n        return\n    \n    try:\n        # Check if the result contains the expected member_id\n        # Assuming the query should return a specific member_id for the given email\n        expected_member_id = "expected_member_id_here"  # Replace with the actual expected member_id\n        assert result[0][0] == expected_member_id\n        print("Issue resolved")\n    except AssertionError:\n        print("Issue reproduced")\n        return\n\n# Example usage:\n# test_issue("SELECT s.member_id FROM member s WHERE s.position=\'Member\' AND MATCH (s.email) AGAINST (\'angela.sanders@lpu.edu\' IN BOOLEAN MODE);", db_connection)\n```\n\n### Explanation:\n1. **Code to reproduce the issue**: The SQL query provided in the issue text is executed within the `test_issue` function.\n2. **Print "Issue reproduced"**: If an exception is raised during the execution of the query, the test will print "Issue reproduced". Specifically, it checks if the error message contains the substring `"syntax error, unexpected \'@\', expecting $end"`.\n3. **Print "Issue resolved"**: If the query executes successfully and the result matches the expected outcome (in this case, the expected `member_id`), the test will print "Issue resolved".\n4. **Test function parameters**: The function `test_issue` takes two parameters: `sql` (the SQL query to be tested) and `db` (the database connection).\n\n### Notes:\n- The `expected_member_id` should be replaced with the actual expected value based on the database content.\n- The `perform_query_on_mysql_databases` function is assumed to be a placeholder for the actual function that executes the SQL query on the database and returns the result and connection.\n- The test is designed to be flexible enough to handle both the reproduction of the issue and the verification of its resolution.', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925313, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=539, prompt_tokens=409, total_tokens=948, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=384, prompt_cache_miss_tokens=25))
+2024-12-11 13:55:39,889 - INFO - Creating API request
+2024-12-11 13:56:06,359 - INFO - API response ChatCompletion(id='5110eab4-afa6-4dab-a6c1-64a4eb790a64', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Attempt to execute the SQL query\n        result, conn = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        # If an exception is raised, print "Issue reproduced"\n        if "syntax error" in str(e):\n            print("Issue reproduced")\n        else:\n            print("Unexpected error:", str(e))\n        return\n    \n    try:\n        # Check if the result contains the expected member_id\n        # Assuming the expected member_id is \'12345\' for the given email\n        expected_member_id = \'12345\'\n        assert result[0] == (expected_member_id,)\n        print("Issue resolved")\n    except AssertionError:\n        # If the result is incorrect, print "Issue reproduced"\n        print("Issue reproduced")\n        return\n```\n\n### Explanation:\n1. **Code to reproduce the issue**: The SQL query provided in the issue text is executed using the `perform_query_on_mysql_databases` function.\n2. **Print "Issue reproduced"**: If an exception is raised during the execution of the SQL query, it checks if the error message contains "syntax error". If so, it prints "Issue reproduced".\n3. **Print "Issue resolved"**: If the query executes successfully, it checks if the result contains the expected `member_id` (assuming `\'12345\'` for the given email). If the result matches the expected value, it prints "Issue resolved".\n4. **Test function**: The function `test_issue` takes two parameters, `sql` and `db`, which are used to execute the SQL query on the database.\n\nThis test can be used to both reproduce the issue and verify if the issue has been fixed by modifying the SQL query or the database schema.', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925345, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=425, prompt_tokens=409, total_tokens=834, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=384, prompt_cache_miss_tokens=25))
+2024-12-11 13:56:06,392 - INFO - Creating API request
+2024-12-11 13:56:32,412 - INFO - API response ChatCompletion(id='be1a3810-4c85-49d1-9ed6-7f89bf3a3cb1', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Attempt to execute the SQL query\n        result, conn = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        # If an exception is raised, print "Issue reproduced"\n        if "syntax error" in str(e):\n            print("Issue reproduced")\n        else:\n            print("Unexpected error occurred:", str(e))\n        return\n    \n    try:\n        # Check if the result contains the expected member_id\n        # Assuming the expected member_id is \'12345\' for the given email\n        expected_member_id = \'12345\'\n        assert result[0] == (expected_member_id,)\n        print("Issue resolved")\n    except AssertionError:\n        # If the result is incorrect, print "Issue reproduced"\n        print("Issue reproduced")\n        return\n```\n\n### Explanation:\n1. **Code to Reproduce the Issue**: The test function `test_issue` attempts to execute the SQL query provided in the issue text using the `perform_query_on_mysql_databases` function. This function is assumed to execute the SQL query on a MySQL database and return the result and the database connection.\n\n2. **Print "Issue reproduced"**: If an exception is raised during the execution of the SQL query, the test checks if the error message contains the phrase "syntax error". If it does, it prints "Issue reproduced". This indicates that the issue described in the issue text has been reproduced.\n\n3. **Print "Issue resolved"**: If the SQL query executes successfully, the test checks if the result contains the expected `member_id` for the given email. If the result matches the expected value, it prints "Issue resolved". This indicates that the issue has been successfully resolved.\n\n4. **Test Function Parameters**: The test function `test_issue` takes two parameters: `sql` (the SQL query to be executed) and `db` (the database connection or configuration).\n\nThis test can be used to both reproduce the issue and verify if the issue has been fixed by modifying the SQL query or the database configuration.', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925368, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=486, prompt_tokens=409, total_tokens=895, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=384, prompt_cache_miss_tokens=25))
+2024-12-11 13:56:32,446 - INFO - Creating API request
+2024-12-11 13:56:58,446 - INFO - API response ChatCompletion(id='4769c7a2-3ed4-415c-8132-585aaafd6498', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Attempt to execute the SQL query\n        result, conn = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        # If an exception is raised, print "Issue reproduced"\n        if "syntax error, unexpected \'@\', expecting $end" in str(e):\n            print("Issue reproduced")\n        else:\n            print("Unexpected error:", str(e))\n        return\n    \n    try:\n        # Check if the result is as expected\n        # Assuming the query should return a specific member_id\n        expected_member_id = "expected_member_id_here"  # Replace with the actual expected member_id\n        assert result[0][0] == expected_member_id\n        print("Issue resolved")\n    except AssertionError:\n        print("Issue reproduced")\n        return\n\n# Example usage:\n# test_issue("SELECT s.member_id FROM member s WHERE s.position=\'Member\' AND MATCH (s.email) AGAINST (\'angela.sanders@lpu.edu\' IN BOOLEAN MODE);", db_connection)\n```\n\n### Explanation:\n1. **Code to Reproduce the Issue**: The test function `test_issue` takes two parameters: `sql` (the SQL query) and `db` (the database connection). It attempts to execute the SQL query using `perform_query_on_mysql_databases`.\n\n2. **Print "Issue reproduced"**: If an exception is raised during the execution of the query, the test checks if the error message contains the specific syntax error mentioned in the issue. If it does, it prints "Issue reproduced".\n\n3. **Print "Issue resolved"**: If the query executes successfully, the test checks if the result matches the expected outcome. If the result is correct, it prints "Issue resolved".\n\n4. **Test Function Name and Parameters**: The function is named `test_issue` and takes two parameters: `sql` and `db`.\n\n5. **Example Usage**: The example usage at the end shows how to call the test function with the SQL query and a database connection.\n\nThis test can be used to both reproduce the issue and verify if the issue has been resolved.', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925392, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=507, prompt_tokens=409, total_tokens=916, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=384, prompt_cache_miss_tokens=25))
+2024-12-11 14:02:11,480 - INFO - ================ normalizing tests for 17 ================
+2024-12-11 14:02:11,483 - INFO - normalized tests: ['def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        if "syntax error, unexpected \'@\', expecting $end" in str(e):\n            print(\'Issue reproduced\')\n        else:\n            print(\'Unexpected error:\', str(e))\n        return\n    try:\n        assert result and result[0][\'member_id\'] is not None, \'No member_id found for the given email\'\n        print(\'Issue resolved\')\n    except AssertionError as ae:\n        print(\'Issue reproduced:\', str(ae))\n        return', 'def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        if "syntax error, unexpected \'@\', expecting $end" in str(e):\n            print(\'Issue reproduced\')\n        else:\n            print(\'Unexpected error:\', str(e))\n        return\n    try:\n        expected_member_id = \'expected_member_id_here\'\n        assert result[0][0] == expected_member_id\n        print(\'Issue resolved\')\n    except AssertionError:\n        print(\'Issue reproduced\')\n        return', "def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        if 'syntax error' in str(e):\n            print('Issue reproduced')\n        else:\n            print('Unexpected error:', str(e))\n        return\n    try:\n        expected_member_id = '12345'\n        assert result[0] == (expected_member_id,)\n        print('Issue resolved')\n    except AssertionError:\n        print('Issue reproduced')\n        return", "def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        if 'syntax error' in str(e):\n            print('Issue reproduced')\n        else:\n            print('Unexpected error occurred:', str(e))\n        return\n    try:\n        expected_member_id = '12345'\n        assert result[0] == (expected_member_id,)\n        print('Issue resolved')\n    except AssertionError:\n        print('Issue reproduced')\n        return", 'def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        if "syntax error, unexpected \'@\', expecting $end" in str(e):\n            print(\'Issue reproduced\')\n        else:\n            print(\'Unexpected error:\', str(e))\n        return\n    try:\n        expected_member_id = \'expected_member_id_here\'\n        assert result[0][0] == expected_member_id\n        print(\'Issue resolved\')\n    except AssertionError:\n        print(\'Issue reproduced\')\n        return']
+2024-12-11 14:02:31,719 - INFO - ================ filtering tests for 17 ================
+2024-12-11 14:02:31,719 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        if "syntax error, unexpected '@', expecting $end" in str(e):
+            print('Issue reproduced')
+        else:
+            print('Unexpected error:', str(e))
+        return
+    try:
+        assert result and result[0]['member_id'] is not None, 'No member_id found for the given email'
+        print('Issue resolved')
+    except AssertionError as ae:
+        print('Issue reproduced:', str(ae))
+        return
+with command: test_func('SELECT s.member_id FROM member s WHERE s.position='Member' AND MATCH (s.email) AGAINST ('angela.sanders@lpu.edu' IN BOOLEAN MODE);', 'student_club')
+2024-12-11 14:02:31,719 - INFO - Test output:
+invalid syntax. Perhaps you forgot a comma? (<string>, line 16)
+
+2024-12-11 14:02:31,719 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        if "syntax error, unexpected '@', expecting $end" in str(e):
+            print('Issue reproduced')
+        else:
+            print('Unexpected error:', str(e))
+        return
+    try:
+        expected_member_id = 'expected_member_id_here'
+        assert result[0][0] == expected_member_id
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT s.member_id FROM member s WHERE s.position='Member' AND MATCH (s.email) AGAINST ('angela.sanders@lpu.edu' IN BOOLEAN MODE);', 'student_club')
+2024-12-11 14:02:31,720 - INFO - Test output:
+invalid syntax. Perhaps you forgot a comma? (<string>, line 17)
+
+2024-12-11 14:02:31,720 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        if 'syntax error' in str(e):
+            print('Issue reproduced')
+        else:
+            print('Unexpected error:', str(e))
+        return
+    try:
+        expected_member_id = '12345'
+        assert result[0] == (expected_member_id,)
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT s.member_id FROM member s WHERE s.position='Member' AND MATCH (s.email) AGAINST ('angela.sanders@lpu.edu' IN BOOLEAN MODE);', 'student_club')
+2024-12-11 14:02:31,720 - INFO - Test output:
+invalid syntax. Perhaps you forgot a comma? (<string>, line 17)
+
+2024-12-11 14:02:31,720 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        if 'syntax error' in str(e):
+            print('Issue reproduced')
+        else:
+            print('Unexpected error occurred:', str(e))
+        return
+    try:
+        expected_member_id = '12345'
+        assert result[0] == (expected_member_id,)
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT s.member_id FROM member s WHERE s.position='Member' AND MATCH (s.email) AGAINST ('angela.sanders@lpu.edu' IN BOOLEAN MODE);', 'student_club')
+2024-12-11 14:02:31,721 - INFO - Test output:
+invalid syntax. Perhaps you forgot a comma? (<string>, line 17)
+
+2024-12-11 14:02:31,721 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        if "syntax error, unexpected '@', expecting $end" in str(e):
+            print('Issue reproduced')
+        else:
+            print('Unexpected error:', str(e))
+        return
+    try:
+        expected_member_id = 'expected_member_id_here'
+        assert result[0][0] == expected_member_id
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT s.member_id FROM member s WHERE s.position='Member' AND MATCH (s.email) AGAINST ('angela.sanders@lpu.edu' IN BOOLEAN MODE);', 'student_club')
+2024-12-11 14:02:31,721 - INFO - Test output:
+invalid syntax. Perhaps you forgot a comma? (<string>, line 17)
+
+2024-12-11 14:02:31,721 - INFO - filtered tests: []
+2024-12-11 16:08:40,077 - INFO - ================ filtering tests for 17 ================
+2024-12-11 16:08:40,077 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        if "syntax error, unexpected '@', expecting $end" in str(e):
+            print('Issue reproduced')
+        else:
+            print('Unexpected error:', str(e))
+        return
+    try:
+        assert result and result[0]['member_id'] is not None, 'No member_id found for the given email'
+        print('Issue resolved')
+    except AssertionError as ae:
+        print('Issue reproduced:', str(ae))
+        return
+with command: test_func('SELECT s.member_id FROM member s WHERE s.position='Member' AND MATCH (s.email) AGAINST ('angela.sanders@lpu.edu' IN BOOLEAN MODE);', 'student_club')
+2024-12-11 16:08:40,078 - INFO - Test output:
+invalid syntax. Perhaps you forgot a comma? (<string>, line 16)
+
+2024-12-11 16:08:40,078 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        if "syntax error, unexpected '@', expecting $end" in str(e):
+            print('Issue reproduced')
+        else:
+            print('Unexpected error:', str(e))
+        return
+    try:
+        expected_member_id = 'expected_member_id_here'
+        assert result[0][0] == expected_member_id
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT s.member_id FROM member s WHERE s.position='Member' AND MATCH (s.email) AGAINST ('angela.sanders@lpu.edu' IN BOOLEAN MODE);', 'student_club')
+2024-12-11 16:08:40,078 - INFO - Test output:
+invalid syntax. Perhaps you forgot a comma? (<string>, line 17)
+
+2024-12-11 16:08:40,078 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        if 'syntax error' in str(e):
+            print('Issue reproduced')
+        else:
+            print('Unexpected error:', str(e))
+        return
+    try:
+        expected_member_id = '12345'
+        assert result[0] == (expected_member_id,)
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT s.member_id FROM member s WHERE s.position='Member' AND MATCH (s.email) AGAINST ('angela.sanders@lpu.edu' IN BOOLEAN MODE);', 'student_club')
+2024-12-11 16:08:40,078 - INFO - Test output:
+invalid syntax. Perhaps you forgot a comma? (<string>, line 17)
+
+2024-12-11 16:08:40,078 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        if 'syntax error' in str(e):
+            print('Issue reproduced')
+        else:
+            print('Unexpected error occurred:', str(e))
+        return
+    try:
+        expected_member_id = '12345'
+        assert result[0] == (expected_member_id,)
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT s.member_id FROM member s WHERE s.position='Member' AND MATCH (s.email) AGAINST ('angela.sanders@lpu.edu' IN BOOLEAN MODE);', 'student_club')
+2024-12-11 16:08:40,079 - INFO - Test output:
+invalid syntax. Perhaps you forgot a comma? (<string>, line 17)
+
+2024-12-11 16:08:40,079 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        if "syntax error, unexpected '@', expecting $end" in str(e):
+            print('Issue reproduced')
+        else:
+            print('Unexpected error:', str(e))
+        return
+    try:
+        expected_member_id = 'expected_member_id_here'
+        assert result[0][0] == expected_member_id
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT s.member_id FROM member s WHERE s.position='Member' AND MATCH (s.email) AGAINST ('angela.sanders@lpu.edu' IN BOOLEAN MODE);', 'student_club')
+2024-12-11 16:08:40,079 - INFO - Test output:
+invalid syntax. Perhaps you forgot a comma? (<string>, line 17)
+
+2024-12-11 16:08:40,079 - INFO - filtered tests: []

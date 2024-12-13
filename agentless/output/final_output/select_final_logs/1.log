@@ -1,0 +1,202 @@
+2024-12-11 16:08:57,998 - INFO - ================ running test for 1 ================
+2024-12-11 16:08:58,000 - INFO - Running test command:
+test_func('WITH t1 AS (SELECT e.event_id FROM event AS e LEFT JOIN attendance AS a ON e.event_id = a.link_to_event), t2 AS (SELECT e.event_id FROM event AS e INNER JOIN attendance AS a ON e.event_id = a.link_to_event) SELECT COUNT(*) AS left_join_count FROM t1', 'student_club')
+2024-12-11 16:08:58,000 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    left_join_query = '\n    WITH t1 AS (\n        SELECT e.event_id\n        FROM event e\n        LEFT JOIN attendance a ON e.event_id = a.link_to_event\n    )\n    SELECT COUNT(*) FROM t1;\n    '
+    inner_join_query = '\n    WITH t2 AS (\n        SELECT e.event_id\n        FROM event e\n        INNER JOIN attendance a ON e.event_id = a.link_to_event\n    )\n    SELECT COUNT(*) FROM t2;\n    '
+    try:
+        (left_join_result, conn) = perform_query_on_mysql_databases(left_join_query, db)
+        left_join_count = left_join_result[0][0]
+        (inner_join_result, conn) = perform_query_on_mysql_databases(inner_join_query, db)
+        inner_join_count = inner_join_result[0][0]
+        difference = left_join_count - inner_join_count
+        print(f'Difference between left join and inner join counts: {difference}')
+        expected_difference = 0
+        if difference != expected_difference:
+            print('Issue reproduced')
+        else:
+            print('Issue resolved')
+    except Exception as e:
+        print('Issue reproduced')
+        print(f'Exception: {e}')
+        return
+test_func('WITH t1 AS (SELECT e.event_id FROM event AS e LEFT JOIN attendance AS a ON e.event_id = a.link_to_event), t2 AS (SELECT e.event_id FROM event AS e INNER JOIN attendance AS a ON e.event_id = a.link_to_event) SELECT COUNT(*) AS left_join_count FROM t1', 'student_club')
+2024-12-11 16:08:58,060 - INFO - Test output:
+
+2024-12-11 16:08:58,063 - INFO - Running test command:
+test_func('WITH t1 AS (SELECT COUNT(*) AS left_join_count FROM event AS e LEFT JOIN attendance AS a ON e.event_id = a.link_to_event), t2 AS (SELECT COUNT(*) AS inner_join_count FROM event AS e INNER JOIN attendance AS a ON e.event_id = a.link_to_event) SELECT left_join_count - inner_join_count AS difference FROM t1, t2', 'student_club')
+2024-12-11 16:08:58,063 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    left_join_query = '\n    WITH t1 AS (\n        SELECT e.event_id\n        FROM event e\n        LEFT JOIN attendance a ON e.event_id = a.link_to_event\n    )\n    SELECT COUNT(*) FROM t1;\n    '
+    inner_join_query = '\n    WITH t2 AS (\n        SELECT e.event_id\n        FROM event e\n        INNER JOIN attendance a ON e.event_id = a.link_to_event\n    )\n    SELECT COUNT(*) FROM t2;\n    '
+    try:
+        (left_join_result, conn) = perform_query_on_mysql_databases(left_join_query, db)
+        left_join_count = left_join_result[0][0]
+        (inner_join_result, conn) = perform_query_on_mysql_databases(inner_join_query, db)
+        inner_join_count = inner_join_result[0][0]
+        difference = left_join_count - inner_join_count
+        print(f'Difference between left join and inner join counts: {difference}')
+        expected_difference = 0
+        if difference != expected_difference:
+            print('Issue reproduced')
+        else:
+            print('Issue resolved')
+    except Exception as e:
+        print('Issue reproduced')
+        print(f'Exception: {e}')
+        return
+test_func('WITH t1 AS (SELECT COUNT(*) AS left_join_count FROM event AS e LEFT JOIN attendance AS a ON e.event_id = a.link_to_event), t2 AS (SELECT COUNT(*) AS inner_join_count FROM event AS e INNER JOIN attendance AS a ON e.event_id = a.link_to_event) SELECT left_join_count - inner_join_count AS difference FROM t1, t2', 'student_club')
+2024-12-11 16:08:58,084 - INFO - Test output:
+Issue resolved
+
+2024-12-11 16:08:58,085 - INFO - Running test command:
+test_func('WITH t1 AS (SELECT COUNT(*) AS left_join_count FROM event AS e LEFT JOIN attendance AS a ON e.event_id = a.link_to_event), t2 AS (SELECT COUNT(*) AS inner_join_count FROM event AS e INNER JOIN attendance AS a ON e.event_id = a.link_to_event) SELECT left_join_count - inner_join_count AS difference FROM t1, t2', 'student_club')
+2024-12-11 16:08:58,086 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    left_join_query = '\n    WITH t1 AS (\n        SELECT e.event_id\n        FROM event e\n        LEFT JOIN attendance a ON e.event_id = a.link_to_event\n    )\n    SELECT COUNT(*) FROM t1;\n    '
+    inner_join_query = '\n    WITH t2 AS (\n        SELECT e.event_id\n        FROM event e\n        INNER JOIN attendance a ON e.event_id = a.link_to_event\n    )\n    SELECT COUNT(*) FROM t2;\n    '
+    try:
+        (left_join_result, conn) = perform_query_on_mysql_databases(left_join_query, db)
+        left_join_count = left_join_result[0][0]
+        (inner_join_result, conn) = perform_query_on_mysql_databases(inner_join_query, db)
+        inner_join_count = inner_join_result[0][0]
+        difference = left_join_count - inner_join_count
+        print(f'Difference between left join and inner join counts: {difference}')
+        expected_difference = 0
+        if difference != expected_difference:
+            print('Issue reproduced')
+        else:
+            print('Issue resolved')
+    except Exception as e:
+        print(f'Issue reproduced: {e}')
+        return
+test_func('WITH t1 AS (SELECT COUNT(*) AS left_join_count FROM event AS e LEFT JOIN attendance AS a ON e.event_id = a.link_to_event), t2 AS (SELECT COUNT(*) AS inner_join_count FROM event AS e INNER JOIN attendance AS a ON e.event_id = a.link_to_event) SELECT left_join_count - inner_join_count AS difference FROM t1, t2', 'student_club')
+2024-12-11 16:08:58,113 - INFO - Test output:
+Issue resolved
+
+2024-12-11 16:08:58,116 - INFO - Running test command:
+test_func('WITH t1 AS (SELECT COUNT(*) AS left_join_count FROM event AS e LEFT JOIN attendance AS a ON e.event_id = a.link_to_event), t2 AS (SELECT COUNT(*) AS inner_join_count FROM event AS e INNER JOIN attendance AS a ON e.event_id = a.link_to_event) SELECT left_join_count - inner_join_count AS difference FROM t1, t2', 'student_club')
+2024-12-11 16:08:58,116 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    try:
+        query = '\n        WITH t1 AS (\n            SELECT e.event_id \n            FROM event e \n            LEFT JOIN attendance a ON e.event_id = a.link_to_event\n        ), \n        t2 AS (\n            SELECT e.event_id \n            FROM event e \n            INNER JOIN attendance a ON e.event_id = a.link_to_event\n        )\n        SELECT COUNT(*) FROM t1;\n        SELECT COUNT(*) FROM t2;\n        '
+        (result, conn) = perform_query_on_mysql_databases(query, db)
+        count_t1 = result[0][0]
+        count_t2 = result[1][0]
+        difference = count_t1 - count_t2
+        if difference != expected_difference:
+            print('Issue reproduced')
+        else:
+            print('Issue resolved')
+    except Exception as e:
+        print('Issue reproduced')
+        return
+test_func('WITH t1 AS (SELECT COUNT(*) AS left_join_count FROM event AS e LEFT JOIN attendance AS a ON e.event_id = a.link_to_event), t2 AS (SELECT COUNT(*) AS inner_join_count FROM event AS e INNER JOIN attendance AS a ON e.event_id = a.link_to_event) SELECT left_join_count - inner_join_count AS difference FROM t1, t2', 'student_club')
+2024-12-11 16:08:58,127 - INFO - Test output:
+
+2024-12-11 16:08:58,129 - INFO - Running test command:
+test_func('WITH t1 AS (SELECT COUNT(*) AS left_join_count FROM event AS e LEFT JOIN attendance AS a ON e.event_id = a.link_to_event), t2 AS (SELECT COUNT(*) AS inner_join_count FROM event AS e INNER JOIN attendance AS a ON e.event_id = a.link_to_event) SELECT left_join_count - inner_join_count AS difference FROM t1, t2', 'student_club')
+2024-12-11 16:08:58,129 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    left_join_query = '\n    WITH t1 AS (\n        SELECT e.event_id\n        FROM event e\n        LEFT JOIN attendance a ON e.event_id = a.link_to_event\n    )\n    SELECT COUNT(*) FROM t1;\n    '
+    inner_join_query = '\n    WITH t2 AS (\n        SELECT e.event_id\n        FROM event e\n        INNER JOIN attendance a ON e.event_id = a.link_to_event\n    )\n    SELECT COUNT(*) FROM t2;\n    '
+    try:
+        (left_join_result, conn) = perform_query_on_mysql_databases(left_join_query, db)
+        left_join_count = left_join_result[0][0]
+        (inner_join_result, conn) = perform_query_on_mysql_databases(inner_join_query, db)
+        inner_join_count = inner_join_result[0][0]
+        difference = left_join_count - inner_join_count
+        print(f'Difference between left join and inner join counts: {difference}')
+        expected_difference = 0
+        if difference != expected_difference:
+            print('Issue reproduced')
+        else:
+            print('Issue resolved')
+    except Exception as e:
+        print('Issue reproduced')
+        print(f'Exception: {e}')
+        return
+test_func('WITH t1 AS (SELECT COUNT(*) AS left_join_count FROM event AS e LEFT JOIN attendance AS a ON e.event_id = a.link_to_event), t2 AS (SELECT COUNT(*) AS inner_join_count FROM event AS e INNER JOIN attendance AS a ON e.event_id = a.link_to_event) SELECT left_join_count - inner_join_count AS difference FROM t1, t2', 'student_club')
+2024-12-11 16:08:58,142 - INFO - Test output:
+
+2024-12-11 16:08:58,144 - INFO - Running test command:
+test_func('WITH t1 AS (SELECT e.event_id FROM event AS e LEFT JOIN attendance AS a ON e.event_id = a.link_to_event), t2 AS (SELECT e.event_id FROM event AS e INNER JOIN attendance AS a ON e.event_id = a.link_to_event) SELECT (SELECT COUNT(*) FROM t2) - (SELECT COUNT(*) FROM t1) AS difference', 'student_club')
+2024-12-11 16:08:58,144 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    left_join_query = '\n    WITH t1 AS (\n        SELECT e.event_id\n        FROM event e\n        LEFT JOIN attendance a ON e.event_id = a.link_to_event\n    )\n    SELECT COUNT(*) FROM t1;\n    '
+    inner_join_query = '\n    WITH t2 AS (\n        SELECT e.event_id\n        FROM event e\n        INNER JOIN attendance a ON e.event_id = a.link_to_event\n    )\n    SELECT COUNT(*) FROM t2;\n    '
+    try:
+        (left_join_result, conn) = perform_query_on_mysql_databases(left_join_query, db)
+        left_join_count = left_join_result[0][0]
+        (inner_join_result, conn) = perform_query_on_mysql_databases(inner_join_query, db)
+        inner_join_count = inner_join_result[0][0]
+        difference = left_join_count - inner_join_count
+        print(f'Difference between left join and inner join counts: {difference}')
+        expected_difference = 0
+        if difference != expected_difference:
+            print('Issue reproduced')
+        else:
+            print('Issue resolved')
+    except Exception as e:
+        print('Issue reproduced')
+        print(f'Exception: {e}')
+        return
+test_func('WITH t1 AS (SELECT e.event_id FROM event AS e LEFT JOIN attendance AS a ON e.event_id = a.link_to_event), t2 AS (SELECT e.event_id FROM event AS e INNER JOIN attendance AS a ON e.event_id = a.link_to_event) SELECT (SELECT COUNT(*) FROM t2) - (SELECT COUNT(*) FROM t1) AS difference', 'student_club')
+2024-12-11 16:08:58,161 - INFO - Test output:
+Issue resolved
+
+2024-12-11 16:08:58,165 - INFO - Running test command:
+test_func('WITH t1 AS (SELECT e.event_id FROM event AS e LEFT JOIN attendance AS a ON e.event_id = a.link_to_event), t2 AS (SELECT e.event_id FROM event AS e INNER JOIN attendance AS a ON e.event_id = a.link_to_event) SELECT (SELECT COUNT(*) FROM t2) - (SELECT COUNT(*) FROM t1) AS difference', 'student_club')
+2024-12-11 16:08:58,165 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    left_join_query = '\n    WITH t1 AS (\n        SELECT e.event_id\n        FROM event e\n        LEFT JOIN attendance a ON e.event_id = a.link_to_event\n    )\n    SELECT COUNT(*) FROM t1;\n    '
+    inner_join_query = '\n    WITH t2 AS (\n        SELECT e.event_id\n        FROM event e\n        INNER JOIN attendance a ON e.event_id = a.link_to_event\n    )\n    SELECT COUNT(*) FROM t2;\n    '
+    try:
+        (left_join_result, conn) = perform_query_on_mysql_databases(left_join_query, db)
+        left_join_count = left_join_result[0][0]
+        (inner_join_result, conn) = perform_query_on_mysql_databases(inner_join_query, db)
+        inner_join_count = inner_join_result[0][0]
+        difference = left_join_count - inner_join_count
+        print(f'Difference between left join and inner join counts: {difference}')
+        expected_difference = 0
+        if difference != expected_difference:
+            print('Issue reproduced')
+        else:
+            print('Issue resolved')
+    except Exception as e:
+        print(f'Issue reproduced: {e}')
+        return
+test_func('WITH t1 AS (SELECT e.event_id FROM event AS e LEFT JOIN attendance AS a ON e.event_id = a.link_to_event), t2 AS (SELECT e.event_id FROM event AS e INNER JOIN attendance AS a ON e.event_id = a.link_to_event) SELECT (SELECT COUNT(*) FROM t2) - (SELECT COUNT(*) FROM t1) AS difference', 'student_club')
+2024-12-11 16:08:58,173 - INFO - Test output:
+Issue reproduced
+
+2024-12-11 16:08:58,175 - INFO - Running test command:
+test_func('WITH t1 AS (SELECT COUNT(*) AS left_join_count FROM event AS e LEFT JOIN attendance AS a ON e.event_id = a.link_to_event), t2 AS (SELECT COUNT(*) AS inner_join_count FROM event AS e INNER JOIN attendance AS a ON e.event_id = a.link_to_event) SELECT left_join_count - inner_join_count AS difference FROM t1, t2', 'student_club')
+2024-12-11 16:08:58,175 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    left_join_query = '\n    WITH t1 AS (\n        SELECT e.event_id\n        FROM event e\n        LEFT JOIN attendance a ON e.event_id = a.link_to_event\n    )\n    SELECT COUNT(*) FROM t1;\n    '
+    inner_join_query = '\n    WITH t2 AS (\n        SELECT e.event_id\n        FROM event e\n        INNER JOIN attendance a ON e.event_id = a.link_to_event\n    )\n    SELECT COUNT(*) FROM t2;\n    '
+    try:
+        (left_join_result, conn) = perform_query_on_mysql_databases(left_join_query, db)
+        left_join_count = left_join_result[0][0]
+        (inner_join_result, conn) = perform_query_on_mysql_databases(inner_join_query, db)
+        inner_join_count = inner_join_result[0][0]
+        difference = left_join_count - inner_join_count
+        print(f'Difference between left join and inner join counts: {difference}')
+        expected_difference = 0
+        if difference != expected_difference:
+            print('Issue reproduced')
+        else:
+            print('Issue resolved')
+    except Exception as e:
+        print('Issue reproduced')
+        print(f'Exception: {e}')
+        return
+test_func('WITH t1 AS (SELECT COUNT(*) AS left_join_count FROM event AS e LEFT JOIN attendance AS a ON e.event_id = a.link_to_event), t2 AS (SELECT COUNT(*) AS inner_join_count FROM event AS e INNER JOIN attendance AS a ON e.event_id = a.link_to_event) SELECT left_join_count - inner_join_count AS difference FROM t1, t2', 'student_club')
+2024-12-11 16:08:58,179 - INFO - Test output:
+Issue reproduced
+
+2024-12-11 16:08:58,179 - INFO - No solutions resolved the issue.
+2024-12-11 16:08:58,272 - INFO - ================ re-ranking solutions for 1 ================
+2024-12-11 16:08:58,272 - INFO - No valid parsed solutions found.

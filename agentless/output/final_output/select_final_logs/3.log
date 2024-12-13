@@ -1,0 +1,106 @@
+2024-12-11 16:08:57,996 - INFO - ================ running test for 3 ================
+2024-12-11 16:08:57,997 - INFO - Running test command:
+test_func('SELECT transactions_1k.*, customers.* FROM transactions_1k LEFT JOIN customers ON transactions_1k.CustomerID = customers.CustomerID LIMIT 5', 'debit_card_specializing')
+2024-12-11 16:08:57,998 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for row in result:
+            assert len(row) > 1
+            assert 'CustomerName' in row
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+test_func('SELECT transactions_1k.*, customers.* FROM transactions_1k LEFT JOIN customers ON transactions_1k.CustomerID = customers.CustomerID LIMIT 5', 'debit_card_specializing')
+2024-12-11 16:08:58,031 - INFO - Test output:
+Issue reproduced
+
+2024-12-11 16:08:58,032 - INFO - Running test command:
+test_func('SELECT transactions_1k.*, customers.* FROM transactions_1k LEFT JOIN customers ON transactions_1k.CustomerID = customers.CustomerID LIMIT 5', 'debit_card_specializing')
+2024-12-11 16:08:58,033 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for row in result:
+            assert len(row) > 1
+            assert 'CustomerName' in row
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+test_func('SELECT transactions_1k.*, customers.* FROM transactions_1k LEFT JOIN customers ON transactions_1k.CustomerID = customers.CustomerID LIMIT 5', 'debit_card_specializing')
+2024-12-11 16:08:58,057 - INFO - Test output:
+
+2024-12-11 16:08:58,060 - INFO - Running test command:
+test_func('SELECT transactions_1k.*, customers.* FROM transactions_1k LEFT JOIN customers ON transactions_1k.CustomerID = customers.CustomerID LIMIT 5', 'debit_card_specializing')
+2024-12-11 16:08:58,064 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for row in result:
+            assert len(row) > 1
+            assert 'CustomerName' in row
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+test_func('SELECT transactions_1k.*, customers.* FROM transactions_1k LEFT JOIN customers ON transactions_1k.CustomerID = customers.CustomerID LIMIT 5', 'debit_card_specializing')
+2024-12-11 16:08:58,078 - INFO - Test output:
+
+2024-12-11 16:08:58,079 - INFO - Running test command:
+test_func('SELECT transactions_1k.*, customers.* FROM transactions_1k LEFT JOIN customers ON transactions_1k.CustomerID = customers.CustomerID LIMIT 5', 'debit_card_specializing')
+2024-12-11 16:08:58,080 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for row in result:
+            assert len(row) > 1
+            assert 'CustomerName' in row
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+test_func('SELECT transactions_1k.*, customers.* FROM transactions_1k LEFT JOIN customers ON transactions_1k.CustomerID = customers.CustomerID LIMIT 5', 'debit_card_specializing')
+2024-12-11 16:08:58,097 - INFO - Test output:
+
+2024-12-11 16:08:58,098 - INFO - Running test command:
+test_func('SELECT transactions_1k.*, customers.* FROM transactions_1k LEFT JOIN customers ON transactions_1k.CustomerID = customers.CustomerID LIMIT 5', 'debit_card_specializing')
+2024-12-11 16:08:58,098 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for row in result:
+            assert len(row) > 1
+            assert 'CustomerName' in row
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+test_func('SELECT transactions_1k.*, customers.* FROM transactions_1k LEFT JOIN customers ON transactions_1k.CustomerID = customers.CustomerID LIMIT 5', 'debit_card_specializing')
+2024-12-11 16:08:58,115 - INFO - Test output:
+Issue reproduced
+
+2024-12-11 16:08:58,117 - INFO - No solutions resolved the issue.
+2024-12-11 16:08:58,270 - INFO - ================ re-ranking solutions for 3 ================
+2024-12-11 16:08:58,270 - INFO - No valid parsed solutions found.

@@ -1,0 +1,98 @@
+2024-12-11 16:08:57,995 - INFO - ================ running test for 5 ================
+2024-12-11 16:08:57,996 - INFO - Running test command:
+test_func('ALTER TABLE "member_privileges" ADD FOREIGN KEY ("member_fk") REFERENCES "member" ("member_id")', 'student_club')
+2024-12-11 16:08:57,996 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    try:
+        conn = db.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    print('Issue resolved')
+test_func('ALTER TABLE "member_privileges" ADD FOREIGN KEY ("member_fk") REFERENCES "member" ("member_id")', 'student_club')
+2024-12-11 16:08:57,997 - INFO - Test output:
+Issue reproduced
+
+2024-12-11 16:08:57,998 - INFO - Running test command:
+test_func('ALTER TABLE "member_privileges" ADD FOREIGN KEY ("member_fk") REFERENCES "member" ("member_id")', 'student_club')
+2024-12-11 16:08:58,000 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    try:
+        conn = db.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    print('Issue resolved')
+test_func('ALTER TABLE "member_privileges" ADD FOREIGN KEY ("member_fk") REFERENCES "member" ("member_id")', 'student_club')
+2024-12-11 16:08:58,002 - INFO - Test output:
+
+2024-12-11 16:08:58,003 - INFO - Running test command:
+test_func('ALTER TABLE "member_privileges" ADD CONSTRAINT "member_fk" FOREIGN KEY ("member_id") REFERENCES "member" ("member_id")', 'student_club')
+2024-12-11 16:08:58,003 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    try:
+        conn = db.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    print('Issue resolved')
+test_func('ALTER TABLE "member_privileges" ADD CONSTRAINT "member_fk" FOREIGN KEY ("member_id") REFERENCES "member" ("member_id")', 'student_club')
+2024-12-11 16:08:58,004 - INFO - Test output:
+Issue reproduced
+
+2024-12-11 16:08:58,005 - INFO - Running test command:
+test_func('ALTER TABLE "member_privileges" ADD CONSTRAINT "member_fk" FOREIGN KEY ("member_id") REFERENCES "member" ("member_id")', 'student_club')
+2024-12-11 16:08:58,005 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    try:
+        conn = db.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    print('Issue resolved')
+test_func('ALTER TABLE "member_privileges" ADD CONSTRAINT "member_fk" FOREIGN KEY ("member_id") REFERENCES "member" ("member_id")', 'student_club')
+2024-12-11 16:08:58,005 - INFO - Test output:
+Issue reproduced
+
+2024-12-11 16:08:58,006 - INFO - Running test command:
+test_func('ALTER TABLE "member_privileges" ADD FOREIGN KEY ("member_fk") REFERENCES "member" ("member_id")', 'student_club')
+2024-12-11 16:08:58,006 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    try:
+        conn = db.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    print('Issue resolved')
+test_func('ALTER TABLE "member_privileges" ADD FOREIGN KEY ("member_fk") REFERENCES "member" ("member_id")', 'student_club')
+2024-12-11 16:08:58,007 - INFO - Test output:
+Issue reproduced
+
+2024-12-11 16:08:58,007 - INFO - No solutions resolved the issue.
+2024-12-11 16:08:58,189 - INFO - ================ re-ranking solutions for 5 ================
+2024-12-11 16:08:58,192 - INFO - No valid parsed solutions found.

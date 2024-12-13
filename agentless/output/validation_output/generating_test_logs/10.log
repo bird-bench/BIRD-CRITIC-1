@@ -1,0 +1,340 @@
+2024-12-11 13:52:30,356 - INFO - ================ generating test for 10 ================
+2024-12-11 13:52:30,357 - INFO - prompting with message:
+We are currently solving the following issue within our repository. Here is the issue text:
+--- BEGIN ISSUE ---
+I want to delete the DisplayName of a user by setting it to NULL in the users table. However, my original query resulted in an error: ```sql
+'DELETE DisplayName FROM users WHERE Id = 2;``` Error:
+```error
+(1109, "Unknown table 'DisplayName' in MULTI DELETE")```. How can I fix this?
+--- END ISSUE ---
+
+Please generate a complete test that can be used to reproduce the issue.
+
+The complete test should contain the following:
+1. Code to reproduce the issue described in the issue text
+2. Print "Issue reproduced" if the outcome indicates that the issue is reproduced: either an exception is raised or the outcome is incorrect
+3. Print "Issue resolved" if the outcome indicates that the issue has been successfully resolved
+5. The name of the test function must be test_issue with two parameter sql and db
+
+Here is an example:
+```python
+def test_issue(sql, db) -> None:
+    try:
+        result, conn = perform_query_on_mysql_databases(sql, db)
+    except:
+        print("Issue reproduced")
+        return
+    try:
+        assert result[0] == ("HR",)
+        assert result[1] == ("Finance",)
+        print("Issue resolved")
+    except AssertionError:
+        print("Issue reproduced")
+        return
+```
+
+Please ensure the generated test reflects the issue described in the provided issue text.
+The generated test should be able to be used to both reproduce the issue as well as to verify the issue has been fixed.
+Wrap the complete test in ```python...```.
+2024-12-11 13:52:30,361 - INFO - Initializing a decoder model: deepseek-chat ...
+2024-12-11 13:52:30,644 - INFO - Creating API request
+2024-12-11 13:52:49,782 - INFO - API response ChatCompletion(id='23dfe1ec-5822-4cca-bc79-d4fc828ee7fb', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Attempt to execute the original query that caused the error\n        conn = db.connect()\n        cursor = conn.cursor()\n        cursor.execute(sql)\n        conn.commit()\n        cursor.close()\n        conn.close()\n    except Exception as e:\n        # If an exception is raised, print "Issue reproduced"\n        print("Issue reproduced")\n        return\n    \n    # If no exception is raised, check if the DisplayName is actually set to NULL\n    try:\n        conn = db.connect()\n        cursor = conn.cursor()\n        cursor.execute("SELECT DisplayName FROM users WHERE Id = 2")\n        result = cursor.fetchone()\n        cursor.close()\n        conn.close()\n        \n        # Assert that the DisplayName is NULL\n        assert result[0] is None, "DisplayName is not NULL"\n        print("Issue resolved")\n    except AssertionError:\n        print("Issue reproduced")\n        return\n```\n\n### Explanation:\n1. **Reproducing the Issue**: The test first attempts to execute the original SQL query (`DELETE DisplayName FROM users WHERE Id = 2;`) that caused the error. If an exception is raised, it prints "Issue reproduced".\n2. **Verifying the Fix**: If no exception is raised, the test then checks if the `DisplayName` column for the user with `Id = 2` is set to `NULL`. If the `DisplayName` is `NULL`, it prints "Issue resolved". If not, it prints "Issue reproduced".\n\nThis test can be used to both reproduce the issue and verify if the issue has been fixed by modifying the SQL query accordingly.', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925150, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=385, prompt_tokens=391, total_tokens=776, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=64, prompt_cache_miss_tokens=327))
+2024-12-11 13:52:49,786 - INFO - Initializing a decoder model: deepseek-chat ...
+2024-12-11 13:52:49,822 - INFO - Creating API request
+2024-12-11 13:53:10,349 - INFO - API response ChatCompletion(id='aa8b3df1-11df-4062-ac57-5c0bd90cb647', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Attempt to execute the original query that resulted in the error\n        conn = db.connect()\n        cursor = conn.cursor()\n        cursor.execute(sql)\n        conn.commit()\n        cursor.close()\n        conn.close()\n    except Exception as e:\n        # If an exception is raised, print "Issue reproduced"\n        print("Issue reproduced")\n        return\n    \n    # If no exception is raised, check if the DisplayName is NULL for the user with Id = 2\n    try:\n        conn = db.connect()\n        cursor = conn.cursor()\n        cursor.execute("SELECT DisplayName FROM users WHERE Id = 2")\n        result = cursor.fetchone()\n        cursor.close()\n        conn.close()\n        \n        # If the DisplayName is NULL, print "Issue resolved"\n        if result[0] is None:\n            print("Issue resolved")\n        else:\n            print("Issue reproduced")\n    except Exception as e:\n        # If an exception occurs during the verification, print "Issue reproduced"\n        print("Issue reproduced")\n        return\n```\n\nThis test function attempts to reproduce the issue by executing the original SQL query that resulted in the error. If an exception is raised, it prints "Issue reproduced". If no exception is raised, it checks if the `DisplayName` for the user with `Id = 2` is `NULL`. If it is, it prints "Issue resolved"; otherwise, it prints "Issue reproduced".', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925174, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=349, prompt_tokens=391, total_tokens=740, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=384, prompt_cache_miss_tokens=7))
+2024-12-11 13:53:10,387 - INFO - Creating API request
+2024-12-11 13:53:30,542 - INFO - API response ChatCompletion(id='15125783-2404-44c7-9bbd-3462d3ac9c22', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Attempt to execute the original query that caused the error\n        conn = db.connect()\n        cursor = conn.cursor()\n        cursor.execute(sql)\n        conn.commit()\n        cursor.close()\n        conn.close()\n    except Exception as e:\n        # If an exception is raised, the issue is reproduced\n        print("Issue reproduced")\n        return\n    \n    # If no exception is raised, check if the DisplayName is actually set to NULL\n    try:\n        conn = db.connect()\n        cursor = conn.cursor()\n        cursor.execute("SELECT DisplayName FROM users WHERE Id = 2")\n        result = cursor.fetchone()\n        cursor.close()\n        conn.close()\n        \n        # If the DisplayName is NULL, the issue is resolved\n        assert result[0] is None\n        print("Issue resolved")\n    except AssertionError:\n        # If the DisplayName is not NULL, the issue is reproduced\n        print("Issue reproduced")\n        return\n```\n\n### Explanation:\n1. **Reproducing the Issue**: The test first attempts to execute the original SQL query (`DELETE DisplayName FROM users WHERE Id = 2;`) that caused the error. If an exception is raised, it prints "Issue reproduced".\n2. **Verifying the Fix**: If no exception is raised, the test then checks if the `DisplayName` column for the user with `Id = 2` is set to `NULL`. If the `DisplayName` is `NULL`, it prints "Issue resolved". If not, it prints "Issue reproduced".\n\nThis test can be used to both reproduce the issue and verify if the issue has been fixed by modifying the SQL query accordingly.', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925190, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=396, prompt_tokens=391, total_tokens=787, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=384, prompt_cache_miss_tokens=7))
+2024-12-11 13:53:30,588 - INFO - Creating API request
+2024-12-11 13:53:49,380 - INFO - API response ChatCompletion(id='ce47e081-f584-4ed6-9b4f-dc8eacef9d7b', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Attempt to execute the original query that caused the error\n        conn = db.connect()\n        cursor = conn.cursor()\n        cursor.execute(sql)\n        conn.commit()\n        cursor.close()\n        conn.close()\n    except Exception as e:\n        # If an exception is raised, the issue is reproduced\n        print("Issue reproduced")\n        return\n    \n    # If no exception is raised, check if the DisplayName is actually set to NULL\n    try:\n        conn = db.connect()\n        cursor = conn.cursor()\n        cursor.execute("SELECT DisplayName FROM users WHERE Id = 2")\n        result = cursor.fetchone()\n        cursor.close()\n        conn.close()\n        \n        # Check if the DisplayName is NULL\n        assert result[0] is None, "DisplayName is not NULL"\n        print("Issue resolved")\n    except AssertionError:\n        print("Issue reproduced")\n        return\n```\n\n### Explanation:\n1. **Reproducing the Issue**: The test first attempts to execute the original SQL query (`DELETE DisplayName FROM users WHERE Id = 2;`) that caused the error. If an exception is raised, it prints "Issue reproduced".\n2. **Verifying the Fix**: If no exception is raised, the test then checks if the `DisplayName` column for the user with `Id = 2` is actually set to `NULL`. If the `DisplayName` is `NULL`, it prints "Issue resolved". If not, it prints "Issue reproduced".\n\nThis test can be used to both reproduce the issue and verify if the issue has been fixed by modifying the SQL query accordingly.', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925210, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=385, prompt_tokens=391, total_tokens=776, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=384, prompt_cache_miss_tokens=7))
+2024-12-11 13:53:49,414 - INFO - Creating API request
+2024-12-11 13:54:05,548 - INFO - API response ChatCompletion(id='21cb8590-6c8f-4634-aef3-060034590223', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Attempt to execute the original query that caused the error\n        conn = db.connect()\n        cursor = conn.cursor()\n        cursor.execute(sql)\n        conn.commit()\n        cursor.close()\n        conn.close()\n    except Exception as e:\n        # If an exception is raised, the issue is reproduced\n        print("Issue reproduced")\n        return\n    \n    # If no exception is raised, check if the DisplayName is NULL\n    try:\n        conn = db.connect()\n        cursor = conn.cursor()\n        cursor.execute("SELECT DisplayName FROM users WHERE Id = 2")\n        result = cursor.fetchone()\n        cursor.close()\n        conn.close()\n        \n        # If the DisplayName is NULL, the issue is resolved\n        assert result[0] is None\n        print("Issue resolved")\n    except AssertionError:\n        # If the DisplayName is not NULL, the issue is reproduced\n        print("Issue reproduced")\n        return\n```\n\nThis test function attempts to reproduce the issue by executing the original SQL query that caused the error. If an exception is raised, it prints "Issue reproduced". If no exception is raised, it checks whether the `DisplayName` of the user with `Id = 2` is `NULL`. If it is `NULL`, the issue is considered resolved; otherwise, it prints "Issue reproduced".', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925229, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=325, prompt_tokens=391, total_tokens=716, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=384, prompt_cache_miss_tokens=7))
+2024-12-11 14:02:11,419 - INFO - ================ normalizing tests for 10 ================
+2024-12-11 14:02:11,424 - INFO - normalized tests: ["def test_func(sql, db) -> None:\n    try:\n        conn = db.connect()\n        cursor = conn.cursor()\n        cursor.execute(sql)\n        conn.commit()\n        cursor.close()\n        conn.close()\n    except Exception as e:\n        print('Issue reproduced')\n        return\n    try:\n        conn = db.connect()\n        cursor = conn.cursor()\n        cursor.execute('SELECT DisplayName FROM users WHERE Id = 2')\n        result = cursor.fetchone()\n        cursor.close()\n        conn.close()\n        assert result[0] is None, 'DisplayName is not NULL'\n        print('Issue resolved')\n    except AssertionError:\n        print('Issue reproduced')\n        return", "def test_func(sql, db) -> None:\n    try:\n        conn = db.connect()\n        cursor = conn.cursor()\n        cursor.execute(sql)\n        conn.commit()\n        cursor.close()\n        conn.close()\n    except Exception as e:\n        print('Issue reproduced')\n        return\n    try:\n        conn = db.connect()\n        cursor = conn.cursor()\n        cursor.execute('SELECT DisplayName FROM users WHERE Id = 2')\n        result = cursor.fetchone()\n        cursor.close()\n        conn.close()\n        if result[0] is None:\n            print('Issue resolved')\n        else:\n            print('Issue reproduced')\n    except Exception as e:\n        print('Issue reproduced')\n        return", "def test_func(sql, db) -> None:\n    try:\n        conn = db.connect()\n        cursor = conn.cursor()\n        cursor.execute(sql)\n        conn.commit()\n        cursor.close()\n        conn.close()\n    except Exception as e:\n        print('Issue reproduced')\n        return\n    try:\n        conn = db.connect()\n        cursor = conn.cursor()\n        cursor.execute('SELECT DisplayName FROM users WHERE Id = 2')\n        result = cursor.fetchone()\n        cursor.close()\n        conn.close()\n        assert result[0] is None\n        print('Issue resolved')\n    except AssertionError:\n        print('Issue reproduced')\n        return", "def test_func(sql, db) -> None:\n    try:\n        conn = db.connect()\n        cursor = conn.cursor()\n        cursor.execute(sql)\n        conn.commit()\n        cursor.close()\n        conn.close()\n    except Exception as e:\n        print('Issue reproduced')\n        return\n    try:\n        conn = db.connect()\n        cursor = conn.cursor()\n        cursor.execute('SELECT DisplayName FROM users WHERE Id = 2')\n        result = cursor.fetchone()\n        cursor.close()\n        conn.close()\n        assert result[0] is None, 'DisplayName is not NULL'\n        print('Issue resolved')\n    except AssertionError:\n        print('Issue reproduced')\n        return", "def test_func(sql, db) -> None:\n    try:\n        conn = db.connect()\n        cursor = conn.cursor()\n        cursor.execute(sql)\n        conn.commit()\n        cursor.close()\n        conn.close()\n    except Exception as e:\n        print('Issue reproduced')\n        return\n    try:\n        conn = db.connect()\n        cursor = conn.cursor()\n        cursor.execute('SELECT DisplayName FROM users WHERE Id = 2')\n        result = cursor.fetchone()\n        cursor.close()\n        conn.close()\n        assert result[0] is None\n        print('Issue resolved')\n    except AssertionError:\n        print('Issue reproduced')\n        return"]
+2024-12-11 14:02:11,563 - INFO - ================ filtering tests for 10 ================
+2024-12-11 14:02:11,563 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        conn = db.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        conn = db.connect()
+        cursor = conn.cursor()
+        cursor.execute('SELECT DisplayName FROM users WHERE Id = 2')
+        result = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        assert result[0] is None, 'DisplayName is not NULL'
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func(''DELETE DisplayName FROM users WHERE Id = 2;', 'codebase_community')
+2024-12-11 14:02:11,564 - INFO - Test output:
+unterminated string literal (detected at line 24) (<string>, line 24)
+
+2024-12-11 14:02:11,564 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        conn = db.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        conn = db.connect()
+        cursor = conn.cursor()
+        cursor.execute('SELECT DisplayName FROM users WHERE Id = 2')
+        result = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        if result[0] is None:
+            print('Issue resolved')
+        else:
+            print('Issue reproduced')
+    except Exception as e:
+        print('Issue reproduced')
+        return
+with command: test_func(''DELETE DisplayName FROM users WHERE Id = 2;', 'codebase_community')
+2024-12-11 14:02:11,564 - INFO - Test output:
+unterminated string literal (detected at line 26) (<string>, line 26)
+
+2024-12-11 14:02:11,564 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        conn = db.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        conn = db.connect()
+        cursor = conn.cursor()
+        cursor.execute('SELECT DisplayName FROM users WHERE Id = 2')
+        result = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        assert result[0] is None
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func(''DELETE DisplayName FROM users WHERE Id = 2;', 'codebase_community')
+2024-12-11 14:02:11,565 - INFO - Test output:
+unterminated string literal (detected at line 24) (<string>, line 24)
+
+2024-12-11 14:02:11,565 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        conn = db.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        conn = db.connect()
+        cursor = conn.cursor()
+        cursor.execute('SELECT DisplayName FROM users WHERE Id = 2')
+        result = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        assert result[0] is None, 'DisplayName is not NULL'
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func(''DELETE DisplayName FROM users WHERE Id = 2;', 'codebase_community')
+2024-12-11 14:02:11,565 - INFO - Test output:
+unterminated string literal (detected at line 24) (<string>, line 24)
+
+2024-12-11 14:02:11,565 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        conn = db.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        conn = db.connect()
+        cursor = conn.cursor()
+        cursor.execute('SELECT DisplayName FROM users WHERE Id = 2')
+        result = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        assert result[0] is None
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func(''DELETE DisplayName FROM users WHERE Id = 2;', 'codebase_community')
+2024-12-11 14:02:11,566 - INFO - Test output:
+unterminated string literal (detected at line 24) (<string>, line 24)
+
+2024-12-11 14:02:11,566 - INFO - filtered tests: []
+2024-12-11 16:08:23,274 - INFO - ================ filtering tests for 10 ================
+2024-12-11 16:08:23,274 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        conn = db.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        conn = db.connect()
+        cursor = conn.cursor()
+        cursor.execute('SELECT DisplayName FROM users WHERE Id = 2')
+        result = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        assert result[0] is None, 'DisplayName is not NULL'
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func(''DELETE DisplayName FROM users WHERE Id = 2;', 'codebase_community')
+2024-12-11 16:08:23,274 - INFO - Test output:
+unterminated string literal (detected at line 24) (<string>, line 24)
+
+2024-12-11 16:08:23,275 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        conn = db.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        conn = db.connect()
+        cursor = conn.cursor()
+        cursor.execute('SELECT DisplayName FROM users WHERE Id = 2')
+        result = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        if result[0] is None:
+            print('Issue resolved')
+        else:
+            print('Issue reproduced')
+    except Exception as e:
+        print('Issue reproduced')
+        return
+with command: test_func(''DELETE DisplayName FROM users WHERE Id = 2;', 'codebase_community')
+2024-12-11 16:08:23,275 - INFO - Test output:
+unterminated string literal (detected at line 26) (<string>, line 26)
+
+2024-12-11 16:08:23,275 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        conn = db.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        conn = db.connect()
+        cursor = conn.cursor()
+        cursor.execute('SELECT DisplayName FROM users WHERE Id = 2')
+        result = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        assert result[0] is None
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func(''DELETE DisplayName FROM users WHERE Id = 2;', 'codebase_community')
+2024-12-11 16:08:23,275 - INFO - Test output:
+unterminated string literal (detected at line 24) (<string>, line 24)
+
+2024-12-11 16:08:23,275 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        conn = db.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        conn = db.connect()
+        cursor = conn.cursor()
+        cursor.execute('SELECT DisplayName FROM users WHERE Id = 2')
+        result = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        assert result[0] is None, 'DisplayName is not NULL'
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func(''DELETE DisplayName FROM users WHERE Id = 2;', 'codebase_community')
+2024-12-11 16:08:23,276 - INFO - Test output:
+unterminated string literal (detected at line 24) (<string>, line 24)
+
+2024-12-11 16:08:23,276 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        conn = db.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        conn = db.connect()
+        cursor = conn.cursor()
+        cursor.execute('SELECT DisplayName FROM users WHERE Id = 2')
+        result = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        assert result[0] is None
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func(''DELETE DisplayName FROM users WHERE Id = 2;', 'codebase_community')
+2024-12-11 16:08:23,276 - INFO - Test output:
+unterminated string literal (detected at line 24) (<string>, line 24)
+
+2024-12-11 16:08:23,276 - INFO - filtered tests: []

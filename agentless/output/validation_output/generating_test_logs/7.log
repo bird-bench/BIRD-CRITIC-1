@@ -1,0 +1,406 @@
+2024-12-11 13:53:37,426 - INFO - ================ generating test for 7 ================
+2024-12-11 13:53:37,426 - INFO - prompting with message:
+We are currently solving the following issue within our repository. Here is the issue text:
+--- BEGIN ISSUE ---
+During insertion of a record into such a table, I want the server to be able to read the length of the content field and store it in the no_of_chars field as a default value. My query is ```sql
+CREATE TABLE `log_content` (
+  `log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` varchar(32) NOT NULL,
+  `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),
+  PRIMARY KEY (`log_id`)
+);``` but it gives me an error.
+```error
+1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'CHAR_LENGTH(`content`) ,
+  PRIMARY KEY (`id`)
+)"```
+Is this POSSIBLE?
+--- END ISSUE ---
+
+Please generate a complete test that can be used to reproduce the issue.
+
+The complete test should contain the following:
+1. Code to reproduce the issue described in the issue text
+2. Print "Issue reproduced" if the outcome indicates that the issue is reproduced: either an exception is raised or the outcome is incorrect
+3. Print "Issue resolved" if the outcome indicates that the issue has been successfully resolved
+5. The name of the test function must be test_issue with two parameter sql and db
+
+Here is an example:
+```python
+def test_issue(sql, db) -> None:
+    try:
+        result, conn = perform_query_on_mysql_databases(sql, db)
+    except:
+        print("Issue reproduced")
+        return
+    try:
+        assert result[0] == ("HR",)
+        assert result[1] == ("Finance",)
+        print("Issue resolved")
+    except AssertionError:
+        print("Issue reproduced")
+        return
+```
+
+Please ensure the generated test reflects the issue described in the provided issue text.
+The generated test should be able to be used to both reproduce the issue as well as to verify the issue has been fixed.
+Wrap the complete test in ```python...```.
+2024-12-11 13:53:37,427 - INFO - Initializing a decoder model: deepseek-chat ...
+2024-12-11 13:53:37,481 - INFO - Creating API request
+2024-12-11 13:53:58,702 - INFO - API response ChatCompletion(id='5d8df34d-b6aa-4855-9be9-d6b4a17230ad', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Attempt to create the table with the problematic SQL query\n        create_table_query = """\n        CREATE TABLE `log_content` (\n          `log_id` int(11) NOT NULL AUTO_INCREMENT,\n          `content` varchar(32) NOT NULL,\n          `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),\n          PRIMARY KEY (`log_id`)\n        );\n        """\n        result, conn = perform_query_on_mysql_databases(create_table_query, db)\n    except Exception as e:\n        # If an exception is raised, the issue is reproduced\n        print("Issue reproduced")\n        return\n    \n    # If the table creation succeeds, attempt to insert a record\n    try:\n        insert_query = """\n        INSERT INTO `log_content` (`content`) VALUES (\'Test Content\');\n        """\n        result, conn = perform_query_on_mysql_databases(insert_query, db)\n        \n        # Check if the `no_of_chars` field is correctly populated\n        select_query = """\n        SELECT `no_of_chars` FROM `log_content` WHERE `log_id` = 1;\n        """\n        result, conn = perform_query_on_mysql_databases(select_query, db)\n        \n        # Verify that the `no_of_chars` field contains the correct length of the content\n        assert result[0][0] == len(\'Test Content\'), "The `no_of_chars` field does not contain the correct length of the content."\n        print("Issue resolved")\n    except AssertionError as ae:\n        # If the assertion fails, the issue is reproduced\n        print("Issue reproduced")\n    except Exception as e:\n        # If any other exception occurs, the issue is reproduced\n        print("Issue reproduced")\n```\n```', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925217, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=441, prompt_tokens=501, total_tokens=942, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=192, prompt_cache_miss_tokens=309))
+2024-12-11 13:53:58,703 - INFO - Initializing a decoder model: deepseek-chat ...
+2024-12-11 13:53:58,743 - INFO - Creating API request
+2024-12-11 13:54:22,810 - INFO - API response ChatCompletion(id='1e83cbd9-db41-49fc-900f-e963568cf67e', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Attempt to create the table with the problematic SQL query\n        create_table_query = """\n        CREATE TABLE `log_content` (\n          `log_id` int(11) NOT NULL AUTO_INCREMENT,\n          `content` varchar(32) NOT NULL,\n          `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),\n          PRIMARY KEY (`log_id`)\n        );\n        """\n        conn = db.cursor()\n        conn.execute(create_table_query)\n        conn.close()\n    except Exception as e:\n        # If an exception is raised, the issue is reproduced\n        print("Issue reproduced")\n        return\n    \n    # If the table creation succeeds, attempt to insert a record\n    try:\n        insert_query = """\n        INSERT INTO `log_content` (`content`) VALUES (\'Test Content\');\n        """\n        conn = db.cursor()\n        conn.execute(insert_query)\n        db.commit()\n        conn.close()\n        \n        # Check if the `no_of_chars` field is correctly populated\n        select_query = """\n        SELECT `no_of_chars` FROM `log_content` WHERE `log_id` = 1;\n        """\n        conn = db.cursor()\n        conn.execute(select_query)\n        result = conn.fetchone()\n        conn.close()\n        \n        # If the `no_of_chars` field is correctly populated, the issue is resolved\n        if result and result[0] == len(\'Test Content\'):\n            print("Issue resolved")\n        else:\n            print("Issue reproduced")\n    except Exception as e:\n        # If an exception is raised during insertion or selection, the issue is reproduced\n        print("Issue reproduced")\n        return\n```\n\nThis test function attempts to create a table with the problematic SQL query and then inserts a record to check if the `no_of_chars` field is correctly populated. If an exception is raised at any point, it prints "Issue reproduced". If the `no_of_chars` field is correctly populated, it prints "Issue resolved".', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925238, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=502, prompt_tokens=501, total_tokens=1003, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=448, prompt_cache_miss_tokens=53))
+2024-12-11 13:54:22,851 - INFO - Creating API request
+2024-12-11 13:54:54,535 - INFO - API response ChatCompletion(id='692e59a4-93bd-469d-8b1b-4fe9ac197f24', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    # The SQL query to reproduce the issue\n    create_table_sql = """\n    CREATE TABLE `log_content` (\n      `log_id` int(11) NOT NULL AUTO_INCREMENT,\n      `content` varchar(32) NOT NULL,\n      `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),\n      PRIMARY KEY (`log_id`)\n    );\n    """\n    \n    try:\n        # Attempt to execute the SQL query\n        result, conn = perform_query_on_mysql_databases(create_table_sql, db)\n    except Exception as e:\n        # If an exception is raised, the issue is reproduced\n        print("Issue reproduced")\n        return\n    \n    # If no exception is raised, the table creation was successful\n    # Now, let\'s try to insert a record to see if the default value works\n    insert_sql = """\n    INSERT INTO `log_content` (`content`) VALUES (\'Test Content\');\n    """\n    \n    try:\n        # Execute the insert query\n        result, conn = perform_query_on_mysql_databases(insert_sql, db)\n    except Exception as e:\n        # If an exception is raised during insertion, the issue is reproduced\n        print("Issue reproduced")\n        return\n    \n    # If the insertion was successful, let\'s check the value of `no_of_chars`\n    select_sql = """\n    SELECT `no_of_chars` FROM `log_content` WHERE `log_id` = 1;\n    """\n    \n    try:\n        # Execute the select query\n        result, conn = perform_query_on_mysql_databases(select_sql, db)\n    except Exception as e:\n        # If an exception is raised during selection, the issue is reproduced\n        print("Issue reproduced")\n        return\n    \n    # Check if the `no_of_chars` value is correct\n    try:\n        assert result[0][0] == len("Test Content")\n        print("Issue resolved")\n    except AssertionError:\n        print("Issue reproduced")\n        return\n```\n\n### Explanation:\n1. **Table Creation**: The test first attempts to create the `log_content` table using the provided SQL query. If this step raises an exception, the issue is reproduced.\n2. **Insertion**: If the table is created successfully, the test then attempts to insert a record into the table. If this step raises an exception, the issue is reproduced.\n3. **Verification**: If the insertion is successful, the test queries the `no_of_chars` field to check if it contains the correct value (the length of the `content` field). If the value is incorrect or an exception is raised, the issue is reproduced. If the value is correct, the issue is resolved.', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925263, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=651, prompt_tokens=501, total_tokens=1152, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=448, prompt_cache_miss_tokens=53))
+2024-12-11 13:54:54,595 - INFO - Creating API request
+2024-12-11 13:55:23,281 - INFO - API response ChatCompletion(id='a365026f-b6a0-4ad3-b7d3-1cf16cc91306', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Attempt to create the table with the problematic SQL query\n        create_table_query = """\n        CREATE TABLE `log_content` (\n          `log_id` int(11) NOT NULL AUTO_INCREMENT,\n          `content` varchar(32) NOT NULL,\n          `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),\n          PRIMARY KEY (`log_id`)\n        );\n        """\n        conn = db.cursor()\n        conn.execute(create_table_query)\n        conn.close()\n    except Exception as e:\n        # If an exception is raised, the issue is reproduced\n        print("Issue reproduced")\n        return\n    \n    # If the table creation succeeds, attempt to insert a record\n    try:\n        insert_query = """\n        INSERT INTO `log_content` (`content`) VALUES (\'Test Content\');\n        """\n        conn = db.cursor()\n        conn.execute(insert_query)\n        db.commit()\n        conn.close()\n        \n        # Fetch the inserted record to check if the `no_of_chars` field is correctly populated\n        select_query = """\n        SELECT `no_of_chars` FROM `log_content` WHERE `log_id` = 1;\n        """\n        conn = db.cursor()\n        conn.execute(select_query)\n        result = conn.fetchone()\n        conn.close()\n        \n        # Check if the `no_of_chars` field contains the correct value (12 for \'Test Content\')\n        assert result[0] == 12\n        print("Issue resolved")\n    except AssertionError:\n        print("Issue reproduced")\n    except Exception as e:\n        print("Issue reproduced")\n```\n\n### Explanation:\n1. **Table Creation**: The test first attempts to create the table using the provided SQL query. If an exception is raised during this step, it prints "Issue reproduced" and exits.\n2. **Insertion and Verification**: If the table creation succeeds, the test proceeds to insert a record into the table. After insertion, it fetches the record to check if the `no_of_chars` field is correctly populated with the length of the `content` field.\n3. **Assertion**: If the `no_of_chars` field contains the correct value (12 for \'Test Content\'), it prints "Issue resolved". If not, it prints "Issue reproduced".\n\nThis test can be used to both reproduce the issue and verify if the issue has been fixed.', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925294, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=587, prompt_tokens=501, total_tokens=1088, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=448, prompt_cache_miss_tokens=53))
+2024-12-11 13:55:23,337 - INFO - Creating API request
+2024-12-11 13:55:55,794 - INFO - API response ChatCompletion(id='4489d3ae-55c1-4adc-844a-15178f398615', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    # The SQL query to reproduce the issue\n    create_table_sql = """\n    CREATE TABLE `log_content` (\n      `log_id` int(11) NOT NULL AUTO_INCREMENT,\n      `content` varchar(32) NOT NULL,\n      `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),\n      PRIMARY KEY (`log_id`)\n    );\n    """\n    \n    try:\n        # Attempt to execute the SQL query\n        result, conn = perform_query_on_mysql_databases(create_table_sql, db)\n    except Exception as e:\n        # If an exception is raised, the issue is reproduced\n        print("Issue reproduced")\n        return\n    \n    # If no exception is raised, the table creation was successful\n    # Now, let\'s try to insert a record to see if the default value works\n    insert_sql = """\n    INSERT INTO `log_content` (`content`) VALUES (\'Test Content\');\n    """\n    \n    try:\n        # Execute the insert query\n        result, conn = perform_query_on_mysql_databases(insert_sql, db)\n    except Exception as e:\n        # If an exception is raised during insertion, the issue is reproduced\n        print("Issue reproduced")\n        return\n    \n    # If the insertion was successful, let\'s check the value of `no_of_chars`\n    select_sql = """\n    SELECT `no_of_chars` FROM `log_content` WHERE `log_id` = 1;\n    """\n    \n    try:\n        # Execute the select query\n        result, conn = perform_query_on_mysql_databases(select_sql, db)\n    except Exception as e:\n        # If an exception is raised during selection, the issue is reproduced\n        print("Issue reproduced")\n        return\n    \n    # Check if the `no_of_chars` value is correct\n    try:\n        # The length of \'Test Content\' is 12\n        assert result[0] == (12,)\n        print("Issue resolved")\n    except AssertionError:\n        print("Issue reproduced")\n        return\n```\n\nThis test function `test_issue` attempts to reproduce the issue described in the provided issue text. It first tries to create the table with the problematic SQL query. If an exception is raised during the table creation, it prints "Issue reproduced". If the table is created successfully, it then attempts to insert a record into the table and checks if the `no_of_chars` field is correctly populated with the length of the `content` field. If the `no_of_chars` value is incorrect or an exception is raised during the insertion or selection, it prints "Issue reproduced". If everything works as expected, it prints "Issue resolved".', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925323, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=645, prompt_tokens=501, total_tokens=1146, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=448, prompt_cache_miss_tokens=53))
+2024-12-11 14:02:11,470 - INFO - ================ normalizing tests for 7 ================
+2024-12-11 14:02:11,475 - INFO - normalized tests: ['def test_func(sql, db) -> None:\n    try:\n        create_table_query = \'\\n        CREATE TABLE `log_content` (\\n          `log_id` int(11) NOT NULL AUTO_INCREMENT,\\n          `content` varchar(32) NOT NULL,\\n          `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),\\n          PRIMARY KEY (`log_id`)\\n        );\\n        \'\n        (result, conn) = perform_query_on_mysql_databases(create_table_query, db)\n    except Exception as e:\n        print(\'Issue reproduced\')\n        return\n    try:\n        insert_query = "\\n        INSERT INTO `log_content` (`content`) VALUES (\'Test Content\');\\n        "\n        (result, conn) = perform_query_on_mysql_databases(insert_query, db)\n        select_query = \'\\n        SELECT `no_of_chars` FROM `log_content` WHERE `log_id` = 1;\\n        \'\n        (result, conn) = perform_query_on_mysql_databases(select_query, db)\n        assert result[0][0] == len(\'Test Content\'), \'The `no_of_chars` field does not contain the correct length of the content.\'\n        print(\'Issue resolved\')\n    except AssertionError as ae:\n        print(\'Issue reproduced\')\n    except Exception as e:\n        print(\'Issue reproduced\')', 'def test_func(sql, db) -> None:\n    try:\n        create_table_query = \'\\n        CREATE TABLE `log_content` (\\n          `log_id` int(11) NOT NULL AUTO_INCREMENT,\\n          `content` varchar(32) NOT NULL,\\n          `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),\\n          PRIMARY KEY (`log_id`)\\n        );\\n        \'\n        conn = db.cursor()\n        conn.execute(create_table_query)\n        conn.close()\n    except Exception as e:\n        print(\'Issue reproduced\')\n        return\n    try:\n        insert_query = "\\n        INSERT INTO `log_content` (`content`) VALUES (\'Test Content\');\\n        "\n        conn = db.cursor()\n        conn.execute(insert_query)\n        db.commit()\n        conn.close()\n        select_query = \'\\n        SELECT `no_of_chars` FROM `log_content` WHERE `log_id` = 1;\\n        \'\n        conn = db.cursor()\n        conn.execute(select_query)\n        result = conn.fetchone()\n        conn.close()\n        if result and result[0] == len(\'Test Content\'):\n            print(\'Issue resolved\')\n        else:\n            print(\'Issue reproduced\')\n    except Exception as e:\n        print(\'Issue reproduced\')\n        return', 'def test_func(sql, db) -> None:\n    create_table_sql = \'\\n    CREATE TABLE `log_content` (\\n      `log_id` int(11) NOT NULL AUTO_INCREMENT,\\n      `content` varchar(32) NOT NULL,\\n      `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),\\n      PRIMARY KEY (`log_id`)\\n    );\\n    \'\n    try:\n        (result, conn) = perform_query_on_mysql_databases(create_table_sql, db)\n    except Exception as e:\n        print(\'Issue reproduced\')\n        return\n    insert_sql = "\\n    INSERT INTO `log_content` (`content`) VALUES (\'Test Content\');\\n    "\n    try:\n        (result, conn) = perform_query_on_mysql_databases(insert_sql, db)\n    except Exception as e:\n        print(\'Issue reproduced\')\n        return\n    select_sql = \'\\n    SELECT `no_of_chars` FROM `log_content` WHERE `log_id` = 1;\\n    \'\n    try:\n        (result, conn) = perform_query_on_mysql_databases(select_sql, db)\n    except Exception as e:\n        print(\'Issue reproduced\')\n        return\n    try:\n        assert result[0][0] == len(\'Test Content\')\n        print(\'Issue resolved\')\n    except AssertionError:\n        print(\'Issue reproduced\')\n        return', 'def test_func(sql, db) -> None:\n    try:\n        create_table_query = \'\\n        CREATE TABLE `log_content` (\\n          `log_id` int(11) NOT NULL AUTO_INCREMENT,\\n          `content` varchar(32) NOT NULL,\\n          `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),\\n          PRIMARY KEY (`log_id`)\\n        );\\n        \'\n        conn = db.cursor()\n        conn.execute(create_table_query)\n        conn.close()\n    except Exception as e:\n        print(\'Issue reproduced\')\n        return\n    try:\n        insert_query = "\\n        INSERT INTO `log_content` (`content`) VALUES (\'Test Content\');\\n        "\n        conn = db.cursor()\n        conn.execute(insert_query)\n        db.commit()\n        conn.close()\n        select_query = \'\\n        SELECT `no_of_chars` FROM `log_content` WHERE `log_id` = 1;\\n        \'\n        conn = db.cursor()\n        conn.execute(select_query)\n        result = conn.fetchone()\n        conn.close()\n        assert result[0] == 12\n        print(\'Issue resolved\')\n    except AssertionError:\n        print(\'Issue reproduced\')\n    except Exception as e:\n        print(\'Issue reproduced\')', 'def test_func(sql, db) -> None:\n    create_table_sql = \'\\n    CREATE TABLE `log_content` (\\n      `log_id` int(11) NOT NULL AUTO_INCREMENT,\\n      `content` varchar(32) NOT NULL,\\n      `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),\\n      PRIMARY KEY (`log_id`)\\n    );\\n    \'\n    try:\n        (result, conn) = perform_query_on_mysql_databases(create_table_sql, db)\n    except Exception as e:\n        print(\'Issue reproduced\')\n        return\n    insert_sql = "\\n    INSERT INTO `log_content` (`content`) VALUES (\'Test Content\');\\n    "\n    try:\n        (result, conn) = perform_query_on_mysql_databases(insert_sql, db)\n    except Exception as e:\n        print(\'Issue reproduced\')\n        return\n    select_sql = \'\\n    SELECT `no_of_chars` FROM `log_content` WHERE `log_id` = 1;\\n    \'\n    try:\n        (result, conn) = perform_query_on_mysql_databases(select_sql, db)\n    except Exception as e:\n        print(\'Issue reproduced\')\n        return\n    try:\n        assert result[0] == (12,)\n        print(\'Issue resolved\')\n    except AssertionError:\n        print(\'Issue reproduced\')\n        return']
+2024-12-11 14:02:31,714 - INFO - ================ filtering tests for 7 ================
+2024-12-11 14:02:31,714 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        create_table_query = '\n        CREATE TABLE `log_content` (\n          `log_id` int(11) NOT NULL AUTO_INCREMENT,\n          `content` varchar(32) NOT NULL,\n          `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),\n          PRIMARY KEY (`log_id`)\n        );\n        '
+        (result, conn) = perform_query_on_mysql_databases(create_table_query, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        insert_query = "\n        INSERT INTO `log_content` (`content`) VALUES ('Test Content');\n        "
+        (result, conn) = perform_query_on_mysql_databases(insert_query, db)
+        select_query = '\n        SELECT `no_of_chars` FROM `log_content` WHERE `log_id` = 1;\n        '
+        (result, conn) = perform_query_on_mysql_databases(select_query, db)
+        assert result[0][0] == len('Test Content'), 'The `no_of_chars` field does not contain the correct length of the content.'
+        print('Issue resolved')
+    except AssertionError as ae:
+        print('Issue reproduced')
+    except Exception as e:
+        print('Issue reproduced')
+with command: test_func('CREATE TABLE `log_content` (
+  `log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` varchar(32) NOT NULL,
+  `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),
+  PRIMARY KEY (`log_id`)
+);', 'thrombosis_prediction')
+2024-12-11 14:02:31,714 - INFO - Test output:
+unterminated string literal (detected at line 19) (<string>, line 19)
+
+2024-12-11 14:02:31,715 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        create_table_query = '\n        CREATE TABLE `log_content` (\n          `log_id` int(11) NOT NULL AUTO_INCREMENT,\n          `content` varchar(32) NOT NULL,\n          `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),\n          PRIMARY KEY (`log_id`)\n        );\n        '
+        conn = db.cursor()
+        conn.execute(create_table_query)
+        conn.close()
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        insert_query = "\n        INSERT INTO `log_content` (`content`) VALUES ('Test Content');\n        "
+        conn = db.cursor()
+        conn.execute(insert_query)
+        db.commit()
+        conn.close()
+        select_query = '\n        SELECT `no_of_chars` FROM `log_content` WHERE `log_id` = 1;\n        '
+        conn = db.cursor()
+        conn.execute(select_query)
+        result = conn.fetchone()
+        conn.close()
+        if result and result[0] == len('Test Content'):
+            print('Issue resolved')
+        else:
+            print('Issue reproduced')
+    except Exception as e:
+        print('Issue reproduced')
+        return
+with command: test_func('CREATE TABLE `log_content` (
+  `log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` varchar(32) NOT NULL,
+  `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),
+  PRIMARY KEY (`log_id`)
+);', 'thrombosis_prediction')
+2024-12-11 14:02:31,715 - INFO - Test output:
+unterminated string literal (detected at line 28) (<string>, line 28)
+
+2024-12-11 14:02:31,715 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    create_table_sql = '\n    CREATE TABLE `log_content` (\n      `log_id` int(11) NOT NULL AUTO_INCREMENT,\n      `content` varchar(32) NOT NULL,\n      `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),\n      PRIMARY KEY (`log_id`)\n    );\n    '
+    try:
+        (result, conn) = perform_query_on_mysql_databases(create_table_sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    insert_sql = "\n    INSERT INTO `log_content` (`content`) VALUES ('Test Content');\n    "
+    try:
+        (result, conn) = perform_query_on_mysql_databases(insert_sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    select_sql = '\n    SELECT `no_of_chars` FROM `log_content` WHERE `log_id` = 1;\n    '
+    try:
+        (result, conn) = perform_query_on_mysql_databases(select_sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        assert result[0][0] == len('Test Content')
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('CREATE TABLE `log_content` (
+  `log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` varchar(32) NOT NULL,
+  `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),
+  PRIMARY KEY (`log_id`)
+);', 'thrombosis_prediction')
+2024-12-11 14:02:31,715 - INFO - Test output:
+unterminated string literal (detected at line 26) (<string>, line 26)
+
+2024-12-11 14:02:31,715 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        create_table_query = '\n        CREATE TABLE `log_content` (\n          `log_id` int(11) NOT NULL AUTO_INCREMENT,\n          `content` varchar(32) NOT NULL,\n          `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),\n          PRIMARY KEY (`log_id`)\n        );\n        '
+        conn = db.cursor()
+        conn.execute(create_table_query)
+        conn.close()
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        insert_query = "\n        INSERT INTO `log_content` (`content`) VALUES ('Test Content');\n        "
+        conn = db.cursor()
+        conn.execute(insert_query)
+        db.commit()
+        conn.close()
+        select_query = '\n        SELECT `no_of_chars` FROM `log_content` WHERE `log_id` = 1;\n        '
+        conn = db.cursor()
+        conn.execute(select_query)
+        result = conn.fetchone()
+        conn.close()
+        assert result[0] == 12
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+    except Exception as e:
+        print('Issue reproduced')
+with command: test_func('CREATE TABLE `log_content` (
+  `log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` varchar(32) NOT NULL,
+  `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),
+  PRIMARY KEY (`log_id`)
+);', 'thrombosis_prediction')
+2024-12-11 14:02:31,716 - INFO - Test output:
+unterminated string literal (detected at line 27) (<string>, line 27)
+
+2024-12-11 14:02:31,716 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    create_table_sql = '\n    CREATE TABLE `log_content` (\n      `log_id` int(11) NOT NULL AUTO_INCREMENT,\n      `content` varchar(32) NOT NULL,\n      `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),\n      PRIMARY KEY (`log_id`)\n    );\n    '
+    try:
+        (result, conn) = perform_query_on_mysql_databases(create_table_sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    insert_sql = "\n    INSERT INTO `log_content` (`content`) VALUES ('Test Content');\n    "
+    try:
+        (result, conn) = perform_query_on_mysql_databases(insert_sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    select_sql = '\n    SELECT `no_of_chars` FROM `log_content` WHERE `log_id` = 1;\n    '
+    try:
+        (result, conn) = perform_query_on_mysql_databases(select_sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        assert result[0] == (12,)
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('CREATE TABLE `log_content` (
+  `log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` varchar(32) NOT NULL,
+  `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),
+  PRIMARY KEY (`log_id`)
+);', 'thrombosis_prediction')
+2024-12-11 14:02:31,716 - INFO - Test output:
+unterminated string literal (detected at line 26) (<string>, line 26)
+
+2024-12-11 14:02:31,716 - INFO - filtered tests: []
+2024-12-11 16:08:40,072 - INFO - ================ filtering tests for 7 ================
+2024-12-11 16:08:40,073 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        create_table_query = '\n        CREATE TABLE `log_content` (\n          `log_id` int(11) NOT NULL AUTO_INCREMENT,\n          `content` varchar(32) NOT NULL,\n          `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),\n          PRIMARY KEY (`log_id`)\n        );\n        '
+        (result, conn) = perform_query_on_mysql_databases(create_table_query, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        insert_query = "\n        INSERT INTO `log_content` (`content`) VALUES ('Test Content');\n        "
+        (result, conn) = perform_query_on_mysql_databases(insert_query, db)
+        select_query = '\n        SELECT `no_of_chars` FROM `log_content` WHERE `log_id` = 1;\n        '
+        (result, conn) = perform_query_on_mysql_databases(select_query, db)
+        assert result[0][0] == len('Test Content'), 'The `no_of_chars` field does not contain the correct length of the content.'
+        print('Issue resolved')
+    except AssertionError as ae:
+        print('Issue reproduced')
+    except Exception as e:
+        print('Issue reproduced')
+with command: test_func('CREATE TABLE `log_content` (
+  `log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` varchar(32) NOT NULL,
+  `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),
+  PRIMARY KEY (`log_id`)
+);', 'thrombosis_prediction')
+2024-12-11 16:08:40,073 - INFO - Test output:
+unterminated string literal (detected at line 19) (<string>, line 19)
+
+2024-12-11 16:08:40,073 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        create_table_query = '\n        CREATE TABLE `log_content` (\n          `log_id` int(11) NOT NULL AUTO_INCREMENT,\n          `content` varchar(32) NOT NULL,\n          `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),\n          PRIMARY KEY (`log_id`)\n        );\n        '
+        conn = db.cursor()
+        conn.execute(create_table_query)
+        conn.close()
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        insert_query = "\n        INSERT INTO `log_content` (`content`) VALUES ('Test Content');\n        "
+        conn = db.cursor()
+        conn.execute(insert_query)
+        db.commit()
+        conn.close()
+        select_query = '\n        SELECT `no_of_chars` FROM `log_content` WHERE `log_id` = 1;\n        '
+        conn = db.cursor()
+        conn.execute(select_query)
+        result = conn.fetchone()
+        conn.close()
+        if result and result[0] == len('Test Content'):
+            print('Issue resolved')
+        else:
+            print('Issue reproduced')
+    except Exception as e:
+        print('Issue reproduced')
+        return
+with command: test_func('CREATE TABLE `log_content` (
+  `log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` varchar(32) NOT NULL,
+  `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),
+  PRIMARY KEY (`log_id`)
+);', 'thrombosis_prediction')
+2024-12-11 16:08:40,073 - INFO - Test output:
+unterminated string literal (detected at line 28) (<string>, line 28)
+
+2024-12-11 16:08:40,073 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    create_table_sql = '\n    CREATE TABLE `log_content` (\n      `log_id` int(11) NOT NULL AUTO_INCREMENT,\n      `content` varchar(32) NOT NULL,\n      `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),\n      PRIMARY KEY (`log_id`)\n    );\n    '
+    try:
+        (result, conn) = perform_query_on_mysql_databases(create_table_sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    insert_sql = "\n    INSERT INTO `log_content` (`content`) VALUES ('Test Content');\n    "
+    try:
+        (result, conn) = perform_query_on_mysql_databases(insert_sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    select_sql = '\n    SELECT `no_of_chars` FROM `log_content` WHERE `log_id` = 1;\n    '
+    try:
+        (result, conn) = perform_query_on_mysql_databases(select_sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        assert result[0][0] == len('Test Content')
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('CREATE TABLE `log_content` (
+  `log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` varchar(32) NOT NULL,
+  `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),
+  PRIMARY KEY (`log_id`)
+);', 'thrombosis_prediction')
+2024-12-11 16:08:40,073 - INFO - Test output:
+unterminated string literal (detected at line 26) (<string>, line 26)
+
+2024-12-11 16:08:40,074 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        create_table_query = '\n        CREATE TABLE `log_content` (\n          `log_id` int(11) NOT NULL AUTO_INCREMENT,\n          `content` varchar(32) NOT NULL,\n          `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),\n          PRIMARY KEY (`log_id`)\n        );\n        '
+        conn = db.cursor()
+        conn.execute(create_table_query)
+        conn.close()
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        insert_query = "\n        INSERT INTO `log_content` (`content`) VALUES ('Test Content');\n        "
+        conn = db.cursor()
+        conn.execute(insert_query)
+        db.commit()
+        conn.close()
+        select_query = '\n        SELECT `no_of_chars` FROM `log_content` WHERE `log_id` = 1;\n        '
+        conn = db.cursor()
+        conn.execute(select_query)
+        result = conn.fetchone()
+        conn.close()
+        assert result[0] == 12
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+    except Exception as e:
+        print('Issue reproduced')
+with command: test_func('CREATE TABLE `log_content` (
+  `log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` varchar(32) NOT NULL,
+  `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),
+  PRIMARY KEY (`log_id`)
+);', 'thrombosis_prediction')
+2024-12-11 16:08:40,074 - INFO - Test output:
+unterminated string literal (detected at line 27) (<string>, line 27)
+
+2024-12-11 16:08:40,074 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    create_table_sql = '\n    CREATE TABLE `log_content` (\n      `log_id` int(11) NOT NULL AUTO_INCREMENT,\n      `content` varchar(32) NOT NULL,\n      `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),\n      PRIMARY KEY (`log_id`)\n    );\n    '
+    try:
+        (result, conn) = perform_query_on_mysql_databases(create_table_sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    insert_sql = "\n    INSERT INTO `log_content` (`content`) VALUES ('Test Content');\n    "
+    try:
+        (result, conn) = perform_query_on_mysql_databases(insert_sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    select_sql = '\n    SELECT `no_of_chars` FROM `log_content` WHERE `log_id` = 1;\n    '
+    try:
+        (result, conn) = perform_query_on_mysql_databases(select_sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        assert result[0] == (12,)
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('CREATE TABLE `log_content` (
+  `log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` varchar(32) NOT NULL,
+  `no_of_chars` int(4) NULL DEFAULT CHAR_LENGTH(`content`),
+  PRIMARY KEY (`log_id`)
+);', 'thrombosis_prediction')
+2024-12-11 16:08:40,074 - INFO - Test output:
+unterminated string literal (detected at line 26) (<string>, line 26)
+
+2024-12-11 16:08:40,074 - INFO - filtered tests: []

@@ -1,0 +1,262 @@
+2024-12-11 13:59:16,673 - INFO - ================ generating test for 31 ================
+2024-12-11 13:59:16,674 - INFO - prompting with message:
+We are currently solving the following issue within our repository. Here is the issue text:
+--- BEGIN ISSUE ---
+I'm encountering an issue with a SQL query where the totals calculated using SUM are incorrect.
+ I am trying to calculate the sum of expense.cost and budget.amount, grouped by link_to_event.
+```sql
+SELECT SUM(expense.cost) AS total_expense, SUM(budget.amount) AS total_budget, budget.link_to_event FROM budget, expense WHERE budget.budget_id = expense.link_to_budget GROUP BY budget.link_to_event;``` When I run this query, I notice that SUM(budget.amount) returns values much larger than expected.
+--- END ISSUE ---
+
+Please generate a complete test that can be used to reproduce the issue.
+
+The complete test should contain the following:
+1. Code to reproduce the issue described in the issue text
+2. Print "Issue reproduced" if the outcome indicates that the issue is reproduced: either an exception is raised or the outcome is incorrect
+3. Print "Issue resolved" if the outcome indicates that the issue has been successfully resolved
+5. The name of the test function must be test_issue with two parameter sql and db
+
+Here is an example:
+```python
+def test_issue(sql, db) -> None:
+    try:
+        result, conn = perform_query_on_mysql_databases(sql, db)
+    except:
+        print("Issue reproduced")
+        return
+    try:
+        assert result[0] == ("HR",)
+        assert result[1] == ("Finance",)
+        print("Issue resolved")
+    except AssertionError:
+        print("Issue reproduced")
+        return
+```
+
+Please ensure the generated test reflects the issue described in the provided issue text.
+The generated test should be able to be used to both reproduce the issue as well as to verify the issue has been fixed.
+Wrap the complete test in ```python...```.
+2024-12-11 13:59:16,674 - INFO - Initializing a decoder model: deepseek-chat ...
+2024-12-11 13:59:16,734 - INFO - Creating API request
+2024-12-11 13:59:43,059 - INFO - API response ChatCompletion(id='f8018222-55e5-43c2-bd9b-fc21a9e7919b', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Perform the query on the database\n        result, conn = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        # If an exception is raised, the issue is reproduced\n        print("Issue reproduced")\n        return\n    \n    # Check if the result contains incorrect sums for total_budget\n    try:\n        for row in result:\n            total_expense, total_budget, link_to_event = row\n            # Assuming that the expected total_budget should not exceed a certain threshold\n            # For example, if the expected total_budget should not be more than 10000\n            assert total_budget <= 10000, f"Unexpected large total_budget: {total_budget} for link_to_event: {link_to_event}"\n        print("Issue resolved")\n    except AssertionError as e:\n        # If the assertion fails, the issue is reproduced\n        print("Issue reproduced")\n        return\n```\n\n### Explanation:\n1. **Code to Reproduce the Issue**: The SQL query provided in the issue text is executed using the `perform_query_on_mysql_databases` function. This function is assumed to be defined elsewhere and is responsible for executing the SQL query on the database.\n\n2. **Print "Issue reproduced"**: If an exception is raised during the execution of the query, it indicates that the issue is reproduced. This could happen if the query is malformed or if there are issues with the database connection.\n\n3. **Print "Issue resolved"**: If the query executes successfully, the result is checked to see if the `total_budget` values are as expected. The assertion checks that the `total_budget` does not exceed a certain threshold (in this case, 10000). If the assertion passes, it means the issue has been resolved. If the assertion fails, it means the issue is still present.\n\n4. **Test Function**: The test function `test_issue` takes two parameters: `sql` (the SQL query) and `db` (the database connection). This function can be used to both reproduce the issue and verify if it has been fixed.', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925558, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=497, prompt_tokens=443, total_tokens=940, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=128, prompt_cache_miss_tokens=315))
+2024-12-11 13:59:43,062 - INFO - Initializing a decoder model: deepseek-chat ...
+2024-12-11 13:59:43,127 - INFO - Creating API request
+2024-12-11 13:59:58,650 - INFO - API response ChatCompletion(id='d5a82e61-d43b-46de-acb2-4764c9bc421a', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Perform the query on the database\n        result, conn = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        # If an exception is raised, the issue is reproduced\n        print("Issue reproduced")\n        return\n    \n    try:\n        # Check if the SUM(budget.amount) is much larger than expected\n        for row in result:\n            total_expense, total_budget, link_to_event = row\n            # Assuming that the expected total_budget should be less than or equal to total_expense\n            assert total_budget <= total_expense, f"Unexpected large total_budget: {total_budget} for link_to_event: {link_to_event}"\n        \n        # If the assertion passes, the issue is resolved\n        print("Issue resolved")\n    except AssertionError as e:\n        # If the assertion fails, the issue is reproduced\n        print("Issue reproduced")\n        return\n```\n\nThis test function `test_issue` attempts to reproduce the issue described in the provided issue text. It performs the SQL query on the database and checks if the `SUM(budget.amount)` is much larger than expected. If the assertion fails, it prints "Issue reproduced". If the assertion passes, it prints "Issue resolved".', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925583, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=305, prompt_tokens=443, total_tokens=748, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=384, prompt_cache_miss_tokens=59))
+2024-12-11 13:59:58,686 - INFO - Creating API request
+2024-12-11 14:00:35,164 - INFO - API response ChatCompletion(id='3fff7a3d-717f-41bf-8804-83f1c9321b77', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Perform the query on the database\n        result, conn = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        # If an exception is raised, the issue is reproduced\n        print("Issue reproduced")\n        return\n    \n    # Check if the result contains incorrect sums for total_budget\n    for row in result:\n        total_expense, total_budget, link_to_event = row\n        if total_budget > expected_budget_sum(link_to_event):  # Assuming expected_budget_sum is a function that calculates the correct sum\n            print("Issue reproduced")\n            return\n    \n    # If no incorrect sums are found, the issue is resolved\n    print("Issue resolved")\n    return\n\n# Example function to calculate the expected budget sum (this should be replaced with the actual logic)\ndef expected_budget_sum(link_to_event):\n    # Placeholder logic to calculate the expected sum of budget.amount for a given link_to_event\n    # This should be replaced with the actual logic to calculate the correct sum\n    return 1000  # Example value\n\n# Example function to perform the query on MySQL databases (this should be replaced with the actual implementation)\ndef perform_query_on_mysql_databases(sql, db):\n    # Placeholder logic to execute the SQL query on the database\n    # This should be replaced with the actual implementation to connect to the database and execute the query\n    conn = None  # Placeholder for the database connection\n    result = [\n        (500, 5000, 1),  # Example result row with incorrect total_budget\n        (300, 3000, 2),  # Example result row with incorrect total_budget\n    ]\n    return result, conn\n```\n\n### Explanation:\n1. **Test Function (`test_issue`)**:\n   - The function `test_issue` takes two parameters: `sql` (the SQL query to be tested) and `db` (the database connection or configuration).\n   - It attempts to perform the query on the database using the `perform_query_on_mysql_databases` function.\n   - If an exception is raised during the query execution, it prints "Issue reproduced".\n   - If the query executes successfully, it checks the result to see if the `total_budget` values are incorrect (i.e., larger than expected). If any incorrect sums are found, it prints "Issue reproduced".\n   - If all sums are correct, it prints "Issue resolved".\n\n2. **Expected Budget Sum (`expected_budget_sum`)**:\n   - This is a placeholder function that should be replaced with the actual logic to calculate the expected sum of `budget.amount` for a given `link_to_event`.\n\n3. **Perform Query on MySQL Databases (`perform_query_on_mysql_databases`)**:\n   - This is a placeholder function that should be replaced with the actual implementation to connect to the database and execute the SQL query.\n\n### Usage:\n- Replace the placeholder functions (`expected_budget_sum` and `perform_query_on_mysql_databases`) with the actual logic to calculate the expected sums and execute the query on the database.\n- Run the `test_issue` function with the SQL query and database configuration to reproduce the issue and verify if it has been resolved.', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925598, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=769, prompt_tokens=443, total_tokens=1212, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=384, prompt_cache_miss_tokens=59))
+2024-12-11 14:00:35,225 - INFO - Creating API request
+2024-12-11 14:01:02,974 - INFO - API response ChatCompletion(id='47e81ded-f0ae-40dd-96a9-59208d6ca884', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Perform the query on the database\n        result, conn = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        # If an exception is raised, the issue is reproduced\n        print("Issue reproduced")\n        return\n    \n    # Check if the result contains incorrect sums for total_budget\n    try:\n        for row in result:\n            total_expense, total_budget, link_to_event = row\n            # Assuming the expected sum of budget.amount is known and should not exceed a certain threshold\n            # For example, if the expected sum should not exceed 1000 for any link_to_event\n            assert total_budget <= 1000, f"Unexpectedly high total_budget: {total_budget} for link_to_event: {link_to_event}"\n        print("Issue resolved")\n    except AssertionError as e:\n        # If the assertion fails, the issue is reproduced\n        print("Issue reproduced")\n        return\n```\n\n### Explanation:\n1. **Code to Reproduce the Issue**: The SQL query provided in the issue text is executed using the `perform_query_on_mysql_databases` function. This function is assumed to be defined elsewhere and is responsible for executing the SQL query on the database.\n\n2. **Print "Issue reproduced"**: If an exception is raised during the execution of the query, it indicates that the issue is reproduced. This could be due to a syntax error, a database connection issue, or any other runtime error.\n\n3. **Print "Issue resolved"**: If the query executes successfully, the result is checked to ensure that the `total_budget` values are not unexpectedly high. If all `total_budget` values are within the expected range (in this case, not exceeding 1000), the issue is considered resolved.\n\n4. **Test Function**: The test function `test_issue` takes two parameters: `sql` (the SQL query) and `db` (the database connection or configuration). This function can be used to both reproduce the issue and verify if it has been fixed.\n\n### Assumptions:\n- The `perform_query_on_mysql_databases` function is defined and can execute SQL queries on the database.\n- The expected sum of `budget.amount` for any `link_to_event` should not exceed a certain threshold (e.g., 1000 in this example). This threshold should be adjusted based on the actual expected values in your database.\n\n### Usage:\nTo use this test, you would need to pass the SQL query from the issue text and the appropriate database connection or configuration to the `test_issue` function. The test will then either print "Issue reproduced" or "Issue resolved" based on the outcome of the query.', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925635, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=634, prompt_tokens=443, total_tokens=1077, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=384, prompt_cache_miss_tokens=59))
+2024-12-11 14:01:03,002 - INFO - Creating API request
+2024-12-11 14:01:24,670 - INFO - API response ChatCompletion(id='f5ca92fd-03b3-4f10-8885-8e2c53c62995', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Perform the query on the database\n        result, conn = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        # If an exception is raised, the issue is reproduced\n        print("Issue reproduced")\n        return\n    \n    # Check if the result contains incorrect sums for total_budget\n    try:\n        for row in result:\n            total_expense, total_budget, link_to_event = row\n            # Assuming we have a way to know the expected sums for comparison\n            # Here we just check if total_budget is much larger than total_expense\n            if total_budget > total_expense * 10:  # Arbitrary threshold for "much larger"\n                raise AssertionError("Total budget is much larger than expected.")\n        print("Issue resolved")\n    except AssertionError:\n        print("Issue reproduced")\n        return\n```\n\n### Explanation:\n1. **Code to Reproduce the Issue**: The SQL query provided in the issue text is executed using the `perform_query_on_mysql_databases` function. This function is assumed to be a placeholder for the actual database query execution logic.\n\n2. **Print "Issue reproduced"**: If an exception is raised during the query execution, it prints "Issue reproduced". This could happen if the query is malformed or if there are issues with the database connection.\n\n3. **Print "Issue resolved"**: If the query executes successfully, the test checks if the `total_budget` values are much larger than expected. If they are, it raises an `AssertionError`, indicating that the issue is reproduced. If not, it prints "Issue resolved".\n\n4. **Test Function Name and Parameters**: The function is named `test_issue` and takes two parameters, `sql` and `db`, which represent the SQL query and the database connection, respectively.\n\nThis test can be used to both reproduce the issue and verify if it has been fixed by adjusting the SQL query or the database schema.', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925663, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=457, prompt_tokens=443, total_tokens=900, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=384, prompt_cache_miss_tokens=59))
+2024-12-11 14:02:11,539 - INFO - ================ normalizing tests for 31 ================
+2024-12-11 14:02:11,542 - INFO - normalized tests: ["def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print('Issue reproduced')\n        return\n    try:\n        for row in result:\n            (total_expense, total_budget, link_to_event) = row\n            assert total_budget <= 10000, f'Unexpected large total_budget: {total_budget} for link_to_event: {link_to_event}'\n        print('Issue resolved')\n    except AssertionError as e:\n        print('Issue reproduced')\n        return", "def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print('Issue reproduced')\n        return\n    try:\n        for row in result:\n            (total_expense, total_budget, link_to_event) = row\n            assert total_budget <= total_expense, f'Unexpected large total_budget: {total_budget} for link_to_event: {link_to_event}'\n        print('Issue resolved')\n    except AssertionError as e:\n        print('Issue reproduced')\n        return", "def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print('Issue reproduced')\n        return\n    for row in result:\n        (total_expense, total_budget, link_to_event) = row\n        if total_budget > expected_budget_sum(link_to_event):\n            print('Issue reproduced')\n            return\n    print('Issue resolved')\n    return\n\ndef expected_budget_sum(link_to_event):\n    return 1000\n\ndef perform_query_on_mysql_databases(sql, db):\n    conn = None\n    result = [(500, 5000, 1), (300, 3000, 2)]\n    return (result, conn)", "def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print('Issue reproduced')\n        return\n    try:\n        for row in result:\n            (total_expense, total_budget, link_to_event) = row\n            assert total_budget <= 1000, f'Unexpectedly high total_budget: {total_budget} for link_to_event: {link_to_event}'\n        print('Issue resolved')\n    except AssertionError as e:\n        print('Issue reproduced')\n        return", "def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print('Issue reproduced')\n        return\n    try:\n        for row in result:\n            (total_expense, total_budget, link_to_event) = row\n            if total_budget > total_expense * 10:\n                raise AssertionError('Total budget is much larger than expected.')\n        print('Issue resolved')\n    except AssertionError:\n        print('Issue reproduced')\n        return"]
+2024-12-11 14:02:32,295 - INFO - ================ filtering tests for 31 ================
+2024-12-11 14:02:32,295 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for row in result:
+            (total_expense, total_budget, link_to_event) = row
+            assert total_budget <= 10000, f'Unexpected large total_budget: {total_budget} for link_to_event: {link_to_event}'
+        print('Issue resolved')
+    except AssertionError as e:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT SUM(expense.cost) AS total_expense, SUM(budget.amount) AS total_budget, budget.link_to_event FROM budget, expense WHERE budget.budget_id = expense.link_to_budget GROUP BY budget.link_to_event;', 'student_club')
+2024-12-11 14:02:32,305 - INFO - Test output:
+Issue resolved
+
+2024-12-11 14:02:32,306 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for row in result:
+            (total_expense, total_budget, link_to_event) = row
+            assert total_budget <= total_expense, f'Unexpected large total_budget: {total_budget} for link_to_event: {link_to_event}'
+        print('Issue resolved')
+    except AssertionError as e:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT SUM(expense.cost) AS total_expense, SUM(budget.amount) AS total_budget, budget.link_to_event FROM budget, expense WHERE budget.budget_id = expense.link_to_budget GROUP BY budget.link_to_event;', 'student_club')
+2024-12-11 14:02:32,310 - INFO - Test output:
+Issue reproduced
+
+2024-12-11 14:02:32,311 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    for row in result:
+        (total_expense, total_budget, link_to_event) = row
+        if total_budget > expected_budget_sum(link_to_event):
+            print('Issue reproduced')
+            return
+    print('Issue resolved')
+    return
+
+def expected_budget_sum(link_to_event):
+    return 1000
+
+def perform_query_on_mysql_databases(sql, db):
+    conn = None
+    result = [(500, 5000, 1), (300, 3000, 2)]
+    return (result, conn)
+with command: test_func('SELECT SUM(expense.cost) AS total_expense, SUM(budget.amount) AS total_budget, budget.link_to_event FROM budget, expense WHERE budget.budget_id = expense.link_to_budget GROUP BY budget.link_to_event;', 'student_club')
+2024-12-11 14:02:32,320 - INFO - Test output:
+name 'expected_budget_sum' is not defined
+
+2024-12-11 14:02:32,320 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for row in result:
+            (total_expense, total_budget, link_to_event) = row
+            assert total_budget <= 1000, f'Unexpectedly high total_budget: {total_budget} for link_to_event: {link_to_event}'
+        print('Issue resolved')
+    except AssertionError as e:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT SUM(expense.cost) AS total_expense, SUM(budget.amount) AS total_budget, budget.link_to_event FROM budget, expense WHERE budget.budget_id = expense.link_to_budget GROUP BY budget.link_to_event;', 'student_club')
+2024-12-11 14:02:32,326 - INFO - Test output:
+Issue reproduced
+
+2024-12-11 14:02:32,327 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for row in result:
+            (total_expense, total_budget, link_to_event) = row
+            if total_budget > total_expense * 10:
+                raise AssertionError('Total budget is much larger than expected.')
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT SUM(expense.cost) AS total_expense, SUM(budget.amount) AS total_budget, budget.link_to_event FROM budget, expense WHERE budget.budget_id = expense.link_to_budget GROUP BY budget.link_to_event;', 'student_club')
+2024-12-11 14:02:32,331 - INFO - Test output:
+Issue resolved
+
+2024-12-11 14:02:32,331 - INFO - filtered tests: ["def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print('Issue reproduced')\n        return\n    try:\n        for row in result:\n            (total_expense, total_budget, link_to_event) = row\n            assert total_budget <= total_expense, f'Unexpected large total_budget: {total_budget} for link_to_event: {link_to_event}'\n        print('Issue resolved')\n    except AssertionError as e:\n        print('Issue reproduced')\n        return", "def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print('Issue reproduced')\n        return\n    try:\n        for row in result:\n            (total_expense, total_budget, link_to_event) = row\n            assert total_budget <= 1000, f'Unexpectedly high total_budget: {total_budget} for link_to_event: {link_to_event}'\n        print('Issue resolved')\n    except AssertionError as e:\n        print('Issue reproduced')\n        return"]
+2024-12-11 16:08:40,590 - INFO - ================ filtering tests for 31 ================
+2024-12-11 16:08:40,590 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for row in result:
+            (total_expense, total_budget, link_to_event) = row
+            assert total_budget <= 10000, f'Unexpected large total_budget: {total_budget} for link_to_event: {link_to_event}'
+        print('Issue resolved')
+    except AssertionError as e:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT SUM(expense.cost) AS total_expense, SUM(budget.amount) AS total_budget, budget.link_to_event FROM budget, expense WHERE budget.budget_id = expense.link_to_budget GROUP BY budget.link_to_event;', 'student_club')
+2024-12-11 16:08:40,595 - INFO - Test output:
+Issue resolved
+
+2024-12-11 16:08:40,595 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for row in result:
+            (total_expense, total_budget, link_to_event) = row
+            assert total_budget <= total_expense, f'Unexpected large total_budget: {total_budget} for link_to_event: {link_to_event}'
+        print('Issue resolved')
+    except AssertionError as e:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT SUM(expense.cost) AS total_expense, SUM(budget.amount) AS total_budget, budget.link_to_event FROM budget, expense WHERE budget.budget_id = expense.link_to_budget GROUP BY budget.link_to_event;', 'student_club')
+2024-12-11 16:08:40,597 - INFO - Test output:
+Issue reproduced
+
+2024-12-11 16:08:40,597 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    for row in result:
+        (total_expense, total_budget, link_to_event) = row
+        if total_budget > expected_budget_sum(link_to_event):
+            print('Issue reproduced')
+            return
+    print('Issue resolved')
+    return
+
+def expected_budget_sum(link_to_event):
+    return 1000
+
+def perform_query_on_mysql_databases(sql, db):
+    conn = None
+    result = [(500, 5000, 1), (300, 3000, 2)]
+    return (result, conn)
+with command: test_func('SELECT SUM(expense.cost) AS total_expense, SUM(budget.amount) AS total_budget, budget.link_to_event FROM budget, expense WHERE budget.budget_id = expense.link_to_budget GROUP BY budget.link_to_event;', 'student_club')
+2024-12-11 16:08:40,599 - INFO - Test output:
+name 'expected_budget_sum' is not defined
+
+2024-12-11 16:08:40,599 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for row in result:
+            (total_expense, total_budget, link_to_event) = row
+            assert total_budget <= 1000, f'Unexpectedly high total_budget: {total_budget} for link_to_event: {link_to_event}'
+        print('Issue resolved')
+    except AssertionError as e:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT SUM(expense.cost) AS total_expense, SUM(budget.amount) AS total_budget, budget.link_to_event FROM budget, expense WHERE budget.budget_id = expense.link_to_budget GROUP BY budget.link_to_event;', 'student_club')
+2024-12-11 16:08:40,601 - INFO - Test output:
+Issue reproduced
+
+2024-12-11 16:08:40,601 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for row in result:
+            (total_expense, total_budget, link_to_event) = row
+            if total_budget > total_expense * 10:
+                raise AssertionError('Total budget is much larger than expected.')
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT SUM(expense.cost) AS total_expense, SUM(budget.amount) AS total_budget, budget.link_to_event FROM budget, expense WHERE budget.budget_id = expense.link_to_budget GROUP BY budget.link_to_event;', 'student_club')
+2024-12-11 16:08:40,603 - INFO - Test output:
+Issue resolved
+
+2024-12-11 16:08:40,603 - INFO - filtered tests: ["def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print('Issue reproduced')\n        return\n    try:\n        for row in result:\n            (total_expense, total_budget, link_to_event) = row\n            assert total_budget <= total_expense, f'Unexpected large total_budget: {total_budget} for link_to_event: {link_to_event}'\n        print('Issue resolved')\n    except AssertionError as e:\n        print('Issue reproduced')\n        return", "def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print('Issue reproduced')\n        return\n    try:\n        for row in result:\n            (total_expense, total_budget, link_to_event) = row\n            assert total_budget <= 1000, f'Unexpectedly high total_budget: {total_budget} for link_to_event: {link_to_event}'\n        print('Issue resolved')\n    except AssertionError as e:\n        print('Issue reproduced')\n        return"]

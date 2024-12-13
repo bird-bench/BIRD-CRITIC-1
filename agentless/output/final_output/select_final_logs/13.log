@@ -1,0 +1,89 @@
+2024-12-11 16:08:58,007 - INFO - ================ running test for 13 ================
+2024-12-11 16:08:58,008 - INFO - Running test command:
+test_func('ALTER TABLE users ALTER COLUMN Reputation SET DATA TYPE UINT', 'codebase_community')
+2024-12-11 16:08:58,008 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        if '1064' in str(e):
+            print('Issue reproduced')
+        else:
+            print('Unexpected error:', str(e))
+        return
+    print('Issue resolved')
+test_func('ALTER TABLE users ALTER COLUMN Reputation SET DATA TYPE UINT', 'codebase_community')
+2024-12-11 16:08:58,024 - INFO - Test output:
+
+2024-12-11 16:08:58,026 - INFO - Running test command:
+test_func('ALTER TABLE users ALTER COLUMN Reputation SET DATA TYPE UINT', 'codebase_community')
+2024-12-11 16:08:58,027 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        if '1064' in str(e):
+            print('Issue reproduced')
+        else:
+            print('Unexpected error:', str(e))
+        return
+    print('Issue resolved')
+test_func('ALTER TABLE users ALTER COLUMN Reputation SET DATA TYPE UINT', 'codebase_community')
+2024-12-11 16:08:58,045 - INFO - Test output:
+Issue reproduced
+
+2024-12-11 16:08:58,046 - INFO - Running test command:
+test_func('ALTER TABLE users ALTER COLUMN Reputation SET DATA TYPE UINT', 'codebase_community')
+2024-12-11 16:08:58,048 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        if '1064' in str(e):
+            print('Issue reproduced')
+        else:
+            print('Unexpected error:', str(e))
+        return
+    print('Issue resolved')
+test_func('ALTER TABLE users ALTER COLUMN Reputation SET DATA TYPE UINT', 'codebase_community')
+2024-12-11 16:08:58,066 - INFO - Test output:
+Issue reproduced
+
+2024-12-11 16:08:58,067 - INFO - Running test command:
+test_func('ALTER TABLE users ALTER COLUMN Reputation SET DATA TYPE UINT', 'codebase_community')
+2024-12-11 16:08:58,068 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        if '1064' in str(e):
+            print('Issue reproduced')
+        else:
+            print('Unexpected error:', str(e))
+        return
+    print('Issue resolved')
+test_func('ALTER TABLE users ALTER COLUMN Reputation SET DATA TYPE UINT', 'codebase_community')
+2024-12-11 16:08:58,081 - INFO - Test output:
+Issue reproduced
+
+2024-12-11 16:08:58,082 - INFO - Running test command:
+test_func('ALTER TABLE users ALTER COLUMN Reputation SET DATA TYPE UINT', 'codebase_community')
+2024-12-11 16:08:58,083 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        if '1064' in str(e):
+            print('Issue reproduced')
+        else:
+            print('Unexpected error:', str(e))
+        return
+    print('Issue resolved')
+test_func('ALTER TABLE users ALTER COLUMN Reputation SET DATA TYPE UINT', 'codebase_community')
+2024-12-11 16:08:58,098 - INFO - Test output:
+Difference between left join and inner join counts: 25
+Issue reproduced
+
+2024-12-11 16:08:58,099 - INFO - No solutions resolved the issue.
+2024-12-11 16:08:58,243 - INFO - ================ re-ranking solutions for 13 ================
+2024-12-11 16:08:58,247 - INFO - No valid parsed solutions found.

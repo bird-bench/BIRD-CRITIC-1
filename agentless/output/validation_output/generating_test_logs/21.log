@@ -1,0 +1,451 @@
+2024-12-11 13:58:53,835 - INFO - ================ generating test for 21 ================
+2024-12-11 13:58:53,837 - INFO - prompting with message:
+We are currently solving the following issue within our repository. Here is the issue text:
+--- BEGIN ISSUE ---
+ I have a table Player_Attributes for each player, with 5 attributes: crossing  finishing  heading_accuracy  short_passing  volleys. Each attribute is a score from 0-100. Now I want to retrieve the top 3 attributes for each player to build two new columns with the top 3 scores and their attributes (Scores or attributes should be contatenated using a comma, and no space). My current sql is ```sql
+
+SELECT 
+    id, 
+    MAX(Max_v) AS Max_v,
+    NULL AS MAX_attribute
+FROM (
+    SELECT id, crossing AS Max_v, 'crossing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, finishing AS Max_v, 'finishing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, heading_accuracy AS Max_v, 'heading_accuracy' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, short_passing AS Max_v, 'short_passing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, volleys AS Max_v, 'volleys' AS AttributeName FROM Player_Attributes
+) T 
+GROUP BY id LIMIT 10;```
+ But, this query is not giving me the top 3 scores and attributes for each player. What I'm trying to do is get the maximum 1(Highest), Maximum 2 (Second Highest) and the Maximum 3 (Third Highest) score across the 5 attributes along with the attribute name of the column where the 1,2,3 maximum score was found or belong to.
+--- END ISSUE ---
+
+Please generate a complete test that can be used to reproduce the issue.
+
+The complete test should contain the following:
+1. Code to reproduce the issue described in the issue text
+2. Print "Issue reproduced" if the outcome indicates that the issue is reproduced: either an exception is raised or the outcome is incorrect
+3. Print "Issue resolved" if the outcome indicates that the issue has been successfully resolved
+5. The name of the test function must be test_issue with two parameter sql and db
+
+Here is an example:
+```python
+def test_issue(sql, db) -> None:
+    try:
+        result, conn = perform_query_on_mysql_databases(sql, db)
+    except:
+        print("Issue reproduced")
+        return
+    try:
+        assert result[0] == ("HR",)
+        assert result[1] == ("Finance",)
+        print("Issue resolved")
+    except AssertionError:
+        print("Issue reproduced")
+        return
+```
+
+Please ensure the generated test reflects the issue described in the provided issue text.
+The generated test should be able to be used to both reproduce the issue as well as to verify the issue has been fixed.
+Wrap the complete test in ```python...```.
+2024-12-11 13:58:53,838 - INFO - Initializing a decoder model: deepseek-chat ...
+2024-12-11 13:58:53,885 - INFO - Creating API request
+2024-12-11 13:59:15,699 - INFO - API response ChatCompletion(id='cfc0630a-172e-455c-ae0e-f15cc68bffe7', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Perform the query on the database\n        result, conn = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print("Issue reproduced")\n        return\n    \n    try:\n        # Check if the result contains the top 3 attributes for each player\n        # Assuming the result should have columns: id, top_3_scores, top_3_attributes\n        for row in result:\n            id, top_3_scores, top_3_attributes = row\n            # Split the concatenated scores and attributes\n            scores = top_3_scores.split(\',\')\n            attributes = top_3_attributes.split(\',\')\n            # Ensure there are exactly 3 scores and 3 attributes\n            assert len(scores) == 3\n            assert len(attributes) == 3\n            # Ensure the scores are in descending order\n            assert scores == sorted(scores, reverse=True)\n        print("Issue resolved")\n    except AssertionError:\n        print("Issue reproduced")\n        return\n```\n\n### Explanation:\n1. **Reproducing the Issue**: The test function `test_issue` attempts to execute the provided SQL query on the database. If an exception is raised during the execution of the query, it prints "Issue reproduced".\n\n2. **Verifying the Issue**: If the query executes successfully, the test checks the result to ensure that it contains the top 3 attributes for each player. It does this by:\n   - Splitting the concatenated scores and attributes.\n   - Ensuring there are exactly 3 scores and 3 attributes.\n   - Verifying that the scores are in descending order.\n\n3. **Resolving the Issue**: If all assertions pass, it prints "Issue resolved". If any assertion fails, it prints "Issue reproduced".\n\nThis test can be used to both reproduce the issue and verify if the issue has been fixed by modifying the SQL query accordingly.', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925534, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=443, prompt_tokens=670, total_tokens=1113, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=384, prompt_cache_miss_tokens=286))
+2024-12-11 13:59:15,703 - INFO - Initializing a decoder model: deepseek-chat ...
+2024-12-11 13:59:15,738 - INFO - Creating API request
+2024-12-11 13:59:50,137 - INFO - API response ChatCompletion(id='7a0404c8-1b72-43f0-a18e-9e8cba104dde', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Perform the query on the database\n        result, conn = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print("Issue reproduced")\n        return\n    \n    try:\n        # Check if the result contains the top 3 attributes for each player\n        # Assuming the result should have columns: id, top_3_scores, top_3_attributes\n        for row in result:\n            id, top_3_scores, top_3_attributes = row\n            # Split the concatenated scores and attributes\n            scores = top_3_scores.split(\',\')\n            attributes = top_3_attributes.split(\',\')\n            \n            # Check if there are exactly 3 scores and attributes\n            assert len(scores) == 3\n            assert len(attributes) == 3\n            \n            # Check if the scores are in descending order\n            assert scores == sorted(scores, reverse=True)\n            \n            # Check if the attributes correspond to the scores\n            # This part is a bit tricky since we don\'t have the actual attribute values\n            # But we can assume that the attributes are correctly mapped to the scores\n            # based on the query logic.\n            \n        print("Issue resolved")\n    except AssertionError:\n        print("Issue reproduced")\n        return\n\n# Example usage:\n# test_issue(your_sql_query, your_database_connection)\n```\n\n### Explanation:\n1. **Reproducing the Issue**: The test function `test_issue` attempts to execute the provided SQL query on the database. If an exception is raised during the execution, it prints "Issue reproduced".\n\n2. **Verifying the Issue**: If the query executes successfully, the test checks if the result contains the top 3 attributes for each player. It does this by:\n   - Splitting the concatenated scores and attributes.\n   - Checking if there are exactly 3 scores and attributes.\n   - Verifying that the scores are in descending order.\n   - Assuming that the attributes correspond correctly to the scores based on the query logic.\n\n3. **Resolving the Issue**: If all the checks pass, it prints "Issue resolved". If any of the checks fail, it prints "Issue reproduced".\n\n### Note:\n- The function `perform_query_on_mysql_databases` is assumed to be a helper function that executes the SQL query on the database and returns the result and the database connection.\n- The test assumes that the result of the query will have columns `id`, `top_3_scores`, and `top_3_attributes`. These columns should contain the concatenated top 3 scores and attributes for each player.\n- The test is designed to be flexible enough to handle different SQL queries and database connections, making it reusable for different scenarios.', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925558, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=634, prompt_tokens=670, total_tokens=1304, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=640, prompt_cache_miss_tokens=30))
+2024-12-11 13:59:50,173 - INFO - Creating API request
+2024-12-11 14:00:11,099 - INFO - API response ChatCompletion(id='d2b7b5af-56c8-48e9-8f26-a545e35bf28d', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Perform the query on the database\n        result, conn = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print("Issue reproduced")\n        return\n    \n    try:\n        # Check if the result contains the top 3 attributes for each player\n        # Assuming the result should have columns: id, top_3_scores, top_3_attributes\n        for row in result:\n            id, top_3_scores, top_3_attributes = row\n            # Split the concatenated scores and attributes\n            scores = top_3_scores.split(\',\')\n            attributes = top_3_attributes.split(\',\')\n            # Ensure there are exactly 3 scores and 3 attributes\n            assert len(scores) == 3\n            assert len(attributes) == 3\n            # Ensure the scores are in descending order\n            assert scores == sorted(scores, reverse=True)\n        print("Issue resolved")\n    except AssertionError:\n        print("Issue reproduced")\n        return\n```\n\n### Explanation:\n1. **Reproducing the Issue**: The test function `test_issue` attempts to execute the provided SQL query on the database. If an exception is raised during the execution of the query, it prints "Issue reproduced".\n\n2. **Verifying the Issue**: If the query executes successfully, the test checks whether the result contains the top 3 attributes for each player. It assumes that the result has columns `id`, `top_3_scores`, and `top_3_attributes`. The test splits these columns by commas and checks:\n   - There are exactly 3 scores and 3 attributes.\n   - The scores are in descending order.\n\n3. **Resolving the Issue**: If all assertions pass, it prints "Issue resolved". If any assertion fails, it prints "Issue reproduced".\n\nThis test can be used to both reproduce the issue and verify if the issue has been fixed by modifying the SQL query accordingly.', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925590, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=454, prompt_tokens=670, total_tokens=1124, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=640, prompt_cache_miss_tokens=30))
+2024-12-11 14:00:11,136 - INFO - Creating API request
+2024-12-11 14:00:40,686 - INFO - API response ChatCompletion(id='d3229cd7-ac1e-4620-9bb1-98d0b2babc2a', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Perform the query on the database\n        result, conn = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print("Issue reproduced")\n        return\n    \n    try:\n        # Check if the result contains the top 3 attributes for each player\n        # Assuming the result should have columns: id, top_3_scores, top_3_attributes\n        for row in result:\n            id, top_3_scores, top_3_attributes = row\n            # Split the concatenated scores and attributes\n            scores = top_3_scores.split(\',\')\n            attributes = top_3_attributes.split(\',\')\n            \n            # Check if there are exactly 3 scores and attributes\n            assert len(scores) == 3\n            assert len(attributes) == 3\n            \n            # Check if the scores are in descending order\n            assert scores == sorted(scores, reverse=True)\n            \n            # Check if the attributes correspond to the scores\n            # This part is a bit tricky since we don\'t have the actual attribute values,\n            # but we can assume that the attributes are correctly matched to the scores\n            # based on the query logic.\n            \n        print("Issue resolved")\n    except AssertionError:\n        print("Issue reproduced")\n        return\n\n# Example usage:\n# test_issue(your_sql_query, your_database_connection)\n```\n\n### Explanation:\n1. **Reproducing the Issue**: The test function `test_issue` attempts to execute the provided SQL query on the database. If an exception is raised during the execution, it prints "Issue reproduced".\n\n2. **Verifying the Issue**: If the query executes successfully, the test checks the result to ensure that it contains the top 3 attributes for each player. It does this by:\n   - Checking that there are exactly 3 scores and 3 attributes for each player.\n   - Ensuring that the scores are in descending order.\n   - Assuming that the attributes are correctly matched to the scores based on the query logic.\n\n3. **Resolving the Issue**: If all the checks pass, the test prints "Issue resolved". If any of the checks fail, it prints "Issue reproduced".\n\n### Notes:\n- The function `perform_query_on_mysql_databases` is a placeholder for the actual function that executes the SQL query on the database. You need to replace it with the appropriate function that connects to your database and executes the query.\n- The test assumes that the result of the query contains columns `id`, `top_3_scores`, and `top_3_attributes`. You may need to adjust the column names based on your actual query result.\n- The test does not check the actual values of the attributes, but it assumes that the query logic correctly matches the attributes to the scores.', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925611, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=646, prompt_tokens=670, total_tokens=1316, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=640, prompt_cache_miss_tokens=30))
+2024-12-11 14:00:40,720 - INFO - Creating API request
+2024-12-11 14:01:01,226 - INFO - API response ChatCompletion(id='cf42d227-9154-4932-a932-7ce8b84a4b15', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Perform the query on the database\n        result, conn = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print("Issue reproduced")\n        return\n    \n    try:\n        # Check if the result contains the top 3 attributes for each player\n        # Assuming the result should have columns: id, top_3_scores, top_3_attributes\n        for row in result:\n            id, top_3_scores, top_3_attributes = row\n            # Split the concatenated scores and attributes\n            scores = top_3_scores.split(\',\')\n            attributes = top_3_attributes.split(\',\')\n            # Ensure there are exactly 3 scores and 3 attributes\n            assert len(scores) == 3\n            assert len(attributes) == 3\n            # Ensure the scores are in descending order\n            assert scores == sorted(scores, reverse=True)\n        print("Issue resolved")\n    except AssertionError:\n        print("Issue reproduced")\n        return\n```\n\n### Explanation:\n1. **Reproducing the Issue**: The test function `test_issue` attempts to execute the provided SQL query on the database. If an exception is raised during the execution, it prints "Issue reproduced".\n2. **Verifying the Issue**: If the query executes successfully, the test checks if the result contains the top 3 attributes for each player. It assumes that the result has columns `id`, `top_3_scores`, and `top_3_attributes`. The test splits these columns by commas and checks if there are exactly 3 scores and 3 attributes. It also ensures that the scores are in descending order.\n3. **Resolving the Issue**: If all assertions pass, it prints "Issue resolved". If any assertion fails, it prints "Issue reproduced".\n\nThis test can be used to both reproduce the issue and verify if the issue has been fixed by modifying the SQL query accordingly.', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925640, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=447, prompt_tokens=670, total_tokens=1117, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=640, prompt_cache_miss_tokens=30))
+2024-12-11 14:02:11,535 - INFO - ================ normalizing tests for 21 ================
+2024-12-11 14:02:11,539 - INFO - normalized tests: ["def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print('Issue reproduced')\n        return\n    try:\n        for row in result:\n            (id, top_3_scores, top_3_attributes) = row\n            scores = top_3_scores.split(',')\n            attributes = top_3_attributes.split(',')\n            assert len(scores) == 3\n            assert len(attributes) == 3\n            assert scores == sorted(scores, reverse=True)\n        print('Issue resolved')\n    except AssertionError:\n        print('Issue reproduced')\n        return", "def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print('Issue reproduced')\n        return\n    try:\n        for row in result:\n            (id, top_3_scores, top_3_attributes) = row\n            scores = top_3_scores.split(',')\n            attributes = top_3_attributes.split(',')\n            assert len(scores) == 3\n            assert len(attributes) == 3\n            assert scores == sorted(scores, reverse=True)\n        print('Issue resolved')\n    except AssertionError:\n        print('Issue reproduced')\n        return", "def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print('Issue reproduced')\n        return\n    try:\n        for row in result:\n            (id, top_3_scores, top_3_attributes) = row\n            scores = top_3_scores.split(',')\n            attributes = top_3_attributes.split(',')\n            assert len(scores) == 3\n            assert len(attributes) == 3\n            assert scores == sorted(scores, reverse=True)\n        print('Issue resolved')\n    except AssertionError:\n        print('Issue reproduced')\n        return", "def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print('Issue reproduced')\n        return\n    try:\n        for row in result:\n            (id, top_3_scores, top_3_attributes) = row\n            scores = top_3_scores.split(',')\n            attributes = top_3_attributes.split(',')\n            assert len(scores) == 3\n            assert len(attributes) == 3\n            assert scores == sorted(scores, reverse=True)\n        print('Issue resolved')\n    except AssertionError:\n        print('Issue reproduced')\n        return", "def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print('Issue reproduced')\n        return\n    try:\n        for row in result:\n            (id, top_3_scores, top_3_attributes) = row\n            scores = top_3_scores.split(',')\n            attributes = top_3_attributes.split(',')\n            assert len(scores) == 3\n            assert len(attributes) == 3\n            assert scores == sorted(scores, reverse=True)\n        print('Issue resolved')\n    except AssertionError:\n        print('Issue reproduced')\n        return"]
+2024-12-11 14:02:32,293 - INFO - ================ filtering tests for 21 ================
+2024-12-11 14:02:32,293 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for row in result:
+            (id, top_3_scores, top_3_attributes) = row
+            scores = top_3_scores.split(',')
+            attributes = top_3_attributes.split(',')
+            assert len(scores) == 3
+            assert len(attributes) == 3
+            assert scores == sorted(scores, reverse=True)
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT 
+    id, 
+    MAX(Max_v) AS Max_v,
+    NULL AS MAX_attribute
+FROM (
+    SELECT id, crossing AS Max_v, 'crossing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, finishing AS Max_v, 'finishing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, heading_accuracy AS Max_v, 'heading_accuracy' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, short_passing AS Max_v, 'short_passing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, volleys AS Max_v, 'volleys' AS AttributeName FROM Player_Attributes
+) T 
+GROUP BY id LIMIT 10;', 'european_football_2')
+2024-12-11 14:02:32,294 - INFO - Test output:
+unterminated string literal (detected at line 19) (<string>, line 19)
+
+2024-12-11 14:02:32,294 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for row in result:
+            (id, top_3_scores, top_3_attributes) = row
+            scores = top_3_scores.split(',')
+            attributes = top_3_attributes.split(',')
+            assert len(scores) == 3
+            assert len(attributes) == 3
+            assert scores == sorted(scores, reverse=True)
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT 
+    id, 
+    MAX(Max_v) AS Max_v,
+    NULL AS MAX_attribute
+FROM (
+    SELECT id, crossing AS Max_v, 'crossing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, finishing AS Max_v, 'finishing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, heading_accuracy AS Max_v, 'heading_accuracy' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, short_passing AS Max_v, 'short_passing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, volleys AS Max_v, 'volleys' AS AttributeName FROM Player_Attributes
+) T 
+GROUP BY id LIMIT 10;', 'european_football_2')
+2024-12-11 14:02:32,294 - INFO - Test output:
+unterminated string literal (detected at line 19) (<string>, line 19)
+
+2024-12-11 14:02:32,294 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for row in result:
+            (id, top_3_scores, top_3_attributes) = row
+            scores = top_3_scores.split(',')
+            attributes = top_3_attributes.split(',')
+            assert len(scores) == 3
+            assert len(attributes) == 3
+            assert scores == sorted(scores, reverse=True)
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT 
+    id, 
+    MAX(Max_v) AS Max_v,
+    NULL AS MAX_attribute
+FROM (
+    SELECT id, crossing AS Max_v, 'crossing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, finishing AS Max_v, 'finishing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, heading_accuracy AS Max_v, 'heading_accuracy' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, short_passing AS Max_v, 'short_passing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, volleys AS Max_v, 'volleys' AS AttributeName FROM Player_Attributes
+) T 
+GROUP BY id LIMIT 10;', 'european_football_2')
+2024-12-11 14:02:32,294 - INFO - Test output:
+unterminated string literal (detected at line 19) (<string>, line 19)
+
+2024-12-11 14:02:32,294 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for row in result:
+            (id, top_3_scores, top_3_attributes) = row
+            scores = top_3_scores.split(',')
+            attributes = top_3_attributes.split(',')
+            assert len(scores) == 3
+            assert len(attributes) == 3
+            assert scores == sorted(scores, reverse=True)
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT 
+    id, 
+    MAX(Max_v) AS Max_v,
+    NULL AS MAX_attribute
+FROM (
+    SELECT id, crossing AS Max_v, 'crossing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, finishing AS Max_v, 'finishing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, heading_accuracy AS Max_v, 'heading_accuracy' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, short_passing AS Max_v, 'short_passing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, volleys AS Max_v, 'volleys' AS AttributeName FROM Player_Attributes
+) T 
+GROUP BY id LIMIT 10;', 'european_football_2')
+2024-12-11 14:02:32,294 - INFO - Test output:
+unterminated string literal (detected at line 19) (<string>, line 19)
+
+2024-12-11 14:02:32,294 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for row in result:
+            (id, top_3_scores, top_3_attributes) = row
+            scores = top_3_scores.split(',')
+            attributes = top_3_attributes.split(',')
+            assert len(scores) == 3
+            assert len(attributes) == 3
+            assert scores == sorted(scores, reverse=True)
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT 
+    id, 
+    MAX(Max_v) AS Max_v,
+    NULL AS MAX_attribute
+FROM (
+    SELECT id, crossing AS Max_v, 'crossing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, finishing AS Max_v, 'finishing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, heading_accuracy AS Max_v, 'heading_accuracy' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, short_passing AS Max_v, 'short_passing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, volleys AS Max_v, 'volleys' AS AttributeName FROM Player_Attributes
+) T 
+GROUP BY id LIMIT 10;', 'european_football_2')
+2024-12-11 14:02:32,294 - INFO - Test output:
+unterminated string literal (detected at line 19) (<string>, line 19)
+
+2024-12-11 14:02:32,295 - INFO - filtered tests: []
+2024-12-11 16:08:40,589 - INFO - ================ filtering tests for 21 ================
+2024-12-11 16:08:40,589 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for row in result:
+            (id, top_3_scores, top_3_attributes) = row
+            scores = top_3_scores.split(',')
+            attributes = top_3_attributes.split(',')
+            assert len(scores) == 3
+            assert len(attributes) == 3
+            assert scores == sorted(scores, reverse=True)
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT 
+    id, 
+    MAX(Max_v) AS Max_v,
+    NULL AS MAX_attribute
+FROM (
+    SELECT id, crossing AS Max_v, 'crossing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, finishing AS Max_v, 'finishing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, heading_accuracy AS Max_v, 'heading_accuracy' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, short_passing AS Max_v, 'short_passing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, volleys AS Max_v, 'volleys' AS AttributeName FROM Player_Attributes
+) T 
+GROUP BY id LIMIT 10;', 'european_football_2')
+2024-12-11 16:08:40,589 - INFO - Test output:
+unterminated string literal (detected at line 19) (<string>, line 19)
+
+2024-12-11 16:08:40,589 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for row in result:
+            (id, top_3_scores, top_3_attributes) = row
+            scores = top_3_scores.split(',')
+            attributes = top_3_attributes.split(',')
+            assert len(scores) == 3
+            assert len(attributes) == 3
+            assert scores == sorted(scores, reverse=True)
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT 
+    id, 
+    MAX(Max_v) AS Max_v,
+    NULL AS MAX_attribute
+FROM (
+    SELECT id, crossing AS Max_v, 'crossing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, finishing AS Max_v, 'finishing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, heading_accuracy AS Max_v, 'heading_accuracy' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, short_passing AS Max_v, 'short_passing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, volleys AS Max_v, 'volleys' AS AttributeName FROM Player_Attributes
+) T 
+GROUP BY id LIMIT 10;', 'european_football_2')
+2024-12-11 16:08:40,589 - INFO - Test output:
+unterminated string literal (detected at line 19) (<string>, line 19)
+
+2024-12-11 16:08:40,589 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for row in result:
+            (id, top_3_scores, top_3_attributes) = row
+            scores = top_3_scores.split(',')
+            attributes = top_3_attributes.split(',')
+            assert len(scores) == 3
+            assert len(attributes) == 3
+            assert scores == sorted(scores, reverse=True)
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT 
+    id, 
+    MAX(Max_v) AS Max_v,
+    NULL AS MAX_attribute
+FROM (
+    SELECT id, crossing AS Max_v, 'crossing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, finishing AS Max_v, 'finishing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, heading_accuracy AS Max_v, 'heading_accuracy' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, short_passing AS Max_v, 'short_passing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, volleys AS Max_v, 'volleys' AS AttributeName FROM Player_Attributes
+) T 
+GROUP BY id LIMIT 10;', 'european_football_2')
+2024-12-11 16:08:40,589 - INFO - Test output:
+unterminated string literal (detected at line 19) (<string>, line 19)
+
+2024-12-11 16:08:40,589 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for row in result:
+            (id, top_3_scores, top_3_attributes) = row
+            scores = top_3_scores.split(',')
+            attributes = top_3_attributes.split(',')
+            assert len(scores) == 3
+            assert len(attributes) == 3
+            assert scores == sorted(scores, reverse=True)
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT 
+    id, 
+    MAX(Max_v) AS Max_v,
+    NULL AS MAX_attribute
+FROM (
+    SELECT id, crossing AS Max_v, 'crossing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, finishing AS Max_v, 'finishing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, heading_accuracy AS Max_v, 'heading_accuracy' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, short_passing AS Max_v, 'short_passing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, volleys AS Max_v, 'volleys' AS AttributeName FROM Player_Attributes
+) T 
+GROUP BY id LIMIT 10;', 'european_football_2')
+2024-12-11 16:08:40,590 - INFO - Test output:
+unterminated string literal (detected at line 19) (<string>, line 19)
+
+2024-12-11 16:08:40,590 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for row in result:
+            (id, top_3_scores, top_3_attributes) = row
+            scores = top_3_scores.split(',')
+            attributes = top_3_attributes.split(',')
+            assert len(scores) == 3
+            assert len(attributes) == 3
+            assert scores == sorted(scores, reverse=True)
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT 
+    id, 
+    MAX(Max_v) AS Max_v,
+    NULL AS MAX_attribute
+FROM (
+    SELECT id, crossing AS Max_v, 'crossing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, finishing AS Max_v, 'finishing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, heading_accuracy AS Max_v, 'heading_accuracy' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, short_passing AS Max_v, 'short_passing' AS AttributeName FROM Player_Attributes
+    UNION ALL
+    SELECT id, volleys AS Max_v, 'volleys' AS AttributeName FROM Player_Attributes
+) T 
+GROUP BY id LIMIT 10;', 'european_football_2')
+2024-12-11 16:08:40,590 - INFO - Test output:
+unterminated string literal (detected at line 19) (<string>, line 19)
+
+2024-12-11 16:08:40,590 - INFO - filtered tests: []

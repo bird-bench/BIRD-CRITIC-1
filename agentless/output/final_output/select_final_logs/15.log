@@ -1,0 +1,133 @@
+2024-12-11 16:08:58,012 - INFO - ================ running test for 15 ================
+2024-12-11 16:08:58,013 - INFO - Running test command:
+test_func('INSERT INTO "superhero_event" ("event_id", "superhero_id") VALUES (1, 256)', 'superhero')
+2024-12-11 16:08:58,014 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    insert_query = 'INSERT INTO `superhero_event` (`superhero_id`) VALUES (256)'
+    create_table_query = '\n    CREATE TABLE IF NOT EXISTS `superhero_event` (\n      `event_id` int(11) NOT NULL,\n      `superhero_id` int(11) DEFAULT NULL,\n      PRIMARY KEY (`event_id`)\n    );\n    '
+    try:
+        db.execute(create_table_query)
+        db.execute(insert_query)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        select_query = 'SELECT `superhero_id` FROM `superhero_event` WHERE `event_id` = 1'
+        result = db.execute(select_query).fetchone()
+        if result is None:
+            print('Issue reproduced')
+        else:
+            print('Issue resolved')
+    except Exception as e:
+        print('Issue reproduced')
+        return
+test_func('INSERT INTO "superhero_event" ("event_id", "superhero_id") VALUES (1, 256)', 'superhero')
+2024-12-11 16:08:58,014 - INFO - Test output:
+Issue reproduced
+
+2024-12-11 16:08:58,016 - INFO - Running test command:
+test_func('INSERT INTO "superhero_event" ("event_id", "superhero_id") VALUES (1, 256)', 'superhero')
+2024-12-11 16:08:58,017 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    insert_query = 'INSERT INTO `superhero_event` (`superhero_id`) VALUES (256)'
+    create_table_query = '\n    CREATE TABLE IF NOT EXISTS `superhero_event` (\n      `event_id` int(11) NOT NULL,\n      `superhero_id` int(11) DEFAULT NULL,\n      PRIMARY KEY (`event_id`)\n    );\n    '
+    try:
+        db.execute(create_table_query)
+        db.execute(insert_query)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        select_query = 'SELECT `superhero_id` FROM `superhero_event` WHERE `event_id` = 1'
+        result = db.execute(select_query).fetchone()
+        if result is None:
+            print('Issue reproduced')
+        else:
+            print('Issue resolved')
+    except Exception as e:
+        print('Issue reproduced')
+        return
+test_func('INSERT INTO "superhero_event" ("event_id", "superhero_id") VALUES (1, 256)', 'superhero')
+2024-12-11 16:08:58,017 - INFO - Test output:
+Issue reproduced
+
+2024-12-11 16:08:58,018 - INFO - Running test command:
+test_func('INSERT INTO "superhero_event" ("event_id", "superhero_id") VALUES (1, 256)', 'superhero')
+2024-12-11 16:08:58,019 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    insert_query = 'INSERT INTO `superhero_event` (`superhero_id`) VALUES (256)'
+    create_table_query = '\n    CREATE TABLE IF NOT EXISTS `superhero_event` (\n      `event_id` int(11) NOT NULL,\n      `superhero_id` int(11) DEFAULT NULL,\n      PRIMARY KEY (`event_id`)\n    );\n    '
+    try:
+        db.execute(create_table_query)
+        db.execute(insert_query)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        select_query = 'SELECT `superhero_id` FROM `superhero_event` WHERE `event_id` = 1'
+        result = db.execute(select_query).fetchone()
+        if result is None:
+            print('Issue reproduced')
+        else:
+            print('Issue resolved')
+    except Exception as e:
+        print('Issue reproduced')
+        return
+test_func('INSERT INTO "superhero_event" ("event_id", "superhero_id") VALUES (1, 256)', 'superhero')
+2024-12-11 16:08:58,019 - INFO - Test output:
+Issue reproduced
+
+2024-12-11 16:08:58,020 - INFO - Running test command:
+test_func('INSERT INTO "superhero_event" ("event_id", "superhero_id") VALUES (1, 256)', 'superhero')
+2024-12-11 16:08:58,020 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    insert_query = 'INSERT INTO `superhero_event` (`superhero_id`) VALUES (256)'
+    create_table_query = '\n    CREATE TABLE IF NOT EXISTS `superhero_event` (\n      `event_id` int(11) NOT NULL,\n      `superhero_id` int(11) DEFAULT NULL,\n      PRIMARY KEY (`event_id`)\n    );\n    '
+    try:
+        db.execute(create_table_query)
+        db.execute(insert_query)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        select_query = 'SELECT `superhero_id` FROM `superhero_event` WHERE `event_id` = 1'
+        result = db.execute(select_query).fetchone()
+        if result is None:
+            print('Issue reproduced')
+        else:
+            print('Issue resolved')
+    except Exception as e:
+        print('Issue reproduced')
+        return
+test_func('INSERT INTO "superhero_event" ("event_id", "superhero_id") VALUES (1, 256)', 'superhero')
+2024-12-11 16:08:58,024 - INFO - Test output:
+
+2024-12-11 16:08:58,027 - INFO - Running test command:
+test_func('INSERT INTO "superhero_event" ("event_id", "superhero_id") VALUES (1, 256)', 'superhero')
+2024-12-11 16:08:58,027 - INFO - Running test with:
+def test_func(sql, db) -> None:
+    insert_query = 'INSERT INTO `superhero_event` (`superhero_id`) VALUES (256)'
+    create_table_query = '\n    CREATE TABLE IF NOT EXISTS `superhero_event` (\n      `event_id` int(11) NOT NULL,\n      `superhero_id` int(11) DEFAULT NULL,\n      PRIMARY KEY (`event_id`)\n    );\n    '
+    try:
+        db.execute(create_table_query)
+        db.execute(insert_query)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        select_query = 'SELECT `superhero_id` FROM `superhero_event` WHERE `event_id` = 1'
+        result = db.execute(select_query).fetchone()
+        if result is None:
+            print('Issue reproduced')
+        else:
+            print('Issue resolved')
+    except Exception as e:
+        print('Issue reproduced')
+        return
+test_func('INSERT INTO "superhero_event" ("event_id", "superhero_id") VALUES (1, 256)', 'superhero')
+2024-12-11 16:08:58,027 - INFO - Test output:
+Issue reproduced
+
+2024-12-11 16:08:58,028 - INFO - No solutions resolved the issue.
+2024-12-11 16:08:58,204 - INFO - ================ re-ranking solutions for 15 ================
+2024-12-11 16:08:58,214 - INFO - No valid parsed solutions found.

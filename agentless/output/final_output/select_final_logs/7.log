@@ -1,0 +1,156 @@
+2024-12-11 16:08:58,007 - INFO - ================ running test for 7 ================
+2024-12-11 16:08:58,008 - INFO - 5 solutions resolved the issue.
+2024-12-11 16:08:58,192 - INFO - ================ re-ranking solutions for 7 ================
+2024-12-11 16:08:58,194 - WARNING - Failed to parse or normalize SQL: -- Step 1: Create the table without the default value for no_of_chars
+CREATE TABLE `log_content` (
+  `log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` varchar(32) NOT NULL,
+  `no_of_chars` int(4) NULL,
+  PRIMARY KEY (`log_id`)
+);
+
+-- Step 2: Create a BEFORE INSERT trigger to calculate and store the length of the content field
+DELIMITER //
+
+CREATE TRIGGER `before_insert_log_content`
+BEFORE INSERT ON `log_content`
+FOR EACH ROW
+BEGIN
+  SET NEW.`no_of_chars` = CHAR_LENGTH(NEW.`content`);
+END //
+
+DELIMITER ;
+Error: Required keyword: 'expression' missing for <class 'sqlglot.expressions.Div'>. Line 10, Col: 12.
+  2: Create a BEFORE INSERT trigger to calculate and store the length of the content field
+DELIMITER /[4m/[0m
+
+CREATE TRIGGER `before_insert_log_content`
+BEFORE INSERT ON `log_content`
+FOR EACH ROW
+BEGIN
+  SET
+2024-12-11 16:08:58,198 - WARNING - Failed to parse or normalize SQL: -- Step 1: Create the table without the DEFAULT value for no_of_chars
+CREATE TABLE `log_content` (
+  `log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` varchar(32) NOT NULL,
+  `no_of_chars` int(4) NULL,
+  PRIMARY KEY (`log_id`)
+);
+
+-- Step 2: Create a BEFORE INSERT trigger to calculate the length of the content field
+DELIMITER //
+
+CREATE TRIGGER `before_insert_log_content`
+BEFORE INSERT ON `log_content`
+FOR EACH ROW
+BEGIN
+  SET NEW.no_of_chars = CHAR_LENGTH(NEW.content);
+END //
+
+DELIMITER ;
+Error: Required keyword: 'expression' missing for <class 'sqlglot.expressions.Div'>. Line 10, Col: 12.
+  
+
+-- Step 2: Create a BEFORE INSERT trigger to calculate the length of the content field
+DELIMITER /[4m/[0m
+
+CREATE TRIGGER `before_insert_log_content`
+BEFORE INSERT ON `log_content`
+FOR EACH ROW
+BEGIN
+  SET
+2024-12-11 16:08:58,199 - WARNING - Failed to parse or normalize SQL: -- Step 1: Create the table without the DEFAULT value for no_of_chars
+CREATE TABLE `log_content` (
+  `log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` varchar(32) NOT NULL,
+  `no_of_chars` int(4) NULL,
+  PRIMARY KEY (`log_id`)
+);
+
+-- Step 2: Create a trigger to update no_of_chars after insert
+DELIMITER //
+
+CREATE TRIGGER `trg_log_content_insert` 
+AFTER INSERT ON `log_content` 
+FOR EACH ROW 
+BEGIN
+  UPDATE `log_content` 
+  SET `no_of_chars` = CHAR_LENGTH(NEW.`content`) 
+  WHERE `log_id` = NEW.`log_id`;
+END//
+
+DELIMITER ;
+Error: Required keyword: 'expression' missing for <class 'sqlglot.expressions.Div'>. Line 10, Col: 12.
+  RIMARY KEY (`log_id`)
+);
+
+-- Step 2: Create a trigger to update no_of_chars after insert
+DELIMITER /[4m/[0m
+
+CREATE TRIGGER `trg_log_content_insert` 
+AFTER INSERT ON `log_content` 
+FOR EACH ROW 
+BEGIN
+  UPDA
+2024-12-11 16:08:58,200 - WARNING - Failed to parse or normalize SQL: -- Step 1: Create the table without the DEFAULT value for no_of_chars
+CREATE TABLE `log_content` (
+  `log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` varchar(32) NOT NULL,
+  `no_of_chars` int(4) NULL,
+  PRIMARY KEY (`log_id`)
+);
+
+-- Step 2: Create a trigger to update no_of_chars after insert
+DELIMITER $$
+CREATE TRIGGER `trg_log_content_insert` 
+AFTER INSERT ON `log_content` 
+FOR EACH ROW 
+BEGIN
+  UPDATE `log_content` 
+  SET `no_of_chars` = CHAR_LENGTH(NEW.`content`) 
+  WHERE `log_id` = NEW.`log_id`;
+END$$
+DELIMITER ;
+Error: Invalid expression / Unexpected token. Line 11, Col: 6.
+  MARY KEY (`log_id`)
+);
+
+-- Step 2: Create a trigger to update no_of_chars after insert
+DELIMITER $$
+[4mCREATE[0m TRIGGER `trg_log_content_insert` 
+AFTER INSERT ON `log_content` 
+FOR EACH ROW 
+BEGIN
+  UPDATE `log_
+2024-12-11 16:08:58,204 - WARNING - Failed to parse or normalize SQL: -- Step 1: Create the table without the DEFAULT clause for no_of_chars
+CREATE TABLE `log_content` (
+  `log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` varchar(32) NOT NULL,
+  `no_of_chars` int(4) NULL,
+  PRIMARY KEY (`log_id`)
+);
+
+-- Step 2: Create a BEFORE INSERT trigger to set no_of_chars to the length of content
+DELIMITER //
+
+CREATE TRIGGER `before_insert_log_content`
+BEFORE INSERT ON `log_content`
+FOR EACH ROW
+BEGIN
+  SET NEW.`no_of_chars` = CHAR_LENGTH(NEW.`content`);
+END;
+//
+
+DELIMITER ;
+Error: Required keyword: 'expression' missing for <class 'sqlglot.expressions.Div'>. Line 10, Col: 12.
+  ;
+
+-- Step 2: Create a BEFORE INSERT trigger to set no_of_chars to the length of content
+DELIMITER /[4m/[0m
+
+CREATE TRIGGER `before_insert_log_content`
+BEFORE INSERT ON `log_content`
+FOR EACH ROW
+BEGIN
+  SET
+2024-12-11 16:08:58,204 - INFO - No valid parsed solutions found.

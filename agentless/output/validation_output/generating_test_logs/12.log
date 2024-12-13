@@ -1,0 +1,364 @@
+2024-12-11 13:54:24,782 - INFO - ================ generating test for 12 ================
+2024-12-11 13:54:24,782 - INFO - prompting with message:
+We are currently solving the following issue within our repository. Here is the issue text:
+--- BEGIN ISSUE ---
+ I want to update my rank column by sorting order according to the fastestLap column in ascending order and dob column in ascending order. This is my current query: 
+
+```sql
+SELECT 
+    r.*, 
+    @rank := @rank + 1 AS ranking
+FROM 
+    (SELECT @rank := 0) AS init, 
+    results AS r
+JOIN 
+    drivers AS d ON r.driverId = d.driverId
+ORDER BY 
+    r.fastestLap ASC, 
+    d.dob ASC
+LIMIT 10;```
+ But the rank column is not updated according to the sorting order. What am I doing wrong here? Thanks.
+--- END ISSUE ---
+
+Please generate a complete test that can be used to reproduce the issue.
+
+The complete test should contain the following:
+1. Code to reproduce the issue described in the issue text
+2. Print "Issue reproduced" if the outcome indicates that the issue is reproduced: either an exception is raised or the outcome is incorrect
+3. Print "Issue resolved" if the outcome indicates that the issue has been successfully resolved
+5. The name of the test function must be test_issue with two parameter sql and db
+
+Here is an example:
+```python
+def test_issue(sql, db) -> None:
+    try:
+        result, conn = perform_query_on_mysql_databases(sql, db)
+    except:
+        print("Issue reproduced")
+        return
+    try:
+        assert result[0] == ("HR",)
+        assert result[1] == ("Finance",)
+        print("Issue resolved")
+    except AssertionError:
+        print("Issue reproduced")
+        return
+```
+
+Please ensure the generated test reflects the issue described in the provided issue text.
+The generated test should be able to be used to both reproduce the issue as well as to verify the issue has been fixed.
+Wrap the complete test in ```python...```.
+2024-12-11 13:54:24,785 - INFO - Initializing a decoder model: deepseek-chat ...
+2024-12-11 13:54:24,830 - INFO - Creating API request
+2024-12-11 13:54:52,360 - INFO - API response ChatCompletion(id='75819ee8-1796-43a0-bf64-12278f754b12', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Perform the query on the database\n        result, conn = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print("Issue reproduced")\n        return\n    \n    try:\n        # Check if the rank column is updated according to the sorting order\n        # Assuming the first row should have rank 1, the second row rank 2, etc.\n        for i, row in enumerate(result):\n            assert row[\'ranking\'] == i + 1, f"Expected rank {i + 1}, but got {row[\'ranking\']}"\n        \n        print("Issue resolved")\n    except AssertionError as e:\n        print("Issue reproduced")\n        return\n\n# Example usage:\n# sql = """\n# SELECT \n#     r.*, \n#     @rank := @rank + 1 AS ranking\n# FROM \n#     (SELECT @rank := 0) AS init, \n#     results AS r\n# JOIN \n#     drivers AS d ON r.driverId = d.driverId\n# ORDER BY \n#     r.fastestLap ASC, \n#     d.dob ASC\n# LIMIT 10;\n# """\n# db = "your_database_name"\n# test_issue(sql, db)\n```\n\n### Explanation:\n1. **Test Function**: The `test_issue` function takes two parameters: `sql` (the SQL query) and `db` (the database name).\n2. **Perform Query**: The `perform_query_on_mysql_databases` function is assumed to execute the SQL query on the specified database and return the result and a connection object.\n3. **Exception Handling**: If an exception occurs during the query execution, it prints "Issue reproduced".\n4. **Assertion**: The test checks if the `ranking` column is correctly updated according to the sorting order. It iterates through the result set and asserts that each row\'s `ranking` value matches the expected rank (starting from 1).\n5. **Outcome**: If all assertions pass, it prints "Issue resolved". If any assertion fails, it prints "Issue reproduced".\n\n### Usage:\n- Replace `"your_database_name"` with the actual database name.\n- Replace the `sql` variable with the actual SQL query you want to test.\n- Run the `test_issue` function to reproduce and verify the issue.', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925265, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=551, prompt_tokens=462, total_tokens=1013, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=128, prompt_cache_miss_tokens=334))
+2024-12-11 13:54:52,363 - INFO - Initializing a decoder model: deepseek-chat ...
+2024-12-11 13:54:52,400 - INFO - Creating API request
+2024-12-11 13:55:18,431 - INFO - API response ChatCompletion(id='bcbf0c84-2733-4fc5-a12f-b11bc5d79009', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Perform the query on the database\n        result, conn = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print("Issue reproduced")\n        return\n    \n    try:\n        # Check if the rank column is updated according to the sorting order\n        # Assuming the first row should have rank 1, the second row rank 2, etc.\n        for i, row in enumerate(result):\n            assert row[\'ranking\'] == i + 1\n        \n        print("Issue resolved")\n    except AssertionError:\n        print("Issue reproduced")\n        return\n\n# Example usage:\n# sql = """\n# SELECT \n#     r.*, \n#     @rank := @rank + 1 AS ranking\n# FROM \n#     (SELECT @rank := 0) AS init, \n#     results AS r\n# JOIN \n#     drivers AS d ON r.driverId = d.driverId\n# ORDER BY \n#     r.fastestLap ASC, \n#     d.dob ASC\n# LIMIT 10;\n# """\n# db = "your_database_name"\n# test_issue(sql, db)\n```\n\n### Explanation:\n1. **Reproducing the Issue**: The test function `test_issue` takes two parameters: `sql` (the SQL query) and `db` (the database name). It attempts to execute the query on the database using `perform_query_on_mysql_databases`. If an exception is raised during the query execution, it prints "Issue reproduced".\n\n2. **Checking the Outcome**: If the query executes successfully, the test checks if the `ranking` column is updated correctly according to the sorting order. It assumes that the first row should have a rank of 1, the second row a rank of 2, and so on. If any row does not match this expectation, an `AssertionError` is raised, and it prints "Issue reproduced".\n\n3. **Resolving the Issue**: If all rows have the correct rank, it prints "Issue resolved".\n\n### Usage:\n- Replace `"your_database_name"` with the actual database name.\n- Replace the `sql` variable with the actual SQL query you want to test.\n\nThis test can be used to both reproduce the issue and verify if the issue has been fixed by modifying the SQL query accordingly.', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925292, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=549, prompt_tokens=462, total_tokens=1011, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=448, prompt_cache_miss_tokens=14))
+2024-12-11 13:55:18,465 - INFO - Creating API request
+2024-12-11 13:55:44,235 - INFO - API response ChatCompletion(id='7c7f8b88-d0b1-429c-950e-857f3d396d92', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Perform the query on the database\n        result, conn = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        # If an exception is raised, the issue is reproduced\n        print("Issue reproduced")\n        return\n    \n    try:\n        # Check if the rank column is updated correctly according to the sorting order\n        # Assuming the first row should have rank 1, the second row rank 2, etc.\n        for i, row in enumerate(result, start=1):\n            assert row[\'ranking\'] == i, f"Expected rank {i}, but got {row[\'ranking\']}"\n        \n        # If all ranks are correct, the issue is resolved\n        print("Issue resolved")\n    except AssertionError as e:\n        # If the assertion fails, the issue is reproduced\n        print("Issue reproduced")\n        return\n```\n\n### Explanation:\n1. **Reproducing the Issue**: The test function `test_issue` takes two parameters: `sql` (the SQL query) and `db` (the database connection). It attempts to execute the provided SQL query on the database. If an exception is raised during the execution, it prints "Issue reproduced".\n\n2. **Verifying the Issue**: If the query executes successfully, the test checks if the `ranking` column is updated correctly according to the sorting order. It does this by iterating through the result set and asserting that the `ranking` value matches the expected rank (starting from 1).\n\n3. **Resolving the Issue**: If all the ranks are correct, the test prints "Issue resolved". If any rank is incorrect, it prints "Issue reproduced".\n\n### Usage:\n- To reproduce the issue, you would pass the original SQL query provided in the issue text to the `test_issue` function.\n- To verify if the issue has been fixed, you would pass the corrected SQL query to the `test_issue` function.\n\n### Note:\n- The function `perform_query_on_mysql_databases` is assumed to be a helper function that executes the SQL query on the database and returns the result set and the database connection. You would need to implement or replace this function with the appropriate database interaction logic.', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925318, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=507, prompt_tokens=462, total_tokens=969, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=448, prompt_cache_miss_tokens=14))
+2024-12-11 13:55:44,282 - INFO - Creating API request
+2024-12-11 13:56:14,083 - INFO - API response ChatCompletion(id='6d8b1a49-f3eb-475e-8d26-4ad9003c7abe', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Perform the query on the database\n        result, conn = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print("Issue reproduced")\n        return\n    \n    try:\n        # Check if the rank column is updated according to the sorting order\n        # Assuming the first row should have rank 1, the second row rank 2, etc.\n        for i, row in enumerate(result):\n            assert row[\'ranking\'] == i + 1\n        \n        print("Issue resolved")\n    except AssertionError:\n        print("Issue reproduced")\n        return\n\n# Example usage:\n# sql = """\n# SELECT \n#     r.*, \n#     @rank := @rank + 1 AS ranking\n# FROM \n#     (SELECT @rank := 0) AS init, \n#     results AS r\n# JOIN \n#     drivers AS d ON r.driverId = d.driverId\n# ORDER BY \n#     r.fastestLap ASC, \n#     d.dob ASC\n# LIMIT 10;\n# """\n# db = "your_database_connection_string"\n# test_issue(sql, db)\n```\n\n### Explanation:\n1. **Code to reproduce the issue**: The provided SQL query is executed on the database.\n2. **Print "Issue reproduced"**: If an exception is raised during the query execution, it prints "Issue reproduced".\n3. **Print "Issue resolved"**: If the query executes successfully, it checks if the `ranking` column is correctly updated according to the sorting order. If the assertion passes, it prints "Issue resolved".\n4. **Test function**: The function `test_issue` takes two parameters: `sql` (the SQL query) and `db` (the database connection string).\n\n### Assumptions:\n- The `perform_query_on_mysql_databases` function is a placeholder for the actual function that executes the SQL query on the database and returns the result and connection.\n- The result is expected to be a list of dictionaries where each dictionary represents a row with column names as keys.\n- The `ranking` column is expected to be sequential starting from 1 for the first row, 2 for the second row, and so on.\n\n### Usage:\n- Replace `"your_database_connection_string"` with the actual connection string to your database.\n- Replace the `sql` variable with the actual SQL query you want to test.\n\nThis test can be used to both reproduce the issue and verify if the issue has been fixed by checking the `ranking` column in the result.', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925344, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=599, prompt_tokens=462, total_tokens=1061, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=448, prompt_cache_miss_tokens=14))
+2024-12-11 13:56:14,134 - INFO - Creating API request
+2024-12-11 13:56:40,530 - INFO - API response ChatCompletion(id='aa453809-3256-40bf-b959-38c694db3129', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='```python\ndef test_issue(sql, db) -> None:\n    try:\n        # Perform the query on the database\n        result, conn = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print("Issue reproduced")\n        return\n    \n    try:\n        # Check if the rank column is updated according to the sorting order\n        # Assuming the result is a list of tuples where each tuple represents a row\n        # and the rank column is the last element in each tuple\n        previous_rank = 0\n        for row in result:\n            current_rank = row[-1]  # The rank is the last column\n            assert current_rank == previous_rank + 1\n            previous_rank = current_rank\n        \n        print("Issue resolved")\n    except AssertionError:\n        print("Issue reproduced")\n        return\n\n# Example usage:\n# test_issue(sql="SELECT r.*, @rank := @rank + 1 AS ranking FROM (SELECT @rank := 0) AS init, results AS r JOIN drivers AS d ON r.driverId = d.driverId ORDER BY r.fastestLap ASC, d.dob ASC LIMIT 10;", db="your_database_name")\n```\n\n### Explanation:\n1. **Reproducing the Issue**: The test function `test_issue` takes two parameters: `sql` (the SQL query) and `db` (the database name). It attempts to execute the provided SQL query on the specified database.\n2. **Checking the Outcome**: If the query execution raises an exception, the test prints "Issue reproduced". If the query executes successfully, the test checks if the `rank` column is updated correctly by comparing the rank of each row to the expected rank (which should be sequential).\n3. **Verifying the Fix**: If the ranks are sequential and correctly ordered, the test prints "Issue resolved". If the ranks are not sequential, the test prints "Issue reproduced".\n\n### Notes:\n- The function `perform_query_on_mysql_databases` is assumed to be a helper function that executes the SQL query on the specified database and returns the result and a connection object.\n- The test assumes that the result of the query is a list of tuples, where each tuple represents a row from the query result. The rank column is assumed to be the last element in each tuple.\n- The test can be used to both reproduce the issue and verify if the issue has been fixed by running the same query with the expected fix applied.', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None))], created=1733925374, model='deepseek-chat', object='chat.completion', service_tier=None, system_fingerprint='fp_1bcb2de9ac', usage=CompletionUsage(completion_tokens=555, prompt_tokens=462, total_tokens=1017, completion_tokens_details=None, prompt_tokens_details=None, prompt_cache_hit_tokens=448, prompt_cache_miss_tokens=14))
+2024-12-11 14:02:11,476 - INFO - ================ normalizing tests for 12 ================
+2024-12-11 14:02:11,479 - INFO - normalized tests: ['def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print(\'Issue reproduced\')\n        return\n    try:\n        for (i, row) in enumerate(result):\n            assert row[\'ranking\'] == i + 1, f"Expected rank {i + 1}, but got {row[\'ranking\']}"\n        print(\'Issue resolved\')\n    except AssertionError as e:\n        print(\'Issue reproduced\')\n        return', "def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print('Issue reproduced')\n        return\n    try:\n        for (i, row) in enumerate(result):\n            assert row['ranking'] == i + 1\n        print('Issue resolved')\n    except AssertionError:\n        print('Issue reproduced')\n        return", 'def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print(\'Issue reproduced\')\n        return\n    try:\n        for (i, row) in enumerate(result, start=1):\n            assert row[\'ranking\'] == i, f"Expected rank {i}, but got {row[\'ranking\']}"\n        print(\'Issue resolved\')\n    except AssertionError as e:\n        print(\'Issue reproduced\')\n        return', "def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print('Issue reproduced')\n        return\n    try:\n        for (i, row) in enumerate(result):\n            assert row['ranking'] == i + 1\n        print('Issue resolved')\n    except AssertionError:\n        print('Issue reproduced')\n        return", "def test_func(sql, db) -> None:\n    try:\n        (result, conn) = perform_query_on_mysql_databases(sql, db)\n    except Exception as e:\n        print('Issue reproduced')\n        return\n    try:\n        previous_rank = 0\n        for row in result:\n            current_rank = row[-1]\n            assert current_rank == previous_rank + 1\n            previous_rank = current_rank\n        print('Issue resolved')\n    except AssertionError:\n        print('Issue reproduced')\n        return"]
+2024-12-11 14:02:31,717 - INFO - ================ filtering tests for 12 ================
+2024-12-11 14:02:31,717 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for (i, row) in enumerate(result):
+            assert row['ranking'] == i + 1, f"Expected rank {i + 1}, but got {row['ranking']}"
+        print('Issue resolved')
+    except AssertionError as e:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT 
+    r.*, 
+    @rank := @rank + 1 AS ranking
+FROM 
+    (SELECT @rank := 0) AS init, 
+    results AS r
+JOIN 
+    drivers AS d ON r.driverId = d.driverId
+ORDER BY 
+    r.fastestLap ASC, 
+    d.dob ASC
+LIMIT 10;', 'formula_1')
+2024-12-11 14:02:31,717 - INFO - Test output:
+unterminated string literal (detected at line 14) (<string>, line 14)
+
+2024-12-11 14:02:31,717 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for (i, row) in enumerate(result):
+            assert row['ranking'] == i + 1
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT 
+    r.*, 
+    @rank := @rank + 1 AS ranking
+FROM 
+    (SELECT @rank := 0) AS init, 
+    results AS r
+JOIN 
+    drivers AS d ON r.driverId = d.driverId
+ORDER BY 
+    r.fastestLap ASC, 
+    d.dob ASC
+LIMIT 10;', 'formula_1')
+2024-12-11 14:02:31,717 - INFO - Test output:
+unterminated string literal (detected at line 14) (<string>, line 14)
+
+2024-12-11 14:02:31,718 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for (i, row) in enumerate(result, start=1):
+            assert row['ranking'] == i, f"Expected rank {i}, but got {row['ranking']}"
+        print('Issue resolved')
+    except AssertionError as e:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT 
+    r.*, 
+    @rank := @rank + 1 AS ranking
+FROM 
+    (SELECT @rank := 0) AS init, 
+    results AS r
+JOIN 
+    drivers AS d ON r.driverId = d.driverId
+ORDER BY 
+    r.fastestLap ASC, 
+    d.dob ASC
+LIMIT 10;', 'formula_1')
+2024-12-11 14:02:31,718 - INFO - Test output:
+unterminated string literal (detected at line 14) (<string>, line 14)
+
+2024-12-11 14:02:31,718 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for (i, row) in enumerate(result):
+            assert row['ranking'] == i + 1
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT 
+    r.*, 
+    @rank := @rank + 1 AS ranking
+FROM 
+    (SELECT @rank := 0) AS init, 
+    results AS r
+JOIN 
+    drivers AS d ON r.driverId = d.driverId
+ORDER BY 
+    r.fastestLap ASC, 
+    d.dob ASC
+LIMIT 10;', 'formula_1')
+2024-12-11 14:02:31,718 - INFO - Test output:
+unterminated string literal (detected at line 14) (<string>, line 14)
+
+2024-12-11 14:02:31,718 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        previous_rank = 0
+        for row in result:
+            current_rank = row[-1]
+            assert current_rank == previous_rank + 1
+            previous_rank = current_rank
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT 
+    r.*, 
+    @rank := @rank + 1 AS ranking
+FROM 
+    (SELECT @rank := 0) AS init, 
+    results AS r
+JOIN 
+    drivers AS d ON r.driverId = d.driverId
+ORDER BY 
+    r.fastestLap ASC, 
+    d.dob ASC
+LIMIT 10;', 'formula_1')
+2024-12-11 14:02:31,718 - INFO - Test output:
+unterminated string literal (detected at line 17) (<string>, line 17)
+
+2024-12-11 14:02:31,718 - INFO - filtered tests: []
+2024-12-11 16:08:40,075 - INFO - ================ filtering tests for 12 ================
+2024-12-11 16:08:40,075 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for (i, row) in enumerate(result):
+            assert row['ranking'] == i + 1, f"Expected rank {i + 1}, but got {row['ranking']}"
+        print('Issue resolved')
+    except AssertionError as e:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT 
+    r.*, 
+    @rank := @rank + 1 AS ranking
+FROM 
+    (SELECT @rank := 0) AS init, 
+    results AS r
+JOIN 
+    drivers AS d ON r.driverId = d.driverId
+ORDER BY 
+    r.fastestLap ASC, 
+    d.dob ASC
+LIMIT 10;', 'formula_1')
+2024-12-11 16:08:40,075 - INFO - Test output:
+unterminated string literal (detected at line 14) (<string>, line 14)
+
+2024-12-11 16:08:40,075 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for (i, row) in enumerate(result):
+            assert row['ranking'] == i + 1
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT 
+    r.*, 
+    @rank := @rank + 1 AS ranking
+FROM 
+    (SELECT @rank := 0) AS init, 
+    results AS r
+JOIN 
+    drivers AS d ON r.driverId = d.driverId
+ORDER BY 
+    r.fastestLap ASC, 
+    d.dob ASC
+LIMIT 10;', 'formula_1')
+2024-12-11 16:08:40,075 - INFO - Test output:
+unterminated string literal (detected at line 14) (<string>, line 14)
+
+2024-12-11 16:08:40,076 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for (i, row) in enumerate(result, start=1):
+            assert row['ranking'] == i, f"Expected rank {i}, but got {row['ranking']}"
+        print('Issue resolved')
+    except AssertionError as e:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT 
+    r.*, 
+    @rank := @rank + 1 AS ranking
+FROM 
+    (SELECT @rank := 0) AS init, 
+    results AS r
+JOIN 
+    drivers AS d ON r.driverId = d.driverId
+ORDER BY 
+    r.fastestLap ASC, 
+    d.dob ASC
+LIMIT 10;', 'formula_1')
+2024-12-11 16:08:40,076 - INFO - Test output:
+unterminated string literal (detected at line 14) (<string>, line 14)
+
+2024-12-11 16:08:40,076 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        for (i, row) in enumerate(result):
+            assert row['ranking'] == i + 1
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT 
+    r.*, 
+    @rank := @rank + 1 AS ranking
+FROM 
+    (SELECT @rank := 0) AS init, 
+    results AS r
+JOIN 
+    drivers AS d ON r.driverId = d.driverId
+ORDER BY 
+    r.fastestLap ASC, 
+    d.dob ASC
+LIMIT 10;', 'formula_1')
+2024-12-11 16:08:40,076 - INFO - Test output:
+unterminated string literal (detected at line 14) (<string>, line 14)
+
+2024-12-11 16:08:40,076 - INFO - Executing test code:
+def test_func(sql, db) -> None:
+    try:
+        (result, conn) = perform_query_on_mysql_databases(sql, db)
+    except Exception as e:
+        print('Issue reproduced')
+        return
+    try:
+        previous_rank = 0
+        for row in result:
+            current_rank = row[-1]
+            assert current_rank == previous_rank + 1
+            previous_rank = current_rank
+        print('Issue resolved')
+    except AssertionError:
+        print('Issue reproduced')
+        return
+with command: test_func('SELECT 
+    r.*, 
+    @rank := @rank + 1 AS ranking
+FROM 
+    (SELECT @rank := 0) AS init, 
+    results AS r
+JOIN 
+    drivers AS d ON r.driverId = d.driverId
+ORDER BY 
+    r.fastestLap ASC, 
+    d.dob ASC
+LIMIT 10;', 'formula_1')
+2024-12-11 16:08:40,076 - INFO - Test output:
+unterminated string literal (detected at line 17) (<string>, line 17)
+
+2024-12-11 16:08:40,077 - INFO - filtered tests: []
