@@ -1,0 +1,96 @@
+2024-12-11 16:12:31,186 - INFO - Starting execution for question 14
+2024-12-11 16:12:31,186 - INFO - Resetting database financial and restoring tables.
+2024-12-11 16:12:31,254 - INFO - Database financial dropped and recreated.
+2024-12-11 16:12:31,254 - INFO - Importing table loan into database financial.
+2024-12-11 16:12:31,293 - INFO - Table loan successfully imported into financial.
+2024-12-11 16:12:31,293 - INFO - Importing table client into database financial.
+2024-12-11 16:12:31,392 - INFO - Table client successfully imported into financial.
+2024-12-11 16:12:31,392 - INFO - Importing table district into database financial.
+2024-12-11 16:12:31,428 - INFO - Table district successfully imported into financial.
+2024-12-11 16:12:31,428 - INFO - Importing table trans into database financial.
+2024-12-11 16:12:38,889 - INFO - Table trans successfully imported into financial.
+2024-12-11 16:12:38,890 - INFO - Importing table account into database financial.
+2024-12-11 16:12:39,019 - INFO - Table account successfully imported into financial.
+2024-12-11 16:12:39,019 - INFO - Importing table card into database financial.
+2024-12-11 16:12:39,059 - INFO - Table card successfully imported into financial.
+2024-12-11 16:12:39,060 - INFO - Importing table order into database financial.
+2024-12-11 16:12:39,158 - INFO - Table order successfully imported into financial.
+2024-12-11 16:12:39,158 - INFO - Importing table disp into database financial.
+2024-12-11 16:12:39,250 - INFO - Table disp successfully imported into financial.
+2024-12-11 16:12:39,250 - INFO - Database reset and tables restored.
+2024-12-11 16:12:39,250 - INFO - 
+
+==================== Preprocess SQL ====================
+
+2024-12-11 16:12:39,250 - INFO - Executing query 1/1: ALTER TABLE `account` ADD COLUMN `account_type` ENUM('Checking', 'Savings', 'Business', 'NULL') AFTER `frequency`;
+
+2024-12-11 16:12:39,261 - INFO - Query result: []
+2024-12-11 16:12:39,261 - INFO - 
+
+============================================================
+
+2024-12-11 16:12:39,262 - INFO - 
+
+==================== Error Reproduction ====================
+
+2024-12-11 16:12:39,262 - INFO - Executing error SQL 1/1:
+INSERT INTO account (`account_id`, `district_id`, `frequency`, `account_type`, `date`) VALUES
+(12345, 18, "POPLATEK MESICNE", "Regular", "1970-12-13");
+2024-12-11 16:12:39,263 - INFO - Expected error encountered for SQL 1: (1265, "Data truncated for column 'account_type' at row 1")
+2024-12-11 16:12:39,263 - INFO - 
+
+============================================================
+
+2024-12-11 16:12:39,263 - INFO - Resetting database financial and restoring tables for solution phase.
+2024-12-11 16:12:39,327 - INFO - Database financial dropped and recreated.
+2024-12-11 16:12:39,327 - INFO - Importing table loan into database financial.
+2024-12-11 16:12:39,366 - INFO - Table loan successfully imported into financial.
+2024-12-11 16:12:39,366 - INFO - Importing table client into database financial.
+2024-12-11 16:12:39,435 - INFO - Table client successfully imported into financial.
+2024-12-11 16:12:39,435 - INFO - Importing table district into database financial.
+2024-12-11 16:12:39,473 - INFO - Table district successfully imported into financial.
+2024-12-11 16:12:39,473 - INFO - Importing table trans into database financial.
+2024-12-11 16:12:46,485 - INFO - Table trans successfully imported into financial.
+2024-12-11 16:12:46,485 - INFO - Importing table account into database financial.
+2024-12-11 16:12:46,554 - INFO - Table account successfully imported into financial.
+2024-12-11 16:12:46,554 - INFO - Importing table card into database financial.
+2024-12-11 16:12:46,592 - INFO - Table card successfully imported into financial.
+2024-12-11 16:12:46,592 - INFO - Importing table order into database financial.
+2024-12-11 16:12:46,698 - INFO - Table order successfully imported into financial.
+2024-12-11 16:12:46,698 - INFO - Importing table disp into database financial.
+2024-12-11 16:12:46,774 - INFO - Table disp successfully imported into financial.
+2024-12-11 16:12:46,774 - INFO - Database reset and tables restored.
+2024-12-11 16:12:46,774 - INFO - 
+
+==================== Preprocess SQL ====================
+
+2024-12-11 16:12:46,775 - INFO - Executing query 1/1: ALTER TABLE `account` ADD COLUMN `account_type` ENUM('Checking', 'Savings', 'Business', 'NULL') AFTER `frequency`;
+
+2024-12-11 16:12:46,792 - INFO - Query result: []
+2024-12-11 16:12:46,792 - INFO - 
+
+============================================================
+
+2024-12-11 16:12:46,793 - INFO - 
+
+==================== LLM Generated SQL ====================
+
+2024-12-11 16:12:46,793 - INFO - Executing query 1/1: INSERT INTO account (`account_id`, `district_id`, `frequency`, `account_type`, `date`) VALUES
+(12345, 18, "POPLATEK MESICNE", "Reg", "1970-12-13");
+2024-12-11 16:12:46,795 - ERROR - Error executing query 1: (1265, "Data truncated for column 'account_type' at row 1")
+2024-12-11 16:12:46,795 - INFO - 
+
+============================================================
+
+2024-12-11 16:12:46,795 - INFO - 
+
+==================== Clean Up SQL ====================
+
+2024-12-11 16:12:46,795 - INFO - Executing query 1/2: DELETE FROM `account` WHERE `account_id` IN (12345, 23456);
+2024-12-11 16:12:46,798 - INFO - Query result: []
+2024-12-11 16:12:46,798 - INFO - Executing query 2/2: ALTER TABLE `account` DROP COLUMN `account_type`;
+2024-12-11 16:12:46,809 - INFO - Query result: []
+2024-12-11 16:12:46,809 - INFO - 
+
+============================================================
+

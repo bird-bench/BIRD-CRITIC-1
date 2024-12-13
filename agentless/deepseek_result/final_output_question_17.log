@@ -1,0 +1,98 @@
+2024-12-11 16:13:17,734 - INFO - Starting execution for question 17
+2024-12-11 16:13:17,735 - INFO - Resetting database student_club and restoring tables.
+2024-12-11 16:13:17,811 - INFO - Database student_club dropped and recreated.
+2024-12-11 16:13:17,812 - INFO - Importing table income into database student_club.
+2024-12-11 16:13:17,850 - INFO - Table income successfully imported into student_club.
+2024-12-11 16:13:17,851 - INFO - Importing table budget into database student_club.
+2024-12-11 16:13:17,887 - INFO - Table budget successfully imported into student_club.
+2024-12-11 16:13:17,887 - INFO - Importing table zip_code into database student_club.
+2024-12-11 16:13:18,234 - INFO - Table zip_code successfully imported into student_club.
+2024-12-11 16:13:18,234 - INFO - Importing table expense into database student_club.
+2024-12-11 16:13:18,268 - INFO - Table expense successfully imported into student_club.
+2024-12-11 16:13:18,268 - INFO - Importing table member into database student_club.
+2024-12-11 16:13:18,305 - INFO - Table member successfully imported into student_club.
+2024-12-11 16:13:18,305 - INFO - Importing table attendance into database student_club.
+2024-12-11 16:13:18,339 - INFO - Table attendance successfully imported into student_club.
+2024-12-11 16:13:18,339 - INFO - Importing table event into database student_club.
+2024-12-11 16:13:18,380 - INFO - Table event successfully imported into student_club.
+2024-12-11 16:13:18,380 - INFO - Importing table major into database student_club.
+2024-12-11 16:13:18,419 - INFO - Table major successfully imported into student_club.
+2024-12-11 16:13:18,420 - INFO - Database reset and tables restored.
+2024-12-11 16:13:18,420 - INFO - 
+
+==================== Preprocess SQL ====================
+
+2024-12-11 16:13:18,420 - INFO - Executing query 1/1: ALTER TABLE member ADD FULLTEXT (email);
+2024-12-11 16:13:18,501 - INFO - Query result: []
+2024-12-11 16:13:18,501 - INFO - 
+
+============================================================
+
+2024-12-11 16:13:18,501 - INFO - 
+
+==================== Error Reproduction ====================
+
+2024-12-11 16:13:18,501 - INFO - Executing error SQL 1/1:
+SELECT s.member_id FROM member s WHERE s.position='Member' AND MATCH (s.email) AGAINST ('angela.sanders@lpu.edu' IN BOOLEAN MODE);
+2024-12-11 16:13:18,504 - INFO - Expected error encountered for SQL 1: (1064, "syntax error, unexpected '@', expecting $end")
+2024-12-11 16:13:18,504 - INFO - 
+
+============================================================
+
+2024-12-11 16:13:18,504 - INFO - Resetting database student_club and restoring tables for solution phase.
+2024-12-11 16:13:18,559 - INFO - Database student_club dropped and recreated.
+2024-12-11 16:13:18,559 - INFO - Importing table income into database student_club.
+2024-12-11 16:13:18,593 - INFO - Table income successfully imported into student_club.
+2024-12-11 16:13:18,593 - INFO - Importing table budget into database student_club.
+2024-12-11 16:13:18,625 - INFO - Table budget successfully imported into student_club.
+2024-12-11 16:13:18,625 - INFO - Importing table zip_code into database student_club.
+2024-12-11 16:13:18,903 - INFO - Table zip_code successfully imported into student_club.
+2024-12-11 16:13:18,904 - INFO - Importing table expense into database student_club.
+2024-12-11 16:13:18,941 - INFO - Table expense successfully imported into student_club.
+2024-12-11 16:13:18,941 - INFO - Importing table member into database student_club.
+2024-12-11 16:13:18,992 - INFO - Table member successfully imported into student_club.
+2024-12-11 16:13:18,992 - INFO - Importing table attendance into database student_club.
+2024-12-11 16:13:19,027 - INFO - Table attendance successfully imported into student_club.
+2024-12-11 16:13:19,027 - INFO - Importing table event into database student_club.
+2024-12-11 16:13:19,061 - INFO - Table event successfully imported into student_club.
+2024-12-11 16:13:19,061 - INFO - Importing table major into database student_club.
+2024-12-11 16:13:19,096 - INFO - Table major successfully imported into student_club.
+2024-12-11 16:13:19,096 - INFO - Database reset and tables restored.
+2024-12-11 16:13:19,096 - INFO - 
+
+==================== Preprocess SQL ====================
+
+2024-12-11 16:13:19,096 - INFO - Executing query 1/1: ALTER TABLE member ADD FULLTEXT (email);
+2024-12-11 16:13:19,139 - INFO - Query result: []
+2024-12-11 16:13:19,140 - INFO - 
+
+============================================================
+
+2024-12-11 16:13:19,140 - INFO - 
+
+==================== LLM Generated SQL ====================
+
+2024-12-11 16:13:19,140 - INFO - Executing query 1/2: SELECT s.member_id 
+FROM member s 
+WHERE s.position='Member' 
+AND MATCH (s.email) AGAINST ('angela.sanders@lpu.edu' IN BOOLEAN MODE);
+2024-12-11 16:13:19,141 - ERROR - Error executing query 1: (1064, "syntax error, unexpected '@', expecting $end")
+2024-12-11 16:13:19,141 - INFO - Executing query 2/2: SELECT s.member_id 
+FROM member s 
+WHERE s.position = 'Member' 
+AND MATCH (s.email) AGAINST ('angela.sanders@lpu.edu' IN BOOLEAN MODE);
+2024-12-11 16:13:19,143 - ERROR - Error executing query 2: (1064, "syntax error, unexpected '@', expecting $end")
+2024-12-11 16:13:19,143 - INFO - 
+
+============================================================
+
+2024-12-11 16:13:19,143 - INFO - 
+
+==================== Clean Up SQL ====================
+
+2024-12-11 16:13:19,143 - INFO - Executing query 1/1: ALTER TABLE member DROP INDEX email;
+2024-12-11 16:13:19,163 - INFO - Query result: []
+2024-12-11 16:13:19,164 - INFO - 
+
+============================================================
+

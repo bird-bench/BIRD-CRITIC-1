@@ -1,0 +1,137 @@
+2024-12-11 16:13:26,432 - INFO - Starting execution for question 20
+2024-12-11 16:13:26,432 - INFO - Resetting database student_club and restoring tables.
+2024-12-11 16:13:26,486 - INFO - Database student_club dropped and recreated.
+2024-12-11 16:13:26,486 - INFO - Importing table income into database student_club.
+2024-12-11 16:13:26,524 - INFO - Table income successfully imported into student_club.
+2024-12-11 16:13:26,524 - INFO - Importing table budget into database student_club.
+2024-12-11 16:13:26,560 - INFO - Table budget successfully imported into student_club.
+2024-12-11 16:13:26,560 - INFO - Importing table zip_code into database student_club.
+2024-12-11 16:13:26,876 - INFO - Table zip_code successfully imported into student_club.
+2024-12-11 16:13:26,877 - INFO - Importing table expense into database student_club.
+2024-12-11 16:13:26,914 - INFO - Table expense successfully imported into student_club.
+2024-12-11 16:13:26,914 - INFO - Importing table member into database student_club.
+2024-12-11 16:13:26,953 - INFO - Table member successfully imported into student_club.
+2024-12-11 16:13:26,954 - INFO - Importing table attendance into database student_club.
+2024-12-11 16:13:26,999 - INFO - Table attendance successfully imported into student_club.
+2024-12-11 16:13:27,000 - INFO - Importing table event into database student_club.
+2024-12-11 16:13:27,036 - INFO - Table event successfully imported into student_club.
+2024-12-11 16:13:27,036 - INFO - Importing table major into database student_club.
+2024-12-11 16:13:27,074 - INFO - Table major successfully imported into student_club.
+2024-12-11 16:13:27,075 - INFO - Database reset and tables restored.
+2024-12-11 16:13:27,075 - INFO - 
+
+==================== Error Reproduction ====================
+
+2024-12-11 16:13:27,075 - INFO - Executing error SQL 1/1:
+SELECT event.event_id, COUNT(attendance.link_to_member) AS total_attendance, GROUP_CONCAT(member.member_id) AS member_ids
+FROM event
+JOIN attendance ON event.event_id = attendance.link_to_event
+JOIN member ON attendance.link_to_member = member.member_id
+WHERE event.status LIKE '%Open%' AND
+  event.status LIKE '%Closed%'
+GROUP BY event.event_id
+ORDER BY event.event_id;
+2024-12-11 16:13:27,078 - INFO - Error SQL executed without error (unexpected).
+2024-12-11 16:13:27,078 - INFO - 
+
+============================================================
+
+2024-12-11 16:13:27,078 - INFO - Starting test case 1/6
+2024-12-11 16:13:27,078 - INFO - Test case content:
+assert len(sol_sql_result) > 0, "Expected rows to be returned with correct OR condition, but no rows were found."
+
+2024-12-11 16:13:27,079 - ERROR - Test case 1 failed due to assertion error: Expected rows to be returned with correct OR condition, but no rows were found.
+2024-12-11 16:13:27,079 - INFO - Resetting database student_club and restoring tables for solution phase.
+2024-12-11 16:13:27,123 - INFO - Database student_club dropped and recreated.
+2024-12-11 16:13:27,123 - INFO - Importing table income into database student_club.
+2024-12-11 16:13:27,156 - INFO - Table income successfully imported into student_club.
+2024-12-11 16:13:27,156 - INFO - Importing table budget into database student_club.
+2024-12-11 16:13:27,191 - INFO - Table budget successfully imported into student_club.
+2024-12-11 16:13:27,192 - INFO - Importing table zip_code into database student_club.
+2024-12-11 16:13:27,482 - INFO - Table zip_code successfully imported into student_club.
+2024-12-11 16:13:27,482 - INFO - Importing table expense into database student_club.
+2024-12-11 16:13:27,515 - INFO - Table expense successfully imported into student_club.
+2024-12-11 16:13:27,516 - INFO - Importing table member into database student_club.
+2024-12-11 16:13:27,551 - INFO - Table member successfully imported into student_club.
+2024-12-11 16:13:27,551 - INFO - Importing table attendance into database student_club.
+2024-12-11 16:13:27,592 - INFO - Table attendance successfully imported into student_club.
+2024-12-11 16:13:27,593 - INFO - Importing table event into database student_club.
+2024-12-11 16:13:27,627 - INFO - Table event successfully imported into student_club.
+2024-12-11 16:13:27,627 - INFO - Importing table major into database student_club.
+2024-12-11 16:13:27,660 - INFO - Table major successfully imported into student_club.
+2024-12-11 16:13:27,660 - INFO - Database reset and tables restored.
+2024-12-11 16:13:27,660 - INFO - 
+
+==================== LLM Generated SQL ====================
+
+2024-12-11 16:13:27,660 - INFO - Executing query 1/2: SELECT event.event_id, COUNT(attendance.link_to_member) AS total_attendance, GROUP_CONCAT(member.member_id) AS member_ids
+FROM event
+JOIN attendance ON event.event_id = attendance.link_to_event
+JOIN member ON attendance.link_to_member = member.member_id
+WHERE event.status LIKE '%Open%' OR event.status LIKE '%Closed%'
+GROUP BY event.event_id
+ORDER BY event.event_id;
+2024-12-11 16:13:27,662 - INFO - Query result: (('rec2N69DMcrqN9PJC', 17, 'rec28ORZgcm1dtqBZ,reccSUPwy30AeZLEb,reccW7q1KkhSKZsea,recD078PnS3x2doBe,recEFd8s6pkrTt4Pz,recEymrwCUKxiiosI,recf4UKTfipCzgcSA,recjHj4BS5A541n9v,recJMazpPVexyFYTc,recL94zpn6Xh6kQii,recP6DJPyi5donvXL,recQaxyXBQG5BBtD0,recro8T1MPMwRadVH,recT92PyyZCGq1R68,recTjHY5xXhvkCdVT,recttfySfQnYb68u3,recZ4PkGERzl9ziHO'), ('rec5XDvJLyxDsGZWc', 20, 'rec28ORZgcm1dtqBZ,rec75vvFxgYtHmqxY,recD078PnS3x2doBe,recEFd8s6pkrTt4Pz,recEymrwCUKxiiosI,recf4UKTfipCzgcSA,recjHj4BS5A541n9v,recJMazpPVexyFYTc,recL94zpn6Xh6kQii,reco0mr8dXTgs5wWA,recP6DJPyi5donvXL,recsTO4OZIF9rbubk,recT92PyyZCGq1R68,recTjHY5xXhvkCdVT,recttfySfQnYb68u3,recUdRhbhcEO1Hk5r,recuSfhAZIlKba4s2,recVsoJJHFI8bgtfw,recxBj3tjKTGHqucS,recZ4PkGERzl9ziHO'), ('recEVTik3MlqbvLFi', 29, 'rec280Sk7o31iG0Tx,rec28ORZgcm1dtqBZ,rec3pH4DxMcWHMRB7,rec4BLdZHS2Blfp4v,rec75vvFxgYtHmqxY,reccSUPwy30AeZLEb,reccW7q1KkhSKZsea,recD078PnS3x2doBe,recEFd8s6pkrTt4Pz,recEymrwCUKxiiosI,recf4UKTfipCzgcSA,recjHj4BS5A541n9v,recJMazpPVexyFYTc,recL4aEZBZoPk9NYx,recL94zpn6Xh6kQii,reco0mr8dXTgs5wWA,recP6DJPyi5donvXL,recQaxyXBQG5BBtD0,recro8T1MPMwRadVH,recsTO4OZIF9rbubk,recT92PyyZCGq1R68,recTjHY5xXhvkCdVT,recttfySfQnYb68u3,recUdRhbhcEO1Hk5r,recuSfhAZIlKba4s2,recVsoJJHFI8bgtfw,recWh2lJVOT6HjChK,recxBj3tjKTGHqucS,recZ4PkGERzl9ziHO'), ('recggMW2eyCYceNcy', 23, 'rec280Sk7o31iG0Tx,rec28ORZgcm1dtqBZ,rec3pH4DxMcWHMRB7,rec4BLdZHS2Blfp4v,reccW7q1KkhSKZsea,recD078PnS3x2doBe,recEFd8s6pkrTt4Pz,recEymrwCUKxiiosI,recf4UKTfipCzgcSA,recJMazpPVexyFYTc,recL94zpn6Xh6kQii,reco0mr8dXTgs5wWA,recP6DJPyi5donvXL,recQaxyXBQG5BBtD0,recro8T1MPMwRadVH,recsTO4OZIF9rbubk,recT92PyyZCGq1R68,recTjHY5xXhvkCdVT,recUdRhbhcEO1Hk5r,recuSfhAZIlKba4s2,recWh2lJVOT6HjChK,recxBj3tjKTGHqucS,recZ4PkGERzl9ziHO'), ('recGxVCwaLW3mDIa3', 14, 'rec28ORZgcm1dtqBZ,rec4BLdZHS2Blfp4v,rec75vvFxgYtHmqxY,recD078PnS3x2doBe,recEFd8s6pkrTt4Pz,recJMazpPVexyFYTc,recL94zpn6Xh6kQii,recP6DJPyi5donvXL,recro8T1MPMwRadVH,recTjHY5xXhvkCdVT,recttfySfQnYb68u3,recUdRhbhcEO1Hk5r,recWh2lJVOT6HjChK,recZ4PkGERzl9ziHO'), ('recI43CzsZ0Q625ma', 27, 'rec280Sk7o31iG0Tx,rec28ORZgcm1dtqBZ,rec3pH4DxMcWHMRB7,rec4BLdZHS2Blfp4v,rec75vvFxgYtHmqxY,reccW7q1KkhSKZsea,recD078PnS3x2doBe,recEFd8s6pkrTt4Pz,recEymrwCUKxiiosI,recf4UKTfipCzgcSA,recjHj4BS5A541n9v,recL4aEZBZoPk9NYx,recL94zpn6Xh6kQii,reco0mr8dXTgs5wWA,recP6DJPyi5donvXL,recQaxyXBQG5BBtD0,recro8T1MPMwRadVH,recsTO4OZIF9rbubk,recT92PyyZCGq1R68,recTjHY5xXhvkCdVT,recttfySfQnYb68u3,recUdRhbhcEO1Hk5r,recuSfhAZIlKba4s2,recVsoJJHFI8bgtfw,recWh2lJVOT6HjChK,recxBj3tjKTGHqucS,recZ4PkGERzl9ziHO'), ('reciRZdAqNIKuMC96', 27, 'rec280Sk7o31iG0Tx,rec28ORZgcm1dtqBZ,rec3pH4DxMcWHMRB7,rec4BLdZHS2Blfp4v,rec75vvFxgYtHmqxY,reccSUPwy30AeZLEb,reccW7q1KkhSKZsea,recD078PnS3x2doBe,recf4UKTfipCzgcSA,recjHj4BS5A541n9v,recJMazpPVexyFYTc,recL4aEZBZoPk9NYx,recL94zpn6Xh6kQii,reco0mr8dXTgs5wWA,recP6DJPyi5donvXL,recQaxyXBQG5BBtD0,recro8T1MPMwRadVH,recsTO4OZIF9rbubk,recT92PyyZCGq1R68,recTjHY5xXhvkCdVT,recttfySfQnYb68u3,recUdRhbhcEO1Hk5r,recuSfhAZIlKba4s2,recVsoJJHFI8bgtfw,recWh2lJVOT6HjChK,recxBj3tjKTGHqucS,recZ4PkGERzl9ziHO'), ('recIuIXdbLe5j5vCA', 12, 'rec280Sk7o31iG0Tx,rec3pH4DxMcWHMRB7,rec75vvFxgYtHmqxY,reccSUPwy30AeZLEb,reccW7q1KkhSKZsea,recD078PnS3x2doBe,recEFd8s6pkrTt4Pz,recf4UKTfipCzgcSA,recP6DJPyi5donvXL,recro8T1MPMwRadVH,recttfySfQnYb68u3,recVsoJJHFI8bgtfw'), ('reckYL4xtQWpkTJ8k', 5, 'rec4BLdZHS2Blfp4v,recD078PnS3x2doBe,recro8T1MPMwRadVH,recsTO4OZIF9rbubk,recUdRhbhcEO1Hk5r'), ('recLKj8BbTNqxFbTb', 30, 'rec280Sk7o31iG0Tx,rec28ORZgcm1dtqBZ,rec2a03QXbFQAUZ7X,rec3pH4DxMcWHMRB7,rec4BLdZHS2Blfp4v,rec75vvFxgYtHmqxY,reccSUPwy30AeZLEb,reccW7q1KkhSKZsea,recD078PnS3x2doBe,recEFd8s6pkrTt4Pz,recEymrwCUKxiiosI,recf4UKTfipCzgcSA,recjHj4BS5A541n9v,recJMazpPVexyFYTc,recL4aEZBZoPk9NYx,recL94zpn6Xh6kQii,reco0mr8dXTgs5wWA,recP6DJPyi5donvXL,recQaxyXBQG5BBtD0,recro8T1MPMwRadVH,recsTO4OZIF9rbubk,recT92PyyZCGq1R68,recTjHY5xXhvkCdVT,recttfySfQnYb68u3,recUdRhbhcEO1Hk5r,recuSfhAZIlKba4s2,recVsoJJHFI8bgtfw,recWh2lJVOT6HjChK,recxBj3tjKTGHqucS,recZ4PkGERzl9ziHO'), ('recmbOVHSyzXQZpQr', 25, 'rec280Sk7o31iG0Tx,rec28ORZgcm1dtqBZ,rec4BLdZHS2Blfp4v,rec75vvFxgYtHmqxY,reccSUPwy30AeZLEb,reccW7q1KkhSKZsea,recD078PnS3x2doBe,recEFd8s6pkrTt4Pz,recEymrwCUKxiiosI,recjHj4BS5A541n9v,recJMazpPVexyFYTc,recL4aEZBZoPk9NYx,recL94zpn6Xh6kQii,reco0mr8dXTgs5wWA,recP6DJPyi5donvXL,recQaxyXBQG5BBtD0,recro8T1MPMwRadVH,recsTO4OZIF9rbubk,recTjHY5xXhvkCdVT,recUdRhbhcEO1Hk5r,recuSfhAZIlKba4s2,recVsoJJHFI8bgtfw,recWh2lJVOT6HjChK,recxBj3tjKTGHqucS,recZ4PkGERzl9ziHO'), ('recoVo6dFSzG1ypX7', 8, 'rec4BLdZHS2Blfp4v,recD078PnS3x2doBe,recEFd8s6pkrTt4Pz,recro8T1MPMwRadVH,recT92PyyZCGq1R68,recTjHY5xXhvkCdVT,recVsoJJHFI8bgtfw,recZ4PkGERzl9ziHO'), ('recsgSUqFCJqekzL5', 11, 'rec28ORZgcm1dtqBZ,rec4BLdZHS2Blfp4v,rec75vvFxgYtHmqxY,reccSUPwy30AeZLEb,recEFd8s6pkrTt4Pz,recf4UKTfipCzgcSA,recro8T1MPMwRadVH,recT92PyyZCGq1R68,recTjHY5xXhvkCdVT,recttfySfQnYb68u3,recZ4PkGERzl9ziHO'), ('recvCUOytx5jPw7kh', 17, 'rec4BLdZHS2Blfp4v,rec75vvFxgYtHmqxY,reccSUPwy30AeZLEb,recD078PnS3x2doBe,recEFd8s6pkrTt4Pz,recEymrwCUKxiiosI,recjHj4BS5A541n9v,recJMazpPVexyFYTc,recL4aEZBZoPk9NYx,recP6DJPyi5donvXL,recro8T1MPMwRadVH,recsTO4OZIF9rbubk,recT92PyyZCGq1R68,recTjHY5xXhvkCdVT,recUdRhbhcEO1Hk5r,recVsoJJHFI8bgtfw,recZ4PkGERzl9ziHO'), ('recykdvf4LgsyA3wZ', 30, 'rec280Sk7o31iG0Tx,rec28ORZgcm1dtqBZ,rec2a03QXbFQAUZ7X,rec3pH4DxMcWHMRB7,rec4BLdZHS2Blfp4v,rec75vvFxgYtHmqxY,reccSUPwy30AeZLEb,reccW7q1KkhSKZsea,recD078PnS3x2doBe,recEFd8s6pkrTt4Pz,recEymrwCUKxiiosI,recf4UKTfipCzgcSA,recjHj4BS5A541n9v,recJMazpPVexyFYTc,recL4aEZBZoPk9NYx,recL94zpn6Xh6kQii,reco0mr8dXTgs5wWA,recP6DJPyi5donvXL,recQaxyXBQG5BBtD0,recro8T1MPMwRadVH,recsTO4OZIF9rbubk,recT92PyyZCGq1R68,recTjHY5xXhvkCdVT,recttfySfQnYb68u3,recUdRhbhcEO1Hk5r,recuSfhAZIlKba4s2,recVsoJJHFI8bgtfw,recWh2lJVOT6HjChK,recxBj3tjKTGHqucS,recZ4PkGERzl9ziHO'), ('reczhS8wix6Kzbp9P', 27, 'rec280Sk7o31iG0Tx,rec28ORZgcm1dtqBZ,rec3pH4DxMcWHMRB7,rec4BLdZHS2Blfp4v,rec75vvFxgYtHmqxY,recD078PnS3x2doBe,recEFd8s6pkrTt4Pz,recEymrwCUKxiiosI,recf4UKTfipCzgcSA,recjHj4BS5A541n9v,recJMazpPVexyFYTc,recL4aEZBZoPk9NYx,recL94zpn6Xh6kQii,reco0mr8dXTgs5wWA,recP6DJPyi5donvXL,recQaxyXBQG5BBtD0,recro8T1MPMwRadVH,recsTO4OZIF9rbubk,recT92PyyZCGq1R68,recTjHY5xXhvkCdVT,recttfySfQnYb68u3,recUdRhbhcEO1Hk5r,recuSfhAZIlKba4s2,recVsoJJHFI8bgtfw,recWh2lJVOT6HjChK,recxBj3tjKTGHqucS,recZ4PkGERzl9ziHO'))
+2024-12-11 16:13:27,662 - INFO - Executing query 2/2: SELECT event.event_id, COUNT(attendance.link_to_member) AS total_attendance, GROUP_CONCAT(member.member_id) AS member_ids
+FROM event
+JOIN attendance ON event.event_id = attendance.link_to_event
+JOIN member ON attendance.link_to_member = member.member_id
+WHERE event.status LIKE '%Open%' OR
+  event.status LIKE '%Closed%'
+GROUP BY event.event_id
+ORDER BY event.event_id;
+2024-12-11 16:13:27,664 - INFO - Query result: (('rec2N69DMcrqN9PJC', 17, 'rec28ORZgcm1dtqBZ,reccSUPwy30AeZLEb,reccW7q1KkhSKZsea,recD078PnS3x2doBe,recEFd8s6pkrTt4Pz,recEymrwCUKxiiosI,recf4UKTfipCzgcSA,recjHj4BS5A541n9v,recJMazpPVexyFYTc,recL94zpn6Xh6kQii,recP6DJPyi5donvXL,recQaxyXBQG5BBtD0,recro8T1MPMwRadVH,recT92PyyZCGq1R68,recTjHY5xXhvkCdVT,recttfySfQnYb68u3,recZ4PkGERzl9ziHO'), ('rec5XDvJLyxDsGZWc', 20, 'rec28ORZgcm1dtqBZ,rec75vvFxgYtHmqxY,recD078PnS3x2doBe,recEFd8s6pkrTt4Pz,recEymrwCUKxiiosI,recf4UKTfipCzgcSA,recjHj4BS5A541n9v,recJMazpPVexyFYTc,recL94zpn6Xh6kQii,reco0mr8dXTgs5wWA,recP6DJPyi5donvXL,recsTO4OZIF9rbubk,recT92PyyZCGq1R68,recTjHY5xXhvkCdVT,recttfySfQnYb68u3,recUdRhbhcEO1Hk5r,recuSfhAZIlKba4s2,recVsoJJHFI8bgtfw,recxBj3tjKTGHqucS,recZ4PkGERzl9ziHO'), ('recEVTik3MlqbvLFi', 29, 'rec280Sk7o31iG0Tx,rec28ORZgcm1dtqBZ,rec3pH4DxMcWHMRB7,rec4BLdZHS2Blfp4v,rec75vvFxgYtHmqxY,reccSUPwy30AeZLEb,reccW7q1KkhSKZsea,recD078PnS3x2doBe,recEFd8s6pkrTt4Pz,recEymrwCUKxiiosI,recf4UKTfipCzgcSA,recjHj4BS5A541n9v,recJMazpPVexyFYTc,recL4aEZBZoPk9NYx,recL94zpn6Xh6kQii,reco0mr8dXTgs5wWA,recP6DJPyi5donvXL,recQaxyXBQG5BBtD0,recro8T1MPMwRadVH,recsTO4OZIF9rbubk,recT92PyyZCGq1R68,recTjHY5xXhvkCdVT,recttfySfQnYb68u3,recUdRhbhcEO1Hk5r,recuSfhAZIlKba4s2,recVsoJJHFI8bgtfw,recWh2lJVOT6HjChK,recxBj3tjKTGHqucS,recZ4PkGERzl9ziHO'), ('recggMW2eyCYceNcy', 23, 'rec280Sk7o31iG0Tx,rec28ORZgcm1dtqBZ,rec3pH4DxMcWHMRB7,rec4BLdZHS2Blfp4v,reccW7q1KkhSKZsea,recD078PnS3x2doBe,recEFd8s6pkrTt4Pz,recEymrwCUKxiiosI,recf4UKTfipCzgcSA,recJMazpPVexyFYTc,recL94zpn6Xh6kQii,reco0mr8dXTgs5wWA,recP6DJPyi5donvXL,recQaxyXBQG5BBtD0,recro8T1MPMwRadVH,recsTO4OZIF9rbubk,recT92PyyZCGq1R68,recTjHY5xXhvkCdVT,recUdRhbhcEO1Hk5r,recuSfhAZIlKba4s2,recWh2lJVOT6HjChK,recxBj3tjKTGHqucS,recZ4PkGERzl9ziHO'), ('recGxVCwaLW3mDIa3', 14, 'rec28ORZgcm1dtqBZ,rec4BLdZHS2Blfp4v,rec75vvFxgYtHmqxY,recD078PnS3x2doBe,recEFd8s6pkrTt4Pz,recJMazpPVexyFYTc,recL94zpn6Xh6kQii,recP6DJPyi5donvXL,recro8T1MPMwRadVH,recTjHY5xXhvkCdVT,recttfySfQnYb68u3,recUdRhbhcEO1Hk5r,recWh2lJVOT6HjChK,recZ4PkGERzl9ziHO'), ('recI43CzsZ0Q625ma', 27, 'rec280Sk7o31iG0Tx,rec28ORZgcm1dtqBZ,rec3pH4DxMcWHMRB7,rec4BLdZHS2Blfp4v,rec75vvFxgYtHmqxY,reccW7q1KkhSKZsea,recD078PnS3x2doBe,recEFd8s6pkrTt4Pz,recEymrwCUKxiiosI,recf4UKTfipCzgcSA,recjHj4BS5A541n9v,recL4aEZBZoPk9NYx,recL94zpn6Xh6kQii,reco0mr8dXTgs5wWA,recP6DJPyi5donvXL,recQaxyXBQG5BBtD0,recro8T1MPMwRadVH,recsTO4OZIF9rbubk,recT92PyyZCGq1R68,recTjHY5xXhvkCdVT,recttfySfQnYb68u3,recUdRhbhcEO1Hk5r,recuSfhAZIlKba4s2,recVsoJJHFI8bgtfw,recWh2lJVOT6HjChK,recxBj3tjKTGHqucS,recZ4PkGERzl9ziHO'), ('reciRZdAqNIKuMC96', 27, 'rec280Sk7o31iG0Tx,rec28ORZgcm1dtqBZ,rec3pH4DxMcWHMRB7,rec4BLdZHS2Blfp4v,rec75vvFxgYtHmqxY,reccSUPwy30AeZLEb,reccW7q1KkhSKZsea,recD078PnS3x2doBe,recf4UKTfipCzgcSA,recjHj4BS5A541n9v,recJMazpPVexyFYTc,recL4aEZBZoPk9NYx,recL94zpn6Xh6kQii,reco0mr8dXTgs5wWA,recP6DJPyi5donvXL,recQaxyXBQG5BBtD0,recro8T1MPMwRadVH,recsTO4OZIF9rbubk,recT92PyyZCGq1R68,recTjHY5xXhvkCdVT,recttfySfQnYb68u3,recUdRhbhcEO1Hk5r,recuSfhAZIlKba4s2,recVsoJJHFI8bgtfw,recWh2lJVOT6HjChK,recxBj3tjKTGHqucS,recZ4PkGERzl9ziHO'), ('recIuIXdbLe5j5vCA', 12, 'rec280Sk7o31iG0Tx,rec3pH4DxMcWHMRB7,rec75vvFxgYtHmqxY,reccSUPwy30AeZLEb,reccW7q1KkhSKZsea,recD078PnS3x2doBe,recEFd8s6pkrTt4Pz,recf4UKTfipCzgcSA,recP6DJPyi5donvXL,recro8T1MPMwRadVH,recttfySfQnYb68u3,recVsoJJHFI8bgtfw'), ('reckYL4xtQWpkTJ8k', 5, 'rec4BLdZHS2Blfp4v,recD078PnS3x2doBe,recro8T1MPMwRadVH,recsTO4OZIF9rbubk,recUdRhbhcEO1Hk5r'), ('recLKj8BbTNqxFbTb', 30, 'rec280Sk7o31iG0Tx,rec28ORZgcm1dtqBZ,rec2a03QXbFQAUZ7X,rec3pH4DxMcWHMRB7,rec4BLdZHS2Blfp4v,rec75vvFxgYtHmqxY,reccSUPwy30AeZLEb,reccW7q1KkhSKZsea,recD078PnS3x2doBe,recEFd8s6pkrTt4Pz,recEymrwCUKxiiosI,recf4UKTfipCzgcSA,recjHj4BS5A541n9v,recJMazpPVexyFYTc,recL4aEZBZoPk9NYx,recL94zpn6Xh6kQii,reco0mr8dXTgs5wWA,recP6DJPyi5donvXL,recQaxyXBQG5BBtD0,recro8T1MPMwRadVH,recsTO4OZIF9rbubk,recT92PyyZCGq1R68,recTjHY5xXhvkCdVT,recttfySfQnYb68u3,recUdRhbhcEO1Hk5r,recuSfhAZIlKba4s2,recVsoJJHFI8bgtfw,recWh2lJVOT6HjChK,recxBj3tjKTGHqucS,recZ4PkGERzl9ziHO'), ('recmbOVHSyzXQZpQr', 25, 'rec280Sk7o31iG0Tx,rec28ORZgcm1dtqBZ,rec4BLdZHS2Blfp4v,rec75vvFxgYtHmqxY,reccSUPwy30AeZLEb,reccW7q1KkhSKZsea,recD078PnS3x2doBe,recEFd8s6pkrTt4Pz,recEymrwCUKxiiosI,recjHj4BS5A541n9v,recJMazpPVexyFYTc,recL4aEZBZoPk9NYx,recL94zpn6Xh6kQii,reco0mr8dXTgs5wWA,recP6DJPyi5donvXL,recQaxyXBQG5BBtD0,recro8T1MPMwRadVH,recsTO4OZIF9rbubk,recTjHY5xXhvkCdVT,recUdRhbhcEO1Hk5r,recuSfhAZIlKba4s2,recVsoJJHFI8bgtfw,recWh2lJVOT6HjChK,recxBj3tjKTGHqucS,recZ4PkGERzl9ziHO'), ('recoVo6dFSzG1ypX7', 8, 'rec4BLdZHS2Blfp4v,recD078PnS3x2doBe,recEFd8s6pkrTt4Pz,recro8T1MPMwRadVH,recT92PyyZCGq1R68,recTjHY5xXhvkCdVT,recVsoJJHFI8bgtfw,recZ4PkGERzl9ziHO'), ('recsgSUqFCJqekzL5', 11, 'rec28ORZgcm1dtqBZ,rec4BLdZHS2Blfp4v,rec75vvFxgYtHmqxY,reccSUPwy30AeZLEb,recEFd8s6pkrTt4Pz,recf4UKTfipCzgcSA,recro8T1MPMwRadVH,recT92PyyZCGq1R68,recTjHY5xXhvkCdVT,recttfySfQnYb68u3,recZ4PkGERzl9ziHO'), ('recvCUOytx5jPw7kh', 17, 'rec4BLdZHS2Blfp4v,rec75vvFxgYtHmqxY,reccSUPwy30AeZLEb,recD078PnS3x2doBe,recEFd8s6pkrTt4Pz,recEymrwCUKxiiosI,recjHj4BS5A541n9v,recJMazpPVexyFYTc,recL4aEZBZoPk9NYx,recP6DJPyi5donvXL,recro8T1MPMwRadVH,recsTO4OZIF9rbubk,recT92PyyZCGq1R68,recTjHY5xXhvkCdVT,recUdRhbhcEO1Hk5r,recVsoJJHFI8bgtfw,recZ4PkGERzl9ziHO'), ('recykdvf4LgsyA3wZ', 30, 'rec280Sk7o31iG0Tx,rec28ORZgcm1dtqBZ,rec2a03QXbFQAUZ7X,rec3pH4DxMcWHMRB7,rec4BLdZHS2Blfp4v,rec75vvFxgYtHmqxY,reccSUPwy30AeZLEb,reccW7q1KkhSKZsea,recD078PnS3x2doBe,recEFd8s6pkrTt4Pz,recEymrwCUKxiiosI,recf4UKTfipCzgcSA,recjHj4BS5A541n9v,recJMazpPVexyFYTc,recL4aEZBZoPk9NYx,recL94zpn6Xh6kQii,reco0mr8dXTgs5wWA,recP6DJPyi5donvXL,recQaxyXBQG5BBtD0,recro8T1MPMwRadVH,recsTO4OZIF9rbubk,recT92PyyZCGq1R68,recTjHY5xXhvkCdVT,recttfySfQnYb68u3,recUdRhbhcEO1Hk5r,recuSfhAZIlKba4s2,recVsoJJHFI8bgtfw,recWh2lJVOT6HjChK,recxBj3tjKTGHqucS,recZ4PkGERzl9ziHO'), ('reczhS8wix6Kzbp9P', 27, 'rec280Sk7o31iG0Tx,rec28ORZgcm1dtqBZ,rec3pH4DxMcWHMRB7,rec4BLdZHS2Blfp4v,rec75vvFxgYtHmqxY,recD078PnS3x2doBe,recEFd8s6pkrTt4Pz,recEymrwCUKxiiosI,recf4UKTfipCzgcSA,recjHj4BS5A541n9v,recJMazpPVexyFYTc,recL4aEZBZoPk9NYx,recL94zpn6Xh6kQii,reco0mr8dXTgs5wWA,recP6DJPyi5donvXL,recQaxyXBQG5BBtD0,recro8T1MPMwRadVH,recsTO4OZIF9rbubk,recT92PyyZCGq1R68,recTjHY5xXhvkCdVT,recttfySfQnYb68u3,recUdRhbhcEO1Hk5r,recuSfhAZIlKba4s2,recVsoJJHFI8bgtfw,recWh2lJVOT6HjChK,recxBj3tjKTGHqucS,recZ4PkGERzl9ziHO'))
+2024-12-11 16:13:27,664 - INFO - 
+
+============================================================
+
+2024-12-11 16:13:27,664 - INFO - Starting test case 1/6
+2024-12-11 16:13:27,664 - INFO - Test case content:
+assert len(sol_sql_result) > 0, "Expected rows to be returned with correct OR condition, but no rows were found."
+
+2024-12-11 16:13:27,664 - INFO - Test case 1 passed.
+2024-12-11 16:13:27,664 - INFO - Starting test case 2/6
+2024-12-11 16:13:27,664 - INFO - Test case content:
+assert sol_sql_result[0][0] == 'rec2N69DMcrqN9PJC', "Expected event_id 'rec2N69DMcrqN9PJC', but found {sol_sql_result[0][0]}."
+
+2024-12-11 16:13:27,665 - INFO - Test case 2 passed.
+2024-12-11 16:13:27,665 - INFO - Starting test case 3/6
+2024-12-11 16:13:27,665 - INFO - Test case content:
+assert sol_sql_result[1][0] == 'rec5XDvJLyxDsGZWc', "Expected event_id 'rec5XDvJLyxDsGZWc', but found {result[1][0]}."
+
+2024-12-11 16:13:27,665 - INFO - Test case 3 passed.
+2024-12-11 16:13:27,665 - INFO - Starting test case 4/6
+2024-12-11 16:13:27,665 - INFO - Test case content:
+query = """
+SELECT COUNT(*) as total FROM event;
+"""
+result = perform_query_on_mysql_databases(query, "student_club")[0][0][0]
+assert result == 42, "Expected 42 records, but found {result} records."
+
+2024-12-11 16:13:27,666 - INFO - Test case 4 passed.
+2024-12-11 16:13:27,666 - INFO - Starting test case 5/6
+2024-12-11 16:13:27,667 - INFO - Test case content:
+query = """
+SELECT COUNT(*) as total FROM member;
+"""
+result = perform_query_on_mysql_databases(query, "student_club")[0][0][0]
+assert result == 33, "Expected 34 records, but found {result} records."
+
+2024-12-11 16:13:27,667 - INFO - Test case 5 passed.
+2024-12-11 16:13:27,667 - INFO - Starting test case 6/6
+2024-12-11 16:13:27,668 - INFO - Test case content:
+query = """
+SELECT COUNT(*) as total FROM attendance;
+"""
+result = perform_query_on_mysql_databases(query, "student_club")[0][0][0]
+assert result == 326, "Expected 326 records, but found {result} records."
+
+2024-12-11 16:13:27,668 - INFO - Test case 6 passed.
+2024-12-11 16:13:27,669 - INFO - 
+
+==================== Clean Up SQL ====================
+
+2024-12-11 16:13:27,669 - INFO - 
+
+============================================================
+

@@ -1,0 +1,104 @@
+2024-12-11 16:13:55,620 - INFO - Starting execution for question 23
+2024-12-11 16:13:55,621 - INFO - Resetting database formula_1 and restoring tables.
+2024-12-11 16:13:55,721 - INFO - Database formula_1 dropped and recreated.
+2024-12-11 16:13:55,722 - INFO - Importing table circuits into database formula_1.
+2024-12-11 16:13:55,759 - INFO - Table circuits successfully imported into formula_1.
+2024-12-11 16:13:55,760 - INFO - Importing table status into database formula_1.
+2024-12-11 16:13:55,810 - INFO - Table status successfully imported into formula_1.
+2024-12-11 16:13:55,810 - INFO - Importing table drivers into database formula_1.
+2024-12-11 16:13:55,860 - INFO - Table drivers successfully imported into formula_1.
+2024-12-11 16:13:55,860 - INFO - Importing table driverStandings into database formula_1.
+2024-12-11 16:13:56,258 - INFO - Table driverStandings successfully imported into formula_1.
+2024-12-11 16:13:56,258 - INFO - Importing table races into database formula_1.
+2024-12-11 16:13:56,337 - INFO - Table races successfully imported into formula_1.
+2024-12-11 16:13:56,337 - INFO - Importing table constructors into database formula_1.
+2024-12-11 16:13:56,376 - INFO - Table constructors successfully imported into formula_1.
+2024-12-11 16:13:56,376 - INFO - Importing table constructorResults into database formula_1.
+2024-12-11 16:13:56,554 - INFO - Table constructorResults successfully imported into formula_1.
+2024-12-11 16:13:56,554 - INFO - Importing table lapTimes into database formula_1.
+2024-12-11 16:13:59,074 - INFO - Table lapTimes successfully imported into formula_1.
+2024-12-11 16:13:59,074 - INFO - Importing table qualifying into database formula_1.
+2024-12-11 16:13:59,245 - INFO - Table qualifying successfully imported into formula_1.
+2024-12-11 16:13:59,245 - INFO - Importing table pitStops into database formula_1.
+2024-12-11 16:13:59,345 - INFO - Table pitStops successfully imported into formula_1.
+2024-12-11 16:13:59,345 - INFO - Importing table seasons into database formula_1.
+2024-12-11 16:13:59,378 - INFO - Table seasons successfully imported into formula_1.
+2024-12-11 16:13:59,378 - INFO - Importing table constructorStandings into database formula_1.
+2024-12-11 16:13:59,537 - INFO - Table constructorStandings successfully imported into formula_1.
+2024-12-11 16:13:59,538 - INFO - Importing table results into database formula_1.
+2024-12-11 16:13:59,952 - INFO - Table results successfully imported into formula_1.
+2024-12-11 16:13:59,953 - INFO - Database reset and tables restored.
+2024-12-11 16:13:59,953 - INFO - 
+
+==================== Error Reproduction ====================
+
+2024-12-11 16:13:59,953 - INFO - Executing error SQL 1/1:
+SELECT s.driverStandingsId, s.raceId, d.driverId FROM driverStandings s LEFT JOIN drivers d on d.driverId = s.driverId AND s.raceId= 19;
+2024-12-11 16:14:00,055 - INFO - Error SQL executed without error (unexpected).
+2024-12-11 16:14:00,055 - INFO - 
+
+============================================================
+
+2024-12-11 16:14:00,056 - INFO - Starting test case 1/5
+2024-12-11 16:14:00,056 - INFO - Test case content:
+test_query_1 = """
+SELECT COUNT(*) FROM driverStandings WHERE raceId = 19;
+"""
+result = perform_query_on_mysql_databases(test_query_1, "formula_1")[0][0][0]
+assert len(sol_sql_result) == result, f"Expected {result} records, but found {len(sol_sql_result)}."
+
+2024-12-11 16:14:00,059 - ERROR - Test case 1 failed due to assertion error: Expected 18 records, but found 31236.
+2024-12-11 16:14:00,059 - INFO - Resetting database formula_1 and restoring tables for solution phase.
+2024-12-11 16:14:00,124 - INFO - Database formula_1 dropped and recreated.
+2024-12-11 16:14:00,128 - INFO - Importing table circuits into database formula_1.
+2024-12-11 16:14:00,163 - INFO - Table circuits successfully imported into formula_1.
+2024-12-11 16:14:00,164 - INFO - Importing table status into database formula_1.
+2024-12-11 16:14:00,196 - INFO - Table status successfully imported into formula_1.
+2024-12-11 16:14:00,196 - INFO - Importing table drivers into database formula_1.
+2024-12-11 16:14:00,244 - INFO - Table drivers successfully imported into formula_1.
+2024-12-11 16:14:00,244 - INFO - Importing table driverStandings into database formula_1.
+2024-12-11 16:14:00,584 - INFO - Table driverStandings successfully imported into formula_1.
+2024-12-11 16:14:00,585 - INFO - Importing table races into database formula_1.
+2024-12-11 16:14:00,638 - INFO - Table races successfully imported into formula_1.
+2024-12-11 16:14:00,638 - INFO - Importing table constructors into database formula_1.
+2024-12-11 16:14:00,673 - INFO - Table constructors successfully imported into formula_1.
+2024-12-11 16:14:00,673 - INFO - Importing table constructorResults into database formula_1.
+2024-12-11 16:14:00,806 - INFO - Table constructorResults successfully imported into formula_1.
+2024-12-11 16:14:00,807 - INFO - Importing table lapTimes into database formula_1.
+2024-12-11 16:14:03,074 - INFO - Table lapTimes successfully imported into formula_1.
+2024-12-11 16:14:03,074 - INFO - Importing table qualifying into database formula_1.
+2024-12-11 16:14:03,200 - INFO - Table qualifying successfully imported into formula_1.
+2024-12-11 16:14:03,200 - INFO - Importing table pitStops into database formula_1.
+2024-12-11 16:14:03,282 - INFO - Table pitStops successfully imported into formula_1.
+2024-12-11 16:14:03,282 - INFO - Importing table seasons into database formula_1.
+2024-12-11 16:14:03,314 - INFO - Table seasons successfully imported into formula_1.
+2024-12-11 16:14:03,315 - INFO - Importing table constructorStandings into database formula_1.
+2024-12-11 16:14:03,459 - INFO - Table constructorStandings successfully imported into formula_1.
+2024-12-11 16:14:03,459 - INFO - Importing table results into database formula_1.
+2024-12-11 16:14:03,790 - INFO - Table results successfully imported into formula_1.
+2024-12-11 16:14:03,790 - INFO - Database reset and tables restored.
+2024-12-11 16:14:03,790 - INFO - 
+
+==================== LLM Generated SQL ====================
+
+2024-12-11 16:14:03,790 - INFO - 
+
+============================================================
+
+2024-12-11 16:14:03,790 - INFO - Starting test case 1/5
+2024-12-11 16:14:03,790 - INFO - Test case content:
+test_query_1 = """
+SELECT COUNT(*) FROM driverStandings WHERE raceId = 19;
+"""
+result = perform_query_on_mysql_databases(test_query_1, "formula_1")[0][0][0]
+assert len(sol_sql_result) == result, f"Expected {result} records, but found {len(sol_sql_result)}."
+
+2024-12-11 16:14:03,792 - ERROR - Test case 1 failed due to error: object of type 'NoneType' has no len()
+2024-12-11 16:14:03,792 - INFO - 
+
+==================== Clean Up SQL ====================
+
+2024-12-11 16:14:03,792 - INFO - 
+
+============================================================
+

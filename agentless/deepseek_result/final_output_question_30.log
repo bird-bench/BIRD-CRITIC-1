@@ -1,0 +1,76 @@
+2024-12-11 16:15:09,733 - INFO - Starting execution for question 30
+2024-12-11 16:15:09,733 - INFO - Resetting database student_club and restoring tables.
+2024-12-11 16:15:09,800 - INFO - Database student_club dropped and recreated.
+2024-12-11 16:15:09,801 - INFO - Importing table income into database student_club.
+2024-12-11 16:15:09,834 - INFO - Table income successfully imported into student_club.
+2024-12-11 16:15:09,834 - INFO - Importing table budget into database student_club.
+2024-12-11 16:15:09,889 - INFO - Table budget successfully imported into student_club.
+2024-12-11 16:15:09,890 - INFO - Importing table zip_code into database student_club.
+2024-12-11 16:15:10,198 - INFO - Table zip_code successfully imported into student_club.
+2024-12-11 16:15:10,198 - INFO - Importing table expense into database student_club.
+2024-12-11 16:15:10,232 - INFO - Table expense successfully imported into student_club.
+2024-12-11 16:15:10,232 - INFO - Importing table member into database student_club.
+2024-12-11 16:15:10,264 - INFO - Table member successfully imported into student_club.
+2024-12-11 16:15:10,265 - INFO - Importing table attendance into database student_club.
+2024-12-11 16:15:10,299 - INFO - Table attendance successfully imported into student_club.
+2024-12-11 16:15:10,299 - INFO - Importing table event into database student_club.
+2024-12-11 16:15:10,331 - INFO - Table event successfully imported into student_club.
+2024-12-11 16:15:10,331 - INFO - Importing table major into database student_club.
+2024-12-11 16:15:10,365 - INFO - Table major successfully imported into student_club.
+2024-12-11 16:15:10,366 - INFO - Database reset and tables restored.
+2024-12-11 16:15:10,366 - INFO - 
+
+==================== Error Reproduction ====================
+
+2024-12-11 16:15:10,366 - INFO - Executing error SQL 1/1:
+SELECT SUM(expense.cost) AS total_expense, SUM(budget.amount) AS total_budget, budget.link_to_event FROM budget, expense WHERE budget.budget_id = expense.link_to_budget GROUP BY budget.link_to_event;
+2024-12-11 16:15:10,368 - INFO - Error SQL executed without error (unexpected).
+2024-12-11 16:15:10,368 - INFO - 
+
+============================================================
+
+2024-12-11 16:15:10,368 - INFO - Starting test case 1/4
+2024-12-11 16:15:10,368 - INFO - Test case content:
+result = [(float(row[0]), str(row[1]), row[2]) for row in sol_sql_result]
+assert (175.39, '205', 'recggMW2eyCYceNcy') in result, f"Test Case 1 failed! Got result {result}"
+2024-12-11 16:15:10,369 - ERROR - Test case 1 failed due to assertion error: Test Case 1 failed! Got result [(449.13, '1200', 'recykdvf4LgsyA3wZ'), (20.2, '20', 'recc8dizaKrSz3GmH'), (156.19, '355', 'reczhS8wix6Kzbp9P'), (241.6, '420', 'recEVTik3MlqbvLFi'), (219.2, '410', 'reciRZdAqNIKuMC96'), (20.2, '20', 'recMKjJbWRgSQqf4Y'), (228.5, '355', 'recmbOVHSyzXQZpQr'), (260.32, '410', 'recI43CzsZ0Q625ma'), (175.39, '355', 'recggMW2eyCYceNcy'), (20.2, '20', 'recJ4Witp9tpjaugn'), (295.12, '300', 'recLKj8BbTNqxFbTb')]
+2024-12-11 16:15:10,369 - INFO - Resetting database student_club and restoring tables for solution phase.
+2024-12-11 16:15:10,408 - INFO - Database student_club dropped and recreated.
+2024-12-11 16:15:10,408 - INFO - Importing table income into database student_club.
+2024-12-11 16:15:10,441 - INFO - Table income successfully imported into student_club.
+2024-12-11 16:15:10,441 - INFO - Importing table budget into database student_club.
+2024-12-11 16:15:10,474 - INFO - Table budget successfully imported into student_club.
+2024-12-11 16:15:10,474 - INFO - Importing table zip_code into database student_club.
+2024-12-11 16:15:10,765 - INFO - Table zip_code successfully imported into student_club.
+2024-12-11 16:15:10,766 - INFO - Importing table expense into database student_club.
+2024-12-11 16:15:10,802 - INFO - Table expense successfully imported into student_club.
+2024-12-11 16:15:10,803 - INFO - Importing table member into database student_club.
+2024-12-11 16:15:10,844 - INFO - Table member successfully imported into student_club.
+2024-12-11 16:15:10,844 - INFO - Importing table attendance into database student_club.
+2024-12-11 16:15:10,903 - INFO - Table attendance successfully imported into student_club.
+2024-12-11 16:15:10,904 - INFO - Importing table event into database student_club.
+2024-12-11 16:15:10,955 - INFO - Table event successfully imported into student_club.
+2024-12-11 16:15:10,956 - INFO - Importing table major into database student_club.
+2024-12-11 16:15:11,011 - INFO - Table major successfully imported into student_club.
+2024-12-11 16:15:11,012 - INFO - Database reset and tables restored.
+2024-12-11 16:15:11,013 - INFO - 
+
+==================== LLM Generated SQL ====================
+
+2024-12-11 16:15:11,013 - INFO - 
+
+============================================================
+
+2024-12-11 16:15:11,014 - INFO - Starting test case 1/4
+2024-12-11 16:15:11,014 - INFO - Test case content:
+result = [(float(row[0]), str(row[1]), row[2]) for row in sol_sql_result]
+assert (175.39, '205', 'recggMW2eyCYceNcy') in result, f"Test Case 1 failed! Got result {result}"
+2024-12-11 16:15:11,015 - ERROR - Test case 1 failed due to error: 'NoneType' object is not iterable
+2024-12-11 16:15:11,016 - INFO - 
+
+==================== Clean Up SQL ====================
+
+2024-12-11 16:15:11,016 - INFO - 
+
+============================================================
+
