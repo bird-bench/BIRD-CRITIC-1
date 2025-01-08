@@ -3,17 +3,7 @@
 """
 Evaluation Script for SQL Debugging Test Cases (PostgreSQL Edition)
 
-This script:
-1. Resets and restores a PostgreSQL database to a known initial state.
-2. Runs preprocessing SQL queries to set up the environment.
-3. Runs error queries expecting them to fail.
-4. If error queries do not fail, runs test cases that should fail.
-   Closes the DB connection at the end of the error scenario phase.
-5. Resets the database again.
-6. Runs solution queries to get the intended results.
-7. Runs test cases to validate the solution.
-8. Runs clean-up queries.
-9. Closes the DB connection and produces a final report.
+Multithreaded + Multiple DB Replicas + tqdm Progress Bar + Cleanup All Ephemeral Databases at the End
 """
 
 import argparse
@@ -25,17 +15,18 @@ import subprocess
 from datetime import datetime
 import re
 import threading
-import io
+import queue  # For distributing database names
 import tqdm
-
+import io
 import psycopg2
 from psycopg2 import OperationalError
 import multiprocessing
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from test_utils import check_sql_function_usage, remove_distinct, preprocess_results
 
+# Ensure the path to postgresql_setup is correct
 sys.path.append("/app/SO_evaluation")
-
-from stack_overflow_scripts.postgresql_setup import (
+from python_scripts.postgresql_setup import (
     perform_query_on_postgresql_databases,
     close_postgresql_connection,
     close_postgresql_pool,
@@ -90,12 +81,11 @@ def log_section_footer(logger):
 
 def reset_and_restore_database(db_name, pg_password, logger=None):
     """
-    Resets the specified database by creating it from the corresponding template database.
-    Steps:
-    1) Close the connection pool
-    2) Terminate all connections
+    直接通过模板库快速重置数据库：
+    1) 关闭连接池
+    2) 终止连接
     3) dropdb
-    4) createdb --template
+    4) createdb --template=xxx_template
     """
     if logger is None:
         logger = PrintLogger()
@@ -106,13 +96,16 @@ def reset_and_restore_database(db_name, pg_password, logger=None):
 
         env_vars = os.environ.copy()
         env_vars["PGPASSWORD"] = pg_password
-
-        template_db_name = f"{db_name}_template"
+        base_db_name = db_name.split("_process_")[0]
+        template_db_name = f"{base_db_name}_template"
 
         logger.info(f"Resetting database {db_name} using template {template_db_name}")
+
+        # 1) 关闭连接池
         logger.info(f"Closing connection pool for database {db_name} before resetting.")
         close_postgresql_pool(db_name)
 
+        # 2) 终止目标数据库的所有连接
         terminate_command = [
             "psql",
             "-h",
@@ -140,6 +133,7 @@ def reset_and_restore_database(db_name, pg_password, logger=None):
         )
         logger.info(f"All connections to database {db_name} have been terminated.")
 
+        # 3) dropdb
         drop_command = [
             "dropdb",
             "--if-exists",
@@ -161,6 +155,7 @@ def reset_and_restore_database(db_name, pg_password, logger=None):
         )
         logger.info(f"Database {db_name} dropped if it existed.")
 
+        # 4) createdb --template=xxx_template
         create_command = [
             "createdb",
             "-h",
@@ -197,11 +192,14 @@ def reset_and_restore_database(db_name, pg_password, logger=None):
 
 
 def split_field(data, field_name):
+    """
+    Retrieve the specified field from the data dictionary and split it based on [split].
+    """
     field_value = data.get(field_name, "")
     if not field_value:
         return []
     if isinstance(field_value, str):
-        # Use [split] as the delimiter
+        # Use [split] as the delimiter with optional surrounding whitespace
         sql_statements = [
             stmt.strip()
             for stmt in re.split(r"\[split\]\s*", field_value)
@@ -214,17 +212,19 @@ def split_field(data, field_name):
         return []
 
 
+# --- NEW: Get a dedicated connection for a phase ---
 def get_connection_for_phase(db_name, logger):
     """
-    Acquires a dedicated connection for the specified phase.
+    Acquire a new connection (borrowed from the connection pool) for a specific phase.
     """
     logger.info(f"Acquiring dedicated connection for phase on db: {db_name}")
+    # Execute a small query to obtain the connection
     _, conn = perform_query_on_postgresql_databases("SELECT 1", db_name, conn=None)
     return conn
 
 
 class NullLogger:
-    """A logger that does not output any message."""
+    """A Logger implementation that does not output any logs"""
 
     def info(self, *args, **kwargs):
         pass
@@ -256,10 +256,10 @@ class PrintLogger:
 
 
 def execute_queries(
-    queries, db_name, conn=None, logger=None, section_title="", is_solution=True
+    queries, db_name, conn, logger=None, section_title="", is_solution=True
 ):
     """
-    Executes a list of queries using the same connection (conn).
+    Execute a list of queries using the SAME connection (conn).
     """
     if logger is None:
         logger = PrintLogger()
@@ -277,23 +277,23 @@ def execute_queries(
             )
             logger.info(f"Query result: {query_result}")
         except psycopg2.errors.QueryCanceled as e:
-            logger.error(f"Timeout error executing query {i}: {e}")
+            logger.error(f"Timeout error executing query {i+1}: {e}")
             if is_solution:
                 timeout_error = True
         except OperationalError as e:
-            logger.error(f"OperationalError executing query {i}: {e}")
+            logger.error(f"OperationalError executing query {i+1}: {e}")
             if is_solution:
                 execution_error = True
         except psycopg2.Error as e:
-            logger.error(f"psycopg2 Error executing query {i}: {e}")
+            logger.error(f"psycopg2 Error executing query {i+1}: {e}")
             if is_solution:
                 execution_error = True
         except subprocess.TimeoutExpired as e:
-            logger.error(f"Subprocess timeout executing query {i}: {e}")
+            logger.error(f"Subprocess timeout executing query {i+1}: {e}")
             if is_solution:
                 timeout_error = True
         except Exception as e:
-            logger.error(f"Generic error executing query {i}: {e}")
+            logger.error(f"Generic error executing query {i+1}: {e}")
             if is_solution:
                 execution_error = True
         finally:
@@ -303,11 +303,11 @@ def execute_queries(
     return query_result, execution_error, timeout_error
 
 
+# --- CHANGE: Use the same conn without internal close ---
 def execute_error_sql(error_sql_list, db_name, logger, conn):
     """
-    Executes a list of SQL statements that are expected to produce errors
-    using the same connection. Returns the first encountered error_message,
-    and the result if no error happened.
+    Execute a list of SQL statements that are expected to produce errors, using the SAME conn.
+    Returns the first encountered error_message, and the result if no error happened.
     """
     log_section_header("Error Reproduction", logger)
     error_message = None
@@ -325,19 +325,19 @@ def execute_error_sql(error_sql_list, db_name, logger, conn):
                     query, db_name, conn
                 )
             except psycopg2.errors.QueryCanceled as e:
-                logger.error(f"Timeout error executing error SQL {i}: {e}")
+                logger.error(f"Timeout error executing error SQL {i+1}: {e}")
                 error_message = str(e)
                 break
             except psycopg2.Error as e:
-                logger.info(f"Expected error encountered for SQL {i}: {e}")
+                logger.info(f"Expected error encountered for SQL {i+1}: {e}")
                 error_message = str(e)
                 break
             except subprocess.TimeoutExpired as e:
-                logger.error(f"Subprocess timeout executing error SQL {i}: {e}")
+                logger.error(f"Subprocess timeout executing error SQL {i+1}: {e}")
                 error_message = f"Timeout: {str(e)}"
                 break
             except Exception as e:
-                logger.info(f"Expected error encountered for SQL {i}: {e}")
+                logger.info(f"Expected error encountered for SQL {i+1}: {e}")
                 error_message = str(e)
                 break
             finally:
@@ -349,6 +349,7 @@ def execute_error_sql(error_sql_list, db_name, logger, conn):
 def run_test_case(
     test_code, result, logger, idx, return_dict, conn, error_sql, sol_sql, db_name
 ):
+    # 1. Prepare global_env and local_env
     global_env = {
         "perform_query_on_postgresql_databases": perform_query_on_postgresql_databases,
         "execute_queries": execute_queries,
@@ -368,6 +369,7 @@ def run_test_case(
 
     logger.info(f"Passing result is {result}")
 
+    # Construct the test case code
     test_case_code = "from datetime import date\n" + test_code
     test_case_code += (
         "\n__test_case_result__ = test_case(pred_sqls, sol_sqls, db_name, conn)"
@@ -376,6 +378,7 @@ def run_test_case(
     logger.info(f"Test case content:\n{test_case_code}")
     logger.info(f"Executing test case {idx}")
 
+    # 2. Redirect sys.stdout to StringIO to capture prints from test_code
     old_stdout = sys.stdout
     mystdout = io.StringIO()
     sys.stdout = mystdout
@@ -391,8 +394,10 @@ def run_test_case(
         logger.error(f"Test case {idx} failed due to error: {e}")
         return_dict[idx] = "failed"
     finally:
+        # 3. Restore sys.stdout
         sys.stdout = old_stdout
 
+    # 4. Log the captured stdout
     captured_output = mystdout.getvalue()
     if captured_output.strip():
         logger.info(f"Captured output from test_code:\n{captured_output}")
@@ -421,7 +426,7 @@ def execute_test_cases(
             ),
         )
         p.start()
-        p.join(timeout=60)
+        p.join(timeout=60)  # Each test case has a maximum of 60 seconds
         if p.is_alive():
             logger.error(f"Test case {i} execution timed out.")
             p.terminate()
@@ -440,17 +445,22 @@ def execute_test_cases(
     return passed_count, failed_tests
 
 
+# --- CHANGE: Preprocessing should also use the same conn ---
 def run_preprocessing(preprocess_sql, db_name, logger, conn):
-    """
-    Executes preprocessing queries if any.
-    """
     if preprocess_sql:
-        execute_queries(preprocess_sql, db_name, conn, logger, "Preprocess SQL", False)
+        execute_queries(
+            preprocess_sql,
+            db_name,
+            conn,
+            logger,
+            section_title="Preprocess SQL",
+            is_solution=False,
+        )
 
 
 def run_error_phase(error_sql, sol_sql, db_name, test_cases, logger, conn, efficiency):
     """
-    1. Execute error queries (expected to fail).
+    1. Execute error queries (expected to fail) with the given conn.
     2. If no error occurs, run test cases that are expected to fail.
     """
     error_message, error_sql_result = execute_error_sql(
@@ -458,25 +468,32 @@ def run_error_phase(error_sql, sol_sql, db_name, test_cases, logger, conn, effic
     )
     assertion_error = False
 
+    # If no error was triggered, execute test_cases (which should fail)
     if error_message is None and test_cases and not efficiency:
         passed_count, failed_tests = execute_test_cases(
             test_cases, error_sql_result, logger, conn, error_sql, sol_sql, db_name
         )
         if failed_tests:
-            assertion_error = False
+            assertion_error = False  # They did fail as expected
         else:
-            assertion_error = True
+            assertion_error = True  # They unexpectedly passed
     return error_message, error_sql_result, assertion_error
 
 
 def run_solution_phase(
-    error_sql, sol_sql, db_name, test_cases, logger, conn, efficiency
+    pred_sql, gold_sql, error_sql, db_name, test_cases, logger, conn, efficiency
 ):
     """
-    Executes the solution queries and runs test cases on the results.
+    1. Execute solution queries using the given conn.
+    2. Run test cases on the solution results if no major error/timeout.
     """
     sol_sql_result, exec_error_flag, timeout_flag = execute_queries(
-        sol_sql, db_name, conn, logger, "LLM Generated SQL", is_solution=True
+        pred_sql,
+        db_name,
+        conn,
+        logger,
+        section_title="LLM Generated SQL",
+        is_solution=True,
     )
 
     instance_execution_error = exec_error_flag
@@ -488,11 +505,11 @@ def run_solution_phase(
     if not instance_execution_error and not instance_timeout_error and test_cases:
         if not efficiency:
             passed_count, failed_tests = execute_test_cases(
-                test_cases, sol_sql_result, logger, conn, sol_sql, sol_sql, db_name
+                test_cases, sol_sql_result, logger, conn, pred_sql, gold_sql, db_name
             )
         else:
             passed_count, failed_tests = execute_test_cases(
-                test_cases, sol_sql_result, logger, conn, error_sql, sol_sql, db_name
+                test_cases, sol_sql_result, logger, conn, error_sql, pred_sql, db_name
             )
         if failed_tests:
             instance_assertion_error = True
@@ -506,24 +523,141 @@ def run_solution_phase(
     )
 
 
+def create_ephemeral_db_copies(base_db_names, num_copies, pg_password, logger):
+    """
+    For each base_db (e.g., 'financial', 'formula_1'), create num_copies ephemeral databases
+    (e.g., financial_process_1, financial_process_2, ...), each from base_db_template.
+    Returns a dictionary: { 'financial': ['financial_process_1', ...], 'formula_1': [...] }
+    """
+    pg_host = "bird_critic_postgresql"
+    pg_port = 5432
+    pg_user = "root"
+    env_vars = os.environ.copy()
+    env_vars["PGPASSWORD"] = pg_password
+
+    ephemeral_db_pool = {}
+
+    for base_db in base_db_names:
+        base_template = f"{base_db}_template"
+        ephemeral_db_pool[base_db] = []
+
+        for i in range(1, num_copies + 1):
+            ephemeral_name = f"{base_db}_process_{i}"
+            # If it already exists, drop it first
+            drop_cmd = [
+                "dropdb",
+                "--if-exists",
+                "-h",
+                pg_host,
+                "-p",
+                str(pg_port),
+                "-U",
+                pg_user,
+                ephemeral_name,
+            ]
+            subprocess.run(
+                drop_cmd,
+                check=False,
+                env=env_vars,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+
+            # createdb --template
+            create_cmd = [
+                "createdb",
+                "-h",
+                pg_host,
+                "-p",
+                str(pg_port),
+                "-U",
+                pg_user,
+                ephemeral_name,
+                "--template",
+                base_template,
+            ]
+            logger.info(
+                f"Creating ephemeral db {ephemeral_name} from {base_template}..."
+            )
+            subprocess.run(
+                create_cmd,
+                check=True,
+                env=env_vars,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+
+            ephemeral_db_pool[base_db].append(ephemeral_name)
+
+        logger.info(
+            f"For base_db={base_db}, ephemeral db list = {ephemeral_db_pool[base_db]}"
+        )
+
+    return ephemeral_db_pool
+
+
+def drop_ephemeral_dbs(ephemeral_db_pool_dict, pg_password, logger):
+    """
+    Delete all ephemeral databases created during the script execution.
+    """
+    pg_host = "bird_critic_postgresql"
+    pg_port = 5432
+    pg_user = "root"
+    env_vars = os.environ.copy()
+    env_vars["PGPASSWORD"] = pg_password
+
+    logger.info("=== Cleaning up ephemeral databases ===")
+    for base_db, ephemeral_list in ephemeral_db_pool_dict.items():
+        for ephemeral_db in ephemeral_list:
+            logger.info(f"Dropping ephemeral db: {ephemeral_db}")
+            drop_cmd = [
+                "dropdb",
+                "--if-exists",
+                "-h",
+                pg_host,
+                "-p",
+                str(pg_port),
+                "-U",
+                pg_user,
+                ephemeral_db,
+            ]
+            try:
+                subprocess.run(
+                    drop_cmd,
+                    check=True,
+                    env=env_vars,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                )
+            except subprocess.CalledProcessError as e:
+                logger.error(f"Failed to drop ephemeral db {ephemeral_db}: {e}")
+
+
 def ex_base(pred_sqls, sol_sqls, db_name, conn):
     """
-    Compares the results of pred_sqls and sol_sqls on the same database connection.
-    Returns 1 if both sets of queries produce identical sets of rows, otherwise 0.
+    Execute predicted SQL list and ground truth SQL list, and compare if the results are identical.
+    Returns 1 if identical, otherwise 0.
     """
+    # If either list is empty, return 0
     if not pred_sqls or not sol_sqls:
         return 0
 
+    # Result comparison function
     def calculate_ex(predicted_res, ground_truth_res):
+        # Compare using sets to ignore order and duplicates
         return 1 if set(predicted_res) == set(ground_truth_res) else 0
 
+    # Execute predicted SQL list
     predicted_res, pred_execution_error, pred_timeout_error = execute_queries(
         pred_sqls, db_name, conn, None, "", True
     )
+
+    # Execute ground truth SQL list
     ground_truth_res, gt_execution_error, gt_timeout_error = execute_queries(
         sol_sqls, db_name, conn, None, "", True
     )
 
+    # If any execution or timeout error occurs, return 0
     if (
         gt_execution_error
         or gt_timeout_error
@@ -532,33 +666,34 @@ def ex_base(pred_sqls, sol_sqls, db_name, conn):
     ):
         return 0
 
+    # If results are None or empty, decide based on requirements (here, return 0)
     if not predicted_res or not ground_truth_res:
         return 0
-
     predicted_res = preprocess_results(predicted_res)
     ground_truth_res = preprocess_results(ground_truth_res)
+    # If both results are successfully retrieved, compare them
     return calculate_ex(predicted_res, ground_truth_res)
 
 
-def performance_compare_by_qep(error_sqls, sol_sqls, db_name, conn):
+def performance_compare_by_qep(old_sqls, sol_sqls, db_name, conn):
     """
-    Compare total plan cost of error_sqls vs. sol_sqls in one connection,
+    Compare total plan cost of old_sqls vs. sol_sqls in one connection,
     by using transactions + ROLLBACK to ensure each group sees the same initial state.
 
     Returns 1 if sol_sqls total plan cost is lower, otherwise 0.
 
     Notes:
-      - If error_sqls / sol_sqls contain schema changes or data modifications,
+      - If old_sqls / sol_sqls contain schema changes or data modifications,
         we rely on transaction rollback to discard those changes before measuring the other side.
       - EXPLAIN itself does not execute the query, only returns the plan and cost estimate.
-      - This approach will not reflect persistent changes made by error_sqls if they are needed by sol_sqls.
+      - This approach will not reflect persistent changes made by old_sqls if they are needed by sol_sqls.
         Instead, it ensures both sets see the same starting state for cost comparison.
     """
 
-    if not error_sqls or not sol_sqls:
-        print("Either error_sqls or sol_sqls is empty. Returning 0.")
+    if not old_sqls or not sol_sqls:
+        print("Either old_sqls or sol_sqls is empty. Returning 0.")
         return 0
-    print(f"Old SQLs are {error_sqls}")
+    print(f"Old SQLs are {old_sqls}")
     print(f"New SQLs are {sol_sqls}")
 
     def measure_sqls_cost(sql_list):
@@ -575,7 +710,6 @@ def performance_compare_by_qep(error_sqls, sol_sqls, db_name, conn):
                 upper_sql.startswith("SELECT")
                 or upper_sql.startswith("INSERT")
                 or upper_sql.startswith("UPDATE")
-                or upper_sql.startswith("WITH")
                 or upper_sql.startswith("DELETE")
             ):
                 print(f"[measure_sqls_cost] Skip EXPLAIN for non-DML: {sql}")
@@ -616,14 +750,14 @@ def performance_compare_by_qep(error_sqls, sol_sqls, db_name, conn):
 
         return total_cost
 
-    # --- Measure cost for error_sqls ---
+    # --- Measure cost for old_sqls ---
     try:
         # Start a transaction
         perform_query_on_postgresql_databases("BEGIN", db_name, conn=conn)
-        old_total_cost = measure_sqls_cost(error_sqls)
+        old_total_cost = measure_sqls_cost(old_sqls)
         print(f"Old SQLs total plan cost: {old_total_cost}")
     finally:
-        # Always rollback so that error_sqls changes are not visible to sol_sqls
+        # Always rollback so that old_sqls changes are not visible to sol_sqls
         perform_query_on_postgresql_databases("ROLLBACK", db_name, conn=conn)
 
     # --- Measure cost for sol_sqls ---
@@ -643,9 +777,232 @@ def performance_compare_by_qep(error_sqls, sol_sqls, db_name, conn):
     return 1 if sol_total_cost < old_total_cost else 0
 
 
+def process_one_instance(data_item, ephemeral_db_queues, args, global_stats_lock):
+    global number_of_execution_errors, number_of_timeouts
+    global number_of_assertion_errors, number_of_error_sql_errors
+    global total_passed_instances, number_error_unexpected_pass
+
+    instance_id = data_item["instance_id"]
+    log_filename = os.path.splitext(args.jsonl_file)[0] + f"_instance_{instance_id}.log"
+    if args.logging == "true":
+        logger = configure_logger(log_filename)
+    else:
+        logger = NullLogger()
+    required_fields = ["selected_database", "preprocess_sql", "error_sql", "sol_sql"]
+    missing_fields = [field for field in required_fields if field not in data_item]
+    if missing_fields:
+        logger.error(f"Missing required fields: {', '.join(missing_fields)}")
+        with global_stats_lock:
+            number_of_error_sql_errors += 1
+        return {
+            "instance_id": instance_id,
+            "status": "failed",
+            "error_message": f"Missing fields: {', '.join(missing_fields)}",
+            "total_test_cases": len(data_item.get("test_cases", [])),
+            "passed_test_cases": 0,
+            "failed_test_cases": [],
+            "error_phase_unexpected_pass": 0,
+            "solution_phase_execution_error": False,
+            "solution_phase_timeout_error": False,
+            "solution_phase_assertion_error": False,
+        }
+
+    efficiency = data_item.get("efficiency", False)
+    db_name = data_item["selected_database"]
+    preprocess_sql = split_field(data_item, "preprocess_sql")
+    error_sql = split_field(data_item, "error_sql")
+    gold_sql = None
+    if args.mode == "gold":
+        pred_sql = split_field(data_item, "sol_sql")
+    else:
+        pred_sql = split_field(data_item, "pred_sqls")
+        gold_sql = split_field(data_item, "sol_sql")
+
+    clean_up_sql = split_field(data_item, "clean_up_sql")
+    test_cases = data_item.get("test_cases", [])
+    language = data_item.get("language", "postgresql")
+
+    error_phase_unexpected_pass = 0
+    solution_phase_execution_error = False
+    solution_phase_timeout_error = False
+    solution_phase_assertion_error = False
+
+    total_test_cases = len(test_cases)
+    passed_test_cases_count = 0
+    failed_test_cases = []
+    error_message_text = ""
+
+    # Get an ephemeral database from the queue
+    try:
+        ephemeral_db = ephemeral_db_queues[db_name].get(
+            timeout=60
+        )  # Wait up to 60 seconds
+    except queue.Empty:
+        logger.error(f"No available ephemeral databases for base_db: {db_name}")
+        with global_stats_lock:
+            number_of_execution_errors += 1
+        return {
+            "instance_id": instance_id,
+            "status": "failed",
+            "error_message": "No available ephemeral databases.",
+            "total_test_cases": total_test_cases,
+            "passed_test_cases": 0,
+            "failed_test_cases": [],
+            "error_phase_unexpected_pass": 0,
+            "solution_phase_execution_error": True,
+            "solution_phase_timeout_error": False,
+            "solution_phase_assertion_error": False,
+        }
+
+    logger.info(f"Instance {instance_id} is using ephemeral db: {ephemeral_db}")
+
+    try:
+        # Phase 1: Error scenario
+        logger.info("=== Starting Error Phase ===")
+        reset_and_restore_database(ephemeral_db, args.pg_password, logger)
+
+        # Acquire connection for error phase
+        error_conn = get_connection_for_phase(ephemeral_db, logger)
+
+        run_preprocessing(preprocess_sql, ephemeral_db, logger, error_conn)
+
+        err_msg, error_sql_result, err_assertion = run_error_phase(
+            error_sql,
+            gold_sql,
+            ephemeral_db,
+            test_cases,
+            logger,
+            error_conn,
+            efficiency,
+        )
+        if err_msg:
+            error_message_text += err_msg
+
+        # Close error_conn
+        close_postgresql_connection(ephemeral_db, error_conn)
+        if err_msg is None and err_assertion:
+            logger.info(
+                "Error SQL did not raise an error, and test cases unexpectedly passed."
+            )
+            error_phase_unexpected_pass = 1
+        elif err_msg is None and not err_assertion:
+            logger.info(
+                "Error SQL did not raise an error, but test cases failed as expected."
+            )
+
+        logger.info("=== Error Phase Completed ===")
+
+        # Phase 2: Solution scenario
+        logger.info("=== Starting Solution Phase ===")
+        reset_and_restore_database(ephemeral_db, args.pg_password, logger)
+
+        # Acquire connection for solution phase
+        solution_conn = get_connection_for_phase(ephemeral_db, logger)
+
+        run_preprocessing(preprocess_sql, ephemeral_db, logger, solution_conn)
+
+        (
+            sol_exec_err,
+            sol_timeout_err,
+            sol_assert_err,
+            passed_count,
+            failed_tests_phase2,
+        ) = run_solution_phase(
+            pred_sql,
+            gold_sql,
+            error_sql,
+            ephemeral_db,
+            test_cases,
+            logger,
+            solution_conn,
+            efficiency,
+        )
+
+        # Close solution_conn
+        close_postgresql_connection(ephemeral_db, solution_conn)
+
+        solution_phase_execution_error = sol_exec_err
+        solution_phase_timeout_error = sol_timeout_err
+        solution_phase_assertion_error = sol_assert_err
+
+        passed_test_cases_count += passed_count
+        failed_test_cases.extend(failed_tests_phase2)
+
+        # Cleanup SQL
+        if clean_up_sql:
+            logger.info("Executing Clean Up SQL after solution phase.")
+            new_temp_conn = get_connection_for_phase(ephemeral_db, logger)
+            execute_queries(
+                clean_up_sql,
+                ephemeral_db,
+                new_temp_conn,
+                logger,
+                section_title="Clean Up SQL",
+                is_solution=False,
+            )
+            close_postgresql_connection(ephemeral_db, new_temp_conn)
+
+        logger.info("=== Solution Phase Completed ===")
+
+    except Exception as e:
+        logger.error(f"Error during execution for question {instance_id}: {e}")
+        solution_phase_execution_error = True
+        error_message_text += str(e)
+
+    finally:
+        # Return the ephemeral database back to the queue
+        ephemeral_db_queues[db_name].put(ephemeral_db)
+        logger.info(
+            f"Instance {instance_id} finished. Returned ephemeral db: {ephemeral_db}"
+        )
+
+    # Update global statistics with thread-safe lock
+    with global_stats_lock:
+        if error_phase_unexpected_pass:
+            number_of_error_sql_errors += 1
+            number_error_unexpected_pass += 1
+        if solution_phase_execution_error:
+            number_of_execution_errors += 1
+        if solution_phase_timeout_error:
+            number_of_timeouts += 1
+        if solution_phase_assertion_error:
+            number_of_assertion_errors += 1
+        if (
+            not solution_phase_execution_error
+            and not solution_phase_timeout_error
+            and not solution_phase_assertion_error
+        ):
+            total_passed_instances += 1
+
+    # Determine the status based on error flags
+    ret_status = "success"
+    if (
+        error_phase_unexpected_pass
+        or solution_phase_execution_error
+        or solution_phase_timeout_error
+        or solution_phase_assertion_error
+    ):
+        ret_status = "failed"
+
+    return {
+        "instance_id": instance_id,
+        "status": ret_status,
+        "error_message": error_message_text if error_message_text else None,
+        "total_test_cases": total_test_cases,
+        "passed_test_cases": passed_test_cases_count,
+        "failed_test_cases": failed_test_cases,
+        "error_phase_unexpected_pass": error_phase_unexpected_pass,
+        "solution_phase_execution_error": solution_phase_execution_error,
+        "solution_phase_timeout_error": solution_phase_timeout_error,
+        "solution_phase_assertion_error": solution_phase_assertion_error,
+    }
+
+
 def main():
-    global number_of_execution_errors, number_of_timeouts, number_of_assertion_errors
-    global total_passed_instances, number_of_error_sql_errors, number_error_unexpected_pass
+    # ====== Declare global variables to modify ======
+    global number_of_execution_errors, number_of_timeouts
+    global number_of_assertion_errors, number_of_error_sql_errors
+    global total_passed_instances, number_error_unexpected_pass
     global question_test_case_results
 
     parser = argparse.ArgumentParser(
@@ -653,22 +1010,35 @@ def main():
     )
     parser.add_argument(
         "--jsonl_file",
-        help="Path to the JSONL file containing the dataset instance.",
         required=True,
+        help="Path to the JSONL file containing the dataset instances.",
     )
     parser.add_argument(
         "--pg_password",
-        help="PostgreSQL password for resetting the database.",
         default="123123",
+        help="PostgreSQL password for resetting the database.",
     )
     parser.add_argument(
-        "--mode", help="gold or pred", choices=["gold", "pred"], default="pred"
+        "--mode",
+        choices=["gold", "pred"],
+        default="pred",
+        help="Which field to use for solution SQL (gold or pred).",
     )
     parser.add_argument(
         "--limit",
         type=int,
-        help="Limit the number of instances to process.",
         default=None,
+        help="Limit the number of instances to process.",
+    )
+    parser.add_argument(
+        "--num_threads", type=int, default=4, help="Number of parallel threads to use."
+    )
+    # NEW: --logging argument
+    parser.add_argument(
+        "--logging",
+        type=str,
+        default="false",
+        help="Enable or disable per-instance logging ('true' or 'false'). Default is 'true'.",
     )
     args = parser.parse_args()
 
@@ -679,171 +1049,69 @@ def main():
 
     if args.limit is not None:
         data_list = data_list[: args.limit]
+    # Remove the following line to respect the limit
+    # data_list = data_list[:10]
 
-    error_messages = []
-    for i, data in tqdm.tqdm(enumerate(data_list), desc="Evaluating questions..."):
-        instance_id = data_list[i]["instance_id"]
-        log_filename = (
-            os.path.splitext(args.jsonl_file)[0] + f"_instance_{instance_id}.log"
-        )
-        logger = configure_logger(log_filename)
-        logger.info(f"Starting execution for question {instance_id}")
+    # Collect all base database names
+    all_db_names = set()
+    for d in data_list:
+        if "selected_database" in d:
+            all_db_names.add(d["selected_database"])
 
-        required_fields = [
-            "selected_database",
-            "preprocess_sql",
-            "error_sql",
-            "sol_sql",
-        ]
-        missing_fields = [field for field in required_fields if field not in data]
-        if missing_fields:
-            logger.error(f"Missing required fields: {', '.join(missing_fields)}")
-            number_of_error_sql_errors += 1
-            error_messages.append(f"Missing fields: {', '.join(missing_fields)}")
-            question_test_case_results.append(
-                {
-                    "instance_id": instance_id,
-                    "total_test_cases": len(data.get("test_cases", [])),
-                    "passed_test_cases": 0,
-                    "failed_test_cases": [],
-                    "error_sql_error": 1,
-                    "error_phase_unexpected_pass": 0,
-                }
-            )
-            continue
+    # Create a summary log
+    base_output_folder = os.path.splitext(args.jsonl_file)[0]
+    big_log_filename = f"{base_output_folder}_multi_thread.log"
+    big_logger = configure_logger(big_log_filename)
+    big_logger.info(
+        f"=== Starting Multi-Thread Evaluation with {args.num_threads} threads ==="
+    )
 
-        efficiency = data.get("efficiency", False)
-        db_name = data["selected_database"]
-        preprocess_sql = split_field(data, "preprocess_sql")
-        error_sql = split_field(data, "error_sql")
+    # Step 1: Create num_threads ephemeral databases for each base_db_name
+    ephemeral_db_pool_dict = create_ephemeral_db_copies(
+        base_db_names=all_db_names,
+        num_copies=args.num_threads,
+        pg_password=args.pg_password,
+        logger=big_logger,
+    )
 
-        if args.mode == "gold":
-            sol_sql = split_field(data, "sol_sql")
-        else:
-            sol_sql = split_field(data, "pred_sqls")
+    # Use queue to manage distribution
+    ephemeral_db_queues = {}
+    for base_db, ephemeral_list in ephemeral_db_pool_dict.items():
+        q = queue.Queue()
+        for ep_db in ephemeral_list:
+            q.put(ep_db)
+        ephemeral_db_queues[base_db] = q
 
-        clean_up_sql = split_field(data, "clean_up_sql")
-        test_cases = data.get("test_cases", [])
-        language = data.get("language", "postgresql")
+    # Thread-safe lock
+    global_stats_lock = threading.Lock()
 
-        error_phase_unexpected_pass = 0
-        solution_phase_execution_error = False
-        solution_phase_timeout_error = False
-        solution_phase_assertion_error = False
-
-        total_test_cases = len(test_cases)
-        passed_test_cases_count = 0
-        failed_test_cases = []
-
-        try:
-            logger.info("=== Starting Error Phase ===")
-            error_conn = get_connection_for_phase(db_name, logger)
-            run_preprocessing(preprocess_sql, db_name, logger, error_conn)
-
-            error_message, error_sql_result, error_assertion = run_error_phase(
-                error_sql, sol_sql, db_name, test_cases, logger, error_conn, efficiency
-            )
-            error_messages.append(error_message if error_message else "")
-
-            close_postgresql_connection(db_name, error_conn)
-
-            if error_message is None and error_assertion:
-                logger.info(
-                    "Error SQL did not raise an error, and test cases unexpectedly passed."
-                )
-                error_phase_unexpected_pass = 1
-            elif error_message is None and not error_assertion:
-                logger.info(
-                    "Error SQL did not raise an error, but test cases failed as expected."
-                )
-
-            logger.info("=== Error Phase Completed ===")
-
-            logger.info("=== Starting Solution Phase ===")
-            logger.info(f"Resetting database {db_name} for solution phase.")
-            reset_and_restore_database(db_name, args.pg_password, logger)
-
-            solution_conn = get_connection_for_phase(db_name, logger)
-            run_preprocessing(preprocess_sql, db_name, logger, solution_conn)
-
-            (
-                sol_exec_err,
-                sol_timeout_err,
-                sol_assert_err,
-                passed_count,
-                failed_tests_phase2,
-            ) = run_solution_phase(
-                error_sql,
-                sol_sql,
-                db_name,
-                test_cases,
-                logger,
-                solution_conn,
-                efficiency,
-            )
-
-            close_postgresql_connection(db_name, solution_conn)
-
-            solution_phase_execution_error = sol_exec_err
-            solution_phase_timeout_error = sol_timeout_err
-            solution_phase_assertion_error = sol_assert_err
-
-            passed_test_cases_count += passed_count
-            failed_test_cases.extend(failed_tests_phase2)
-
-            if clean_up_sql:
-                logger.info("Executing Clean Up SQL after solution phase.")
-                new_temp_conn = get_connection_for_phase(db_name, logger)
-                execute_queries(
-                    clean_up_sql,
-                    db_name,
-                    new_temp_conn,
-                    logger,
-                    section_title="Clean Up SQL",
-                )
-                close_postgresql_connection(db_name, new_temp_conn)
-
-            logger.info("=== Solution Phase Completed ===")
-            logger.info(f"Resetting database {db_name} and restoring tables.")
-            reset_and_restore_database(db_name, args.pg_password, logger)
-            logger.info("Database reset and tables restored.")
-        except Exception as e:
-            logger.error(f"Error during execution for question {instance_id}: {e}")
-            solution_phase_execution_error = True
-            error_messages.append(str(e))
-
-        if error_phase_unexpected_pass:
-            number_of_error_sql_errors += 1
-            number_error_unexpected_pass += 1
-        if solution_phase_execution_error:
-            number_of_execution_errors += 1
-        if solution_phase_timeout_error:
-            number_of_timeouts += 1
-        if solution_phase_assertion_error:
-            number_of_assertion_errors += 1
-
-        if (
-            not solution_phase_execution_error
-            and not solution_phase_timeout_error
-            and not solution_phase_assertion_error
-        ):
-            total_passed_instances += 1
-
-        question_test_case_results.append(
-            {
-                "instance_id": instance_id,
-                "total_test_cases": total_test_cases,
-                "passed_test_cases": passed_test_cases_count,
-                "failed_test_cases": failed_test_cases,
-                "error_sql_error": 1 if error_phase_unexpected_pass else 0,
-                "error_phase_unexpected_pass": error_phase_unexpected_pass,
-                "solution_phase_execution_error": solution_phase_execution_error,
-                "solution_phase_timeout_error": solution_phase_timeout_error,
-                "solution_phase_assertion_error": solution_phase_assertion_error,
-            }
-        )
-
+    # Multithreaded execution with tqdm progress bar
+    results = []
     total_instances = len(data_list)
+
+    from tqdm import tqdm as tqdm_progress
+
+    with ThreadPoolExecutor(max_workers=args.num_threads) as executor, tqdm_progress(
+        total=total_instances, desc="Evaluating Questions"
+    ) as pbar:
+        future_to_data = {}
+        for data_item in data_list:
+            future = executor.submit(
+                process_one_instance,
+                data_item,
+                ephemeral_db_queues,
+                args,
+                global_stats_lock,
+            )
+            future_to_data[future] = data_item
+
+        for fut in as_completed(future_to_data):
+            res = fut.result()
+            results.append(res)
+            pbar.update(1)  # Update progress bar after each instance
+
+    question_test_case_results = results
+    output_data = data_list.copy()
     total_errors = (
         number_of_execution_errors
         + number_of_timeouts
@@ -859,14 +1127,14 @@ def main():
         else 0.0
     )
     timestamp = datetime.now().isoformat(sep=" ", timespec="microseconds")
-    base_output_folder = os.path.splitext(args.jsonl_file)[0]
     report_file_path = f"{base_output_folder}_report.txt"
-    output_data = data_list.copy()
+
+    # Generate the report
     try:
         with open(report_file_path, "w") as report_file:
             report_file.write("--------------------------------------------------\n")
             report_file.write(
-                "BIRD CRITIC Stack Overflow Result Statistics (Postgres):\n"
+                "BIRD CRITIC Stack Overflow Result Statistics (Postgres, Multi-Thread):\n"
             )
             report_file.write(f"Number of Instances: {len(data_list)}\n")
             report_file.write(
@@ -896,16 +1164,14 @@ def main():
                     if q_res.get("error_phase_unexpected_pass")
                     else ""
                 )
-                sol_phase_note = (
-                    " | Sol Phase: Execution Error"
-                    if q_res.get("solution_phase_execution_error")
-                    else ""
-                )
-                sol_phase_note += (
-                    " | Sol Phase: Timeout Error"
-                    if q_res.get("solution_phase_timeout_error")
-                    else ""
-                )
+                sol_phase_note = ""
+                if q_res.get("solution_phase_execution_error"):
+                    sol_phase_note += " | Sol Phase: Execution Error"
+                if q_res.get("solution_phase_timeout_error"):
+                    sol_phase_note += " | Sol Phase: Timeout Error"
+                if q_res.get("solution_phase_assertion_error"):
+                    sol_phase_note += " | Sol Phase: Assertion Error"
+
                 report_file.write(
                     f"Question_{q_idx}: ({t_pass}/{t_total}) test cases passed, "
                     f"failed test cases: {failed_list_str}{error_phase_note}{sol_phase_note}\n"
@@ -923,20 +1189,30 @@ def main():
                     output_data[i]["error_message"] = failed_list_str + " failed"
                 else:
                     output_data[i]["error_message"] = sol_phase_note
+
     except Exception as e:
         print(f"Failed to write report: {e}")
 
     print("Overall report generated:", report_file_path)
 
-    output_jsonl_file = f"{base_output_folder}_output_with_status.jsonl"
-    with open(output_jsonl_file, "w") as f:
-        for data in output_data:
-            f.write(json.dumps(data) + "\n")
+    # Output JSONL with status
+    if args.logging == "true":
+        output_jsonl_file = f"{base_output_folder}_output_with_status.jsonl"
+        with open(output_jsonl_file, "w") as f:
+            for i, data in enumerate(output_data):
+                data["status"] = question_test_case_results[i]["status"]
+                data["error_message"] = question_test_case_results[i]["error_message"]
+                f.write(json.dumps(data) + "\n")
 
+    # Close all PostgreSQL pools
     try:
         close_all_postgresql_pools()
     except Exception as e:
         print(f"Failed to close all PostgreSQL pools: {e}")
+
+    # Finally, delete all ephemeral databases
+    drop_ephemeral_dbs(ephemeral_db_pool_dict, args.pg_password, big_logger)
+    big_logger.info("All ephemeral databases have been dropped.")
 
 
 if __name__ == "__main__":
