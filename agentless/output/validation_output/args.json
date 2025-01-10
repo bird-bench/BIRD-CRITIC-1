@@ -1,9 +1,0 @@
-{
-    "max_samples": 5,
-    "repair_file": "/app/agentless/output/repair_output/output.jsonl",
-    "model": "deepseek-chat",
-    "backend": "deepseek",
-    "output_folder": "/app/agentless/output/validation_output",
-    "num_threads": 8,
-    "output_file": "/app/agentless/output/validation_output/output.jsonl"
-}

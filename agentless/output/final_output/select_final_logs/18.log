@@ -1,6 +1,0 @@
-2024-12-11 16:08:58,074 - INFO - ================ running test for 18 ================
-2024-12-11 16:08:58,075 - INFO - 5 solutions resolved the issue.
-2024-12-11 16:08:58,235 - INFO - ================ re-ranking solutions for 18 ================
-2024-12-11 16:08:58,235 - WARNING - Failed to parse or normalize SQL: SHOW COLUMNS FROM customers LIKE 'customer_type';
-Error: Unsupported expression type Show
-2024-12-11 16:08:58,246 - INFO - Selected 1 final solutions after re-ranking.
