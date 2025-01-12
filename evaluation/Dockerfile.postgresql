@@ -1,0 +1,13 @@
+# Dockerfile.postgresql
+FROM postgres:14.12
+
+# Set up environment variables for user and password only
+ENV POSTGRES_USER=root
+ENV POSTGRES_PASSWORD=123123
+
+
+# Copy the initialization script to the entrypoint directory
+COPY init-databases_postgresql.sh /docker-entrypoint-initdb.d/
+
+# Set permissions for the initialization script
+RUN chmod +x /docker-entrypoint-initdb.d/init-databases_postgresql.sh

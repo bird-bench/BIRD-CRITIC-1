@@ -8,40 +8,58 @@
 
 
 [![License](https://img.shields.io/badge/License-CC%20By%20NC%204.0-orange.svg)](https://creativecommons.org/licenses/by-nc/4.0/)
-[![Data Link](https://img.shields.io/badge/Download-BIRD_CRITIC-green.svg)](https://github.com/bird-bench/bird-critic/)
-[![Python 3.7+](https://img.shields.io/badge/Python-3.7+-teal.svg)](https://www.python.org/downloads/release/python-390/)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10+-teal.svg)](https://www.python.org/downloads/release/python-310/)
 [![OpenAI 1.40+](https://img.shields.io/badge/OpenAI-1.40+-beige.svg)](https://pypi.org/project/openai/)
 
 ## Overview
-**BIRD-Critic** is the first SQL debugging benchmark designed to answer a critical question: *Can large language models (LLMs) resolve real-world user bugs in database applications?* To create this benchmark, we curated realistic bug cases from platforms like GitHub Issues and StackOverflow.
+**BIRD-Critic** is the first SQL debugging benchmark designed to answer a critical question: *Can large language models (LLMs) resolve real-world user bugs in database applications?* To create this benchmark, we curated realistic bug cases from StackOverflow.
 
-We are releasing a preview version of BIRD-Critic, which includes **XXX data instances** divided into two categories. The first category focuses on Stack Overflow issues, where we explore and collect SQL debugging scenarios, distill problem definitions, reproduce bugs and solutions in the BIRD environment, and design test cases for evaluation. The second category centers on GitHub issues, involving the collection of user-reported problems from SQL-relevant GitHub repositories, reproducing these bugs in the BIRD environment, and using GitHub-provided patches as ground truth to evaluate the performance of LLMs.
+We are releasing a preview version of BIRD-Critic, which includes **141 data instances**. These data instances focuses on Stack Overflow issues, where we explore and collect SQL debugging scenarios, distill problem definitions, reproduce bugs and solutions in the BIRD environment, and design test cases for evaluation. 
 
 ## Dataset Introduction
 
-For the preview version, we use the **BIRD-SQL dev database**, which can be downloaded from [the official BIRD website](https://bird-bench.github.io/).
+For the preview version, we use the **BIRD-SQL dev database**, see more information on [the official BIRD website](https://bird-bench.github.io/).
 
-The **Stack Overflow** dataset includes the following key resources:
-
-- The dataset is provided as a JSONL file located under [`./data/so_databases/`](./data/so_databases/).
-- Each entry in the JSONL file contains six main components:
+Each data instance includes the following key components:
   - `db_id`: The name of the database.
   - `query`: The user query rewritten in the BIRD environment.
-  - `language`: The SQL dialect, either MySQL or PostgreSQL.
   - `error_sql`: The buggy SQL query written by the user.
-  - `sol_sql`: The corrected SQL solution.
+  - `sol_sql`: The ground truth SQL solution.
   - `preprocess_sql`: List of SQL queries to execute before solution_sql/prediction.
   - `clean_up_sql`: SQL queries to execute after the test cases, to revise any effect made on the database .
-  - `test_cases`: A set of test cases to validate the predicted solution SQL.
+  - `test_cases`: A set of test cases to validate the predicted corrected SQL.
 
 ## Environment Setup
+### Generation
+To run the baseline code you need to install the following dependencies:
+```bash
+cd baseline
+conda create -n bird_critic python=3.10 -y
+conda activate bird_critic
+pip install -r requirements.txt
+# Generate the prompt
+bash generate_prompt.sh
+
+# Inference, need to set the API key in config.py
+bash run_baseline.sh
+```
+The output will be save in the [`./baseline/outputs/final_output/`](./baseline/outputs/final_output/)
+
+### Evaluation
 We use **docker** to provide a consistent environment for running the benchmark. To set up the environment, follow these steps:
 
-## File usage
-
-### Evaluate the model predictions
-- Use the [`./stack_overflow_scripts/eval_log.py`](./stack_overflow_scripts/eval_log.pys/) to evaluate the model predictions (assume the prediction sql saved in the predict_sol field in the JSONL file). The input will be the prediction JSONL file and the output will be the evaluation results along with the logs.
-
-
-## Baseline Performance
-We adapt the method from paper [Agentless: Demystifying LLM-based Software Engineering Agents](https://github.com/OpenAutoCoder/Agentless) to evaluate the baseline performance of the LLMs. The detailed implementation can be found in the [`./agentless`](./agentless) script. The result can be find in the [`./agentless/deepseek_result`](./agentless/deepseek_result) folder.
+1. First download the BIRD Dev PostgreSQL database from [the Google Drive](https://drive.google.com/drive/folders/1O4svFGkE8_Ps60EQeyrCTN6LVOWudjgm?usp=sharing).
+2. Unzip the folder and save it in the [`./evaluation`](./evaluation) named with postgre_table_dumps
+3. Build the docker compose
+```bash
+cd evaluation
+docker compose up --build
+```
+4. Run the evaluation script inside the so_eval_env container
+```bash
+docker compose exec so_eval_env bash
+# You need to modify the JSONL location in the run_eval.sh
+bash run_eval.sh 
+```
+The output will be save in the [`./evaluation/outputs/`](./evaluation/outputs/)
+If you want the log file for each instance, you can set the `--logging` to `true` in the `run_eval.sh` script.

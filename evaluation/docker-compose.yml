@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  postgresql:
+    build:
+      context: .
+      dockerfile: Dockerfile.postgresql
+    container_name: bird_critic_postgresql
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 123123
+      TZ: "Asia/Hong_Kong"
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+      - ./postgre_table_dumps:/docker-entrypoint-initdb.d/postgre_table_dumps
+    ports:
+      - "5432:5432"
+
+  so_eval_env:
+    build:
+      context: .
+      dockerfile: Dockerfile.so_eval
+    container_name: so_eval_env
+    volumes:
+      - ./:/app/
+      - ./postgre_table_dumps:/app/postgre_table_dumps
+    depends_on:
+      - postgresql
+    command: ["tail", "-f", "/dev/null"]
+
+volumes:
+  postgresql_data:

@@ -1,2 +1,2 @@
-jsonl_file="/app/SO_evaluation/post_eval_baseline/api/0110_gpt-4o.jsonl"
+jsonl_file="JSONL_FILE_FROM_INFERENCE"
 python3 /app/SO_evaluation/evaluation/evaluation.py --jsonl_file "$jsonl_file" 

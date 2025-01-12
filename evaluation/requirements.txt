@@ -1,0 +1,10 @@
+psycopg2==2.9.9
+PyMySQL==1.1.1
+cryptography==3.4.8
+pandas==2.1.0
+numpy==1.26.1
+sqlparse==0.5.2
+tqdm==4.67.0
+rich==13.9.4
+httpx==0.27.2
+pymssql==2.3.2

@@ -1,0 +1,12 @@
+# Dockerfile.python
+FROM python:3.10
+
+# Set the main working directory to /app
+WORKDIR /app
+
+# Copy requirements.txt and install dependencies
+COPY requirements.txt /app/
+RUN pip install -r /app/requirements.txt
+
+# Set entrypoint to keep the container running for testing
+CMD ["tail", "-f", "/dev/null"]
