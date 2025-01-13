@@ -10,30 +10,30 @@ done
 echo "PostgreSQL is ready!"
 
 ############################
-# 0. 创建一个作为“测试模板”的数据库 sql_test_template
+# 0. Create template database: sql_test_template 
 ############################
 echo "Creating template database: sql_test_template with UTF8 encoding (formerly sql_test)"
 psql -U root -tc "SELECT 1 FROM pg_database WHERE datname='sql_test_template'" | grep -q 1 \
   || psql -U root -c "CREATE DATABASE sql_test_template WITH OWNER=root ENCODING='UTF8' TEMPLATE=template0;"
 
-# 在 sql_test_template 库中创建 schema
+# In the template database, create required schemas
 echo "Creating required schemas: test_schema and test_schema_2 in sql_test_template"
 psql -U root -d sql_test_template -c "CREATE SCHEMA IF NOT EXISTS test_schema;"
 psql -U root -d sql_test_template -c "CREATE SCHEMA IF NOT EXISTS test_schema_2;"
 
-# 创建 hstore、citext 扩展
+# Create hstore and citext extensions 
 echo "Creating hstore and citext extensions in sql_test_template..."
 psql -U root -d sql_test_template -c "CREATE EXTENSION IF NOT EXISTS hstore;"
 psql -U root -d sql_test_template -c "CREATE EXTENSION IF NOT EXISTS citext;"
 
-# 设置默认全文搜索配置
+# Set default_text_search_config to pg_catalog.english
 echo "Setting default_text_search_config to pg_catalog.english in sql_test_template..."
 psql -U root -d sql_test_template -c "ALTER DATABASE sql_test_template SET default_text_search_config = 'pg_catalog.english';"
 
 echo "NOTE: For two-phase transaction support, set 'max_prepared_transactions' > 0 in postgresql.conf."
 
 ############################
-# 1. 定义数据库→表清单，并将每个库改成“xxx_template”命名
+# 1. Define database mappings and table order
 ############################
 declare -A DATABASE_MAPPING=(
     ["debit_card_specializing_template"]="customers gasstations products yearmonth transactions_1k"
@@ -62,7 +62,7 @@ TABLE_ORDER=(
 )
 
 ############################
-# 2. 创建各个“模板数据库”，并导入表数据
+# 2. Create template databases and import table data
 ############################
 for DB_TEMPLATE in "${!DATABASE_MAPPING[@]}"; do
     echo "Creating template database: $DB_TEMPLATE"
@@ -70,7 +70,7 @@ for DB_TEMPLATE in "${!DATABASE_MAPPING[@]}"; do
       || psql -U root -c "CREATE DATABASE ${DB_TEMPLATE} WITH OWNER=root ENCODING='UTF8' TEMPLATE=template0;"
 done
 
-# 函数：导入某个table到指定数据库
+# Import table data into a database
 import_table() {
     local table_name_lower=$(echo "$1" | tr '[:upper:]' '[:lower:]')
     local db_lower=$(echo "$2" | tr '[:upper:]' '[:lower:]')
@@ -87,7 +87,7 @@ import_table() {
     fi
 }
 
-# 按 TABLE_ORDER 顺序给每个 template 数据库导入对应的表
+# Import tables in the order specified in TABLE_ORDER
 for table_name in "${TABLE_ORDER[@]}"; do
     for DB_TEMPLATE in "${!DATABASE_MAPPING[@]}"; do
         if [[ " ${DATABASE_MAPPING[$DB_TEMPLATE]} " =~ " ${table_name} " ]]; then
@@ -97,7 +97,7 @@ for table_name in "${TABLE_ORDER[@]}"; do
     done
 done
 
-# 检查是否有导入错误
+# Check for errors during import
 if [[ -s /tmp/error.log ]]; then
     echo "Errors occurred during import:"
     cat /tmp/error.log
@@ -106,16 +106,15 @@ fi
 rm -f /tmp/error.log
 
 ############################
-# 3. 可选：将这些“xxx_template”设置为真正的“template数据库” (需要superuser)
+# 3. Set these template databases as 'datistemplate = true'
 ############################
 echo "Marking these template databases as 'datistemplate = true' so they can be used as official templates..."
 for DB_TEMPLATE in "${!DATABASE_MAPPING[@]}"; do
-  # 一般需要 postgres 超级用户权限，也可以在 docker-compose.yml 中设定 PGUSER=postgres PGPASSWORD=xxx
   psql -U root -d postgres -c "UPDATE pg_database SET datistemplate = true WHERE datname = '${DB_TEMPLATE}';" || true
 done
 
 ############################
-# 使用示例
+# Log completion message
 ############################
 echo "All template databases created. To reset a DB from template, for example 'financial':"
 echo "    dropdb financial || true"
@@ -126,11 +125,11 @@ echo "Done."
 echo "Now creating a real DB from each template DB..."
 
 for DB_TEMPLATE in "${!DATABASE_MAPPING[@]}"; do
-  # real DB 名称 = 去掉 "_template" 后缀
+  # real DB name = template DB name without '_template'
   REAL_DB="${DB_TEMPLATE%_template}"
 
   echo "Checking if real database '${REAL_DB}' exists..."
-  # 如果真正的数据库还没创建，则基于模板库创建它
+  # If the real DB does not exist, create it from the template DB
   EXISTS=$(psql -U root -tc "SELECT 1 FROM pg_database WHERE datname='${REAL_DB}'" | grep -c 1 || true)
   if [[ "$EXISTS" -eq 0 ]]; then
     echo "Creating real database '${REAL_DB}' from template '${DB_TEMPLATE}'"
