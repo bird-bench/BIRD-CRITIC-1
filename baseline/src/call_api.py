@@ -36,7 +36,6 @@ gemini_key_cycle = itertools.cycle(GEMINI_API_KEYS)
 def write_response(results, data_list, output_path):
     """
     By default, each result is a single response.
-    If we are returning top_n responses, each result is a list of strings.
     """
     formatted_data = []
     for i, data in enumerate(data_list):
