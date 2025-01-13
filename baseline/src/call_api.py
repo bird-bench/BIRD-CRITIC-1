@@ -85,10 +85,6 @@ def api_request(messages, engine, client, backend, **kwargs):
             elif backend == "genai":
                 response = client.generate_content(
                     messages[0]["content"],
-                    safety_settings={
-                        HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
-                        HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
-                    },
                     generation_config=GenerationConfig(
                         temperature=kwargs.get("temperature", 0),
                         top_p=kwargs.get("top_p", 1),
