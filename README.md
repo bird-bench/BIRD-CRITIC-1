@@ -38,6 +38,7 @@ conda create -n bird_critic python=3.10 -y
 conda activate bird_critic
 pip install -r requirements.txt
 # Generate the prompt
+cd run
 bash generate_prompt.sh
 
 # Inference, need to set the API key in config.py

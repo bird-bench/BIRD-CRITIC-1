@@ -2,7 +2,7 @@ import json
 import os
 import argparse
 from tqdm import tqdm
-from assistant.prompt import assistant_prompt
+from prompt import assistant_prompt
 
 
 # Utility functions
