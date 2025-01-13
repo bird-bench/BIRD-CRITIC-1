@@ -4,7 +4,7 @@ services:
   postgresql:
     build:
       context: .
-      dockerfile: Dockerfile.postgresql
+      dockerfile: ./env/Dockerfile.postgresql
     container_name: bird_critic_postgresql
     environment:
       POSTGRES_USER: root
@@ -19,7 +19,7 @@ services:
   so_eval_env:
     build:
       context: .
-      dockerfile: Dockerfile.so_eval
+      dockerfile: ./env/Dockerfile.so_eval
     container_name: so_eval_env
     volumes:
       - ./:/app/

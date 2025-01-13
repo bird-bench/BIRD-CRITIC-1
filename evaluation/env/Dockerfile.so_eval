@@ -4,8 +4,11 @@ FROM python:3.10
 # Set the main working directory to /app
 WORKDIR /app
 
+# Install the PostgreSQL client so 'dropdb', 'createdb', and 'psql' are available
+RUN apt-get update && apt-get install -y postgresql-client
+
 # Copy requirements.txt and install dependencies
-COPY requirements.txt /app/
+COPY ./env/requirements.txt /app
 RUN pip install -r /app/requirements.txt
 
 # Set entrypoint to keep the container running for testing

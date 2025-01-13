@@ -58,6 +58,7 @@ docker compose up --build
 4. Run the evaluation script inside the so_eval_env container
 ```bash
 docker compose exec so_eval_env bash
+cd run
 # You need to modify the JSONL location in the run_eval.sh
 bash run_eval.sh 
 ```

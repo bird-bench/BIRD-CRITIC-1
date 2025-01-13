@@ -7,7 +7,7 @@ ENV POSTGRES_PASSWORD=123123
 
 
 # Copy the initialization script to the entrypoint directory
-COPY init-databases_postgresql.sh /docker-entrypoint-initdb.d/
+COPY ./env/init-databases_postgresql.sh /docker-entrypoint-initdb.d/
 
 # Set permissions for the initialization script
 RUN chmod +x /docker-entrypoint-initdb.d/init-databases_postgresql.sh
