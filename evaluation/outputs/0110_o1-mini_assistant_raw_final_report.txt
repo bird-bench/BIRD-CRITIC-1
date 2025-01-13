@@ -1,0 +1,151 @@
+--------------------------------------------------
+BIRD CRITIC Stack Overflow Result Statistics (Postgres, Multi-Thread):
+Number of Instances: 141
+Number of Execution Errors: 31
+Number of Timeouts: 1
+Number of Assertion Errors: 58
+Total Errors: 90
+Overall Accuracy: 36.17%
+Timestamp: 2025-01-13 07:38:39.112235
+
+Question_335_2: (0/1) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_270_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_333_1: (1/1) test cases passed, failed test cases: None
+Question_271_2: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_336_2: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_338_1: (0/1) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_337_2: (1/1) test cases passed, failed test cases: None
+Question_235_3: (0/1) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_231_2: (2/2) test cases passed, failed test cases: None
+Question_234_3: (2/2) test cases passed, failed test cases: None
+Question_233_3: (2/2) test cases passed, failed test cases: None
+Question_239_3: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_236_2: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_241_3: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_339_1: (1/1) test cases passed, failed test cases: None
+Question_340_1: (0/1) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_350_1: (1/1) test cases passed, failed test cases: None
+Question_351_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_341_2: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_365_1: (0/1) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_352_2: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_362_1: (1/1) test cases passed, failed test cases: None
+Question_366_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_242_2: (1/1) test cases passed, failed test cases: None
+Question_243_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_244_1: (1/1) test cases passed, failed test cases: None
+Question_247_2: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_245_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_248_2: (1/1) test cases passed, failed test cases: None
+Question_249_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_264_2: (1/1) test cases passed, failed test cases: None
+Question_436_1: (1/1) test cases passed, failed test cases: None
+Question_265_1: (1/1) test cases passed, failed test cases: None
+Question_440_1: (1/1) test cases passed, failed test cases: None
+Question_437_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_439_1: (1/1) test cases passed, failed test cases: None
+Question_391_2: (0/3) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_389_1: (2/2) test cases passed, failed test cases: None
+Question_403_1: (3/3) test cases passed, failed test cases: None
+Question_398_1: (0/5) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_396_2: (1/5) test cases passed, failed test cases: test_2, test_3, test_4, test_5 | Eval Phase: Assertion Error
+Question_257_1: (0/1) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_266_2: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_251_2: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_237_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_442_3: (0/1) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_444_2: (1/1) test cases passed, failed test cases: None
+Question_261_3: (1/1) test cases passed, failed test cases: None
+Question_259_2: (1/1) test cases passed, failed test cases: None
+Question_441_2: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_405_3: (2/4) test cases passed, failed test cases: test_1, test_2 | Eval Phase: Assertion Error
+Question_392_2: (1/3) test cases passed, failed test cases: test_2, test_3 | Eval Phase: Assertion Error
+Question_510_3: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_511_2: (0/1) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_513_3: (1/1) test cases passed, failed test cases: None
+Question_512_1: (1/1) test cases passed, failed test cases: None
+Question_514_3: (0/1) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_491_1: (1/1) test cases passed, failed test cases: None
+Question_492_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_490_1: (0/1) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_493_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_497_2: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_238_1: (0/1) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_499_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_519_1: (0/1) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_494_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_517_2: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_496_3: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_495_1: (1/1) test cases passed, failed test cases: None
+Question_354_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_355_1: (1/1) test cases passed, failed test cases: None
+Question_357_1: (1/1) test cases passed, failed test cases: None
+Question_360_1: (0/1) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_361_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_363_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_364_1: (0/1) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_540_2: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_541_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_543_1: (1/1) test cases passed, failed test cases: None
+Question_545_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_546_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_548_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_549_3: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_342_1: (0/1) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_343_2: (1/1) test cases passed, failed test cases: None
+Question_344_1: (0/1) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_345_3: (1/1) test cases passed, failed test cases: None
+Question_346_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_347_2: (1/1) test cases passed, failed test cases: None
+Question_397_2: (3/4) test cases passed, failed test cases: test_4 | Eval Phase: Assertion Error
+Question_348_3: (1/1) test cases passed, failed test cases: None
+Question_399_1: (0/1) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_542_2: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_349_1: (0/1) test cases passed, failed test cases:  | Eval Phase: Timeout Error
+Question_544_2: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_551_1: (0/1) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_550_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_553_3: (0/1) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_368_2: (0/1) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_552_3: (1/1) test cases passed, failed test cases: None
+Question_556_3: (0/1) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_554_3: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_555_2: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_558_3: (1/1) test cases passed, failed test cases: None
+Question_557_3: (1/1) test cases passed, failed test cases: None
+Question_559_1: (1/1) test cases passed, failed test cases: None
+Question_438_1: (1/1) test cases passed, failed test cases: None
+Question_443_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_272_1: (1/1) test cases passed, failed test cases: None
+Question_334_1: (1/1) test cases passed, failed test cases: None
+Question_435_3: (0/1) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_570_1: (1/1) test cases passed, failed test cases: None
+Question_269_1: (1/1) test cases passed, failed test cases: None
+Question_571_1: (1/1) test cases passed, failed test cases: None
+Question_572_1: (1/1) test cases passed, failed test cases: None
+Question_573_2: (1/1) test cases passed, failed test cases: None
+Question_574_1: (0/1) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_575_1: (1/1) test cases passed, failed test cases: None
+Question_407_1: (0/3) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_400_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_594_1: (0/2) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_590_1: (0/1) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_592_1: (0/2) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_596_1: (1/2) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_595_1: (2/2) test cases passed, failed test cases: None
+Question_526_2: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_524_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_522_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_528_1: (0/2) test cases passed, failed test cases: test_1, test_2 | Eval Phase: Assertion Error
+Question_523_3: (1/1) test cases passed, failed test cases: None
+Question_525_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_521_4: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_527_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_529_3: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_576_1: (1/1) test cases passed, failed test cases: None
+Question_578_1: (0/1) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_577_1: (1/1) test cases passed, failed test cases: None
+Question_579_1: (1/1) test cases passed, failed test cases: None
+Question_255_2: (0/1) test cases passed, failed test cases:  | Eval Phase: Execution Error
+Question_267_1: (0/1) test cases passed, failed test cases: test_1 | Eval Phase: Assertion Error
+Question_359_1: (1/1) test cases passed, failed test cases: None
