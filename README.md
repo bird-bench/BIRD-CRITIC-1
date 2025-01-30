@@ -65,8 +65,7 @@ conda activate bird_critic
 pip install -r requirements.txt
 ```
 
-You also need to setup the model name (eg., **gpt-4o-2024-08-06**) with the API key in the `config.py`(./baseline/src/config.py)
- file. Then you can run the following command to generate the output:
+You also need to setup the model name (eg., **gpt-4o-2024-08-06**) with the API key in the `config.py` file. Then you can run the following command to generate the output:
 ```bash
 # Generate the prompt
 cd run
@@ -89,7 +88,7 @@ cd evaluation
 docker compose up --build
 ```
 4. Interact with the PostgreSQL database
-Use the `perform_query_on_postgresql_databases()` function in the `evaluation/src/db_utils.py`(./evaluation/src/db_utils.py) file to interact with the PostgreSQL database. `query` is the SQL query you want to run, and `db_name` is the name of the database you want to run the query on. The function will return the result of the query.
+Use the `perform_query_on_postgresql_databases()` function in the `evaluation/src/db_utils.py` file to interact with the PostgreSQL database. `query` is the SQL query you want to run, and `db_name` is the name of the database you want to run the query on. The function will return the result of the query.
 5. Run the evaluation script inside the so_eval_env container
 ```bash
 docker compose exec so_eval_env bash
