@@ -9,10 +9,6 @@ def extract_sql_from_response(response_string):
     Extract all SQL code blocks wrapped with ```sql and ``` from the response string.
     Returns a list of SQL statements.
     """
-    # This pattern:
-    # - Matches ```sql (case-insensitive) followed by optional whitespace (including newlines).
-    # - Captures everything inside until the next ``` (non-greedy).
-    # - Uses re.DOTALL so '.' can match newlines as well.
     sql_pattern = re.compile(
         r"```sql\s*(.*?)```",
         re.IGNORECASE | re.DOTALL,
@@ -43,7 +39,6 @@ def process_file(input_file, output_file):
                 print(
                     f"Extracted {len(sql_list)} SQL statements from line {line_number}"
                 )
-                # data.pop("response", None)
                 # Add the list to the data
                 data["pred_sqls"] = sql_list
 

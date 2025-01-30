@@ -16,11 +16,7 @@ from logger import (
     configure_logger,
     NullLogger,
 )
-from utils import (
-    load_jsonl,
-    split_field,
-    save_report_and_status
-)
+from utils import load_jsonl, split_field, save_report_and_status
 from db_utils import (
     perform_query_on_postgresql_databases,
     close_postgresql_connection,
@@ -29,9 +25,16 @@ from db_utils import (
     get_connection_for_phase,
     reset_and_restore_database,
     create_ephemeral_db_copies,
-    drop_ephemeral_dbs
+    drop_ephemeral_dbs,
 )
-from test_utils import check_sql_function_usage, remove_distinct, preprocess_results,ex_base,performance_compare_by_qep
+from test_utils import (
+    check_sql_function_usage,
+    remove_distinct,
+    preprocess_results,
+    ex_base,
+    performance_compare_by_qep,
+)
+from datasets import load_dataset
 
 # Global counters
 number_of_execution_errors = 0
@@ -42,17 +45,8 @@ number_error_unexpected_pass = 0
 question_test_case_results = []
 
 
-
 def run_test_case(
-    test_code, 
-    result, 
-    logger, 
-    idx, 
-    return_dict, 
-    conn, 
-    pred_sqls, 
-    sol_sqls, 
-    db_name
+    test_code, result, logger, idx, return_dict, conn, pred_sqls, sol_sqls, db_name
 ):
     """
     In a separate Process, runs the test_code with the given environment and captures pass/fail status.
@@ -61,7 +55,7 @@ def run_test_case(
         "perform_query_on_postgresql_databases": perform_query_on_postgresql_databases,
         "execute_queries": execute_queries,
         "ex_base": ex_base,
-        "performance_compare_by_qep":performance_compare_by_qep,
+        "performance_compare_by_qep": performance_compare_by_qep,
         "check_sql_function_usage": check_sql_function_usage,
         "remove_distinct": remove_distinct,
         "preprocess_results": preprocess_results,
@@ -77,7 +71,9 @@ def run_test_case(
     logger.info(f"Passing result is {result}")
 
     test_case_code = "from datetime import date\n" + test_code
-    test_case_code += "\n__test_case_result__ = test_case(pred_sqls, sol_sqls, db_name, conn)"
+    test_case_code += (
+        "\n__test_case_result__ = test_case(pred_sqls, sol_sqls, db_name, conn)"
+    )
 
     logger.info(f"Test case content:\n{test_case_code}")
     logger.info(f"Executing test case {idx}")
@@ -103,17 +99,12 @@ def run_test_case(
     if captured_output.strip():
         logger.info(f"Captured output from test_code:\n{captured_output}")
 
+
 def execute_test_cases(
-    test_cases, 
-    sql_result, 
-    logger, 
-    conn, 
-    error_sql, 
-    sol_sql, 
-    db_name
+    test_cases, sql_result, logger, conn, error_sql, sol_sql, db_name
 ):
     """
-    Spawns each test case in a separate Process. 
+    Spawns each test case in a separate Process.
     Returns (passed_count, failed_tests).
     """
     manager = multiprocessing.Manager()
@@ -124,10 +115,20 @@ def execute_test_cases(
         logger.info(f"Starting test case {i}/{len(test_cases)}")
         p = multiprocessing.Process(
             target=run_test_case,
-            args=(test_case, sql_result, logger, i, return_dict, conn, error_sql, sol_sql, db_name)
+            args=(
+                test_case,
+                sql_result,
+                logger,
+                i,
+                return_dict,
+                conn,
+                error_sql,
+                sol_sql,
+                db_name,
+            ),
         )
         p.start()
-        p.join(timeout=60)  
+        p.join(timeout=60)
         if p.is_alive():
             logger.error(f"Test case {i} execution timed out.")
             p.terminate()
@@ -137,7 +138,7 @@ def execute_test_cases(
 
     passed_count = 0
     failed_tests = []
-    for idx in range(1, len(test_cases)+1):
+    for idx in range(1, len(test_cases) + 1):
         status = return_dict.get(idx, "failed")
         if status == "passed":
             passed_count += 1
@@ -146,22 +147,23 @@ def execute_test_cases(
 
     return passed_count, failed_tests
 
+
 def run_preprocessing(preprocess_sql, db_name, logger, conn):
     """
     Execute any pre-processing SQL statements.
     """
     if preprocess_sql:
         execute_queries(
-            preprocess_sql, 
-            db_name, 
-            conn, 
-            logger, 
-            section_title="Preprocess SQL"
+            preprocess_sql, db_name, conn, logger, section_title="Preprocess SQL"
         )
-def run_evaluation_phase(pred_sqls, sol_sqls, error_sqls, db_name, test_cases, logger, conn, efficiency):
+
+
+def run_evaluation_phase(
+    pred_sqls, sol_sqls, error_sqls, db_name, test_cases, logger, conn, efficiency
+):
     """
-    1. Execute 'pred_sql' 
-    2. If no error, run test cases. 
+    1. Execute 'pred_sql'
+    2. If no error, run test cases.
     Returns tuple of flags + (passed_count, failed_tests).
     """
     sol_sql_result, exec_error_flag, timeout_flag = execute_queries(
@@ -177,23 +179,23 @@ def run_evaluation_phase(pred_sqls, sol_sqls, error_sqls, db_name, test_cases, l
     if not instance_execution_error and not instance_timeout_error and test_cases:
         if not efficiency:
             passed_count, failed_tests = execute_test_cases(
-                test_cases, 
-                sol_sql_result, 
+                test_cases,
+                sol_sql_result,
                 logger,
                 conn,
-                pred_sqls,   # pred_sqls param for run_test_case
-                sol_sqls,   # sol_sqls param for run_test_case
-                db_name
+                pred_sqls,  # pred_sqls param for run_test_case
+                sol_sqls,  # sol_sqls param for run_test_case
+                db_name,
             )
         else:
             passed_count, failed_tests = execute_test_cases(
-                test_cases, 
-                sol_sql_result, 
+                test_cases,
+                sol_sql_result,
                 logger,
                 conn,
                 error_sqls,  # pass error_sql as "pred_sqls" slow
-                pred_sqls,   # pass pred_sql as "sol_sqls" fast
-                db_name
+                pred_sqls,  # pass pred_sql as "sol_sqls" fast
+                db_name,
             )
 
         if failed_tests:
@@ -207,6 +209,7 @@ def run_evaluation_phase(pred_sqls, sol_sqls, error_sqls, db_name, test_cases, l
         failed_tests,
     )
 
+
 def process_one_instance(data_item, ephemeral_db_queues, args, global_stats_lock):
     """
     Orchestrate the entire logic for a single instance:
@@ -219,7 +222,7 @@ def process_one_instance(data_item, ephemeral_db_queues, args, global_stats_lock
     global number_of_assertion_errors
     global total_passed_instances, number_error_unexpected_pass
 
-    instance_id = data_item['instance_id']
+    instance_id = data_item["instance_id"]
     log_filename = os.path.splitext(args.jsonl_file)[0] + f"_instance_{instance_id}.log"
 
     if args.logging == "true":
@@ -227,7 +230,13 @@ def process_one_instance(data_item, ephemeral_db_queues, args, global_stats_lock
     else:
         logger = NullLogger()
 
-    required_fields = ["selected_database", "preprocess_sql", "error_sql", "sol_sql","pred_sqls"]
+    required_fields = [
+        "selected_database",
+        "preprocess_sql",
+        "error_sql",
+        "sol_sql",
+        "pred_sqls",
+    ]
     missing_fields = [field for field in required_fields if field not in data_item]
     if missing_fields:
         logger.error(f"Missing required fields: {', '.join(missing_fields)}")
@@ -268,7 +277,7 @@ def process_one_instance(data_item, ephemeral_db_queues, args, global_stats_lock
     except queue.Empty:
         logger.error(f"No available ephemeral databases for base_db: {db_name}")
         with global_stats_lock:
-            print('run here')
+            print("run here")
             number_of_execution_errors += 1
         return {
             "instance_id": instance_id,
@@ -292,22 +301,21 @@ def process_one_instance(data_item, ephemeral_db_queues, args, global_stats_lock
         evaluation_conn = get_connection_for_phase(ephemeral_db, logger)
         run_preprocessing(preprocess_sql, ephemeral_db, logger, evaluation_conn)
 
-
         (
             evaluation_phase_execution_error,
             evaluation_phase_timeout_error,
             evaluation_phase_assertion_error,
             passed_count,
-            failed_tests
+            failed_tests,
         ) = run_evaluation_phase(
-            pred_sqls, 
-            sol_sqls, 
-            error_sqls, 
-            ephemeral_db, 
-            test_cases, 
-            logger, 
+            pred_sqls,
+            sol_sqls,
+            error_sqls,
+            ephemeral_db,
+            test_cases,
+            logger,
             evaluation_conn,
-            efficiency
+            efficiency,
         )
 
         close_postgresql_connection(ephemeral_db, evaluation_conn)
@@ -320,8 +328,11 @@ def process_one_instance(data_item, ephemeral_db_queues, args, global_stats_lock
             logger.info("Executing Clean Up SQL after solution phase.")
             new_temp_conn = get_connection_for_phase(ephemeral_db, logger)
             execute_queries(
-                clean_up_sql, ephemeral_db, new_temp_conn, logger, 
-                section_title="Clean Up SQL"
+                clean_up_sql,
+                ephemeral_db,
+                new_temp_conn,
+                logger,
+                section_title="Clean Up SQL",
             )
             close_postgresql_connection(ephemeral_db, new_temp_conn)
 
@@ -336,7 +347,9 @@ def process_one_instance(data_item, ephemeral_db_queues, args, global_stats_lock
     finally:
         # Return the ephemeral database to the queue
         ephemeral_db_queues[db_name].put(ephemeral_db)
-        logger.info(f"Instance {instance_id} finished. Returned ephemeral db: {ephemeral_db}")
+        logger.info(
+            f"Instance {instance_id} finished. Returned ephemeral db: {ephemeral_db}"
+        )
 
     # ---------- Update Global Stats ----------
     with global_stats_lock:
@@ -346,16 +359,20 @@ def process_one_instance(data_item, ephemeral_db_queues, args, global_stats_lock
             number_of_timeouts += 1
         if evaluation_phase_assertion_error:
             number_of_assertion_errors += 1
-        if (not evaluation_phase_execution_error
+        if (
+            not evaluation_phase_execution_error
             and not evaluation_phase_timeout_error
-            and not evaluation_phase_assertion_error):
+            and not evaluation_phase_assertion_error
+        ):
             total_passed_instances += 1
 
     # ---------- Determine status ----------
     ret_status = "success"
-    if (evaluation_phase_execution_error 
-        or evaluation_phase_timeout_error 
-        or evaluation_phase_assertion_error):
+    if (
+        evaluation_phase_execution_error
+        or evaluation_phase_timeout_error
+        or evaluation_phase_assertion_error
+    ):
         ret_status = "failed"
 
     return {
@@ -370,53 +387,71 @@ def process_one_instance(data_item, ephemeral_db_queues, args, global_stats_lock
         "evaluation_phase_assertion_error": evaluation_phase_assertion_error,
     }
 
+
 def main():
     global number_of_execution_errors, number_of_timeouts
     global number_of_assertion_errors
     global total_passed_instances, number_error_unexpected_pass
     global question_test_case_results
 
-    parser = argparse.ArgumentParser(description="Execute SQL solution and test cases (PostgreSQL).")
-    parser.add_argument("--jsonl_file", required=True,
-                        help="Path to the JSONL file containing the dataset instances.")
-    parser.add_argument("--limit", type=int, default=None,
-                        help="Limit the number of instances to process.")
-    parser.add_argument("--num_threads", type=int, default=2,
-                        help="Number of parallel threads to use.")
+    parser = argparse.ArgumentParser(
+        description="Execute SQL solution and test cases (PostgreSQL)."
+    )
+    parser.add_argument(
+        "--jsonl_file",
+        required=True,
+        help="Path to the JSONL file containing the dataset instances.",
+    )
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=None,
+        help="Limit the number of instances to process.",
+    )
+    parser.add_argument(
+        "--num_threads", type=int, default=2, help="Number of parallel threads to use."
+    )
     parser.add_argument(
         "--logging",
         type=str,
         default="false",
-        help="Enable or disable per-instance logging ('true' or 'false')."
+        help="Enable or disable per-instance logging ('true' or 'false').",
     )
     args = parser.parse_args()
 
     data_list = load_jsonl(args.jsonl_file)
+
+    # or to load the data from the Hugging Face dataset
+    # dataset = load_dataset("birdsql/bird-critic-1.0-flash-exp")
+    # data_list = dataset["train"]
+
     if not data_list:
         print("No data found in the JSONL file.")
         sys.exit(1)
 
     if args.limit is not None:
-        data_list = data_list[:args.limit]
+        data_list = data_list[: args.limit]
 
     # Collect base DB names
     all_db_names = set()
     for d in data_list:
-        if 'selected_database' in d:
-            all_db_names.add(d['selected_database'])
+        if "selected_database" in d:
+            all_db_names.add(d["selected_database"])
 
     # summary logger
     base_output_folder = os.path.splitext(args.jsonl_file)[0]
     ephemeral_db_log_filename = f"{base_output_folder}_multi_thread.log"
     ephemeral_db_logger = configure_logger(ephemeral_db_log_filename)
-    ephemeral_db_logger.info(f"=== Starting Multi-Thread Evaluation with {args.num_threads} threads ===")
+    ephemeral_db_logger.info(
+        f"=== Starting Multi-Thread Evaluation with {args.num_threads} threads ==="
+    )
 
     # Create ephemeral DB copies
     ephemeral_db_pool_dict = create_ephemeral_db_copies(
         base_db_names=all_db_names,
         num_copies=args.num_threads,
         pg_password="123123",
-        logger=ephemeral_db_logger
+        logger=ephemeral_db_logger,
     )
 
     # Initialize queues
@@ -431,17 +466,17 @@ def main():
     results = []
     total_instances = len(data_list)
 
-    
-    with ThreadPoolExecutor(max_workers=args.num_threads) as executor, \
-         tqdm_progress(total=total_instances, desc="Evaluating Questions") as pbar:
+    with ThreadPoolExecutor(max_workers=args.num_threads) as executor, tqdm_progress(
+        total=total_instances, desc="Evaluating Questions"
+    ) as pbar:
         future_to_data = {}
         for data_item in data_list:
             future = executor.submit(
-                process_one_instance, 
-                data_item, 
-                ephemeral_db_queues, 
-                args, 
-                global_stats_lock
+                process_one_instance,
+                data_item,
+                ephemeral_db_queues,
+                args,
+                global_stats_lock,
             )
             future_to_data[future] = data_item
 
@@ -453,9 +488,7 @@ def main():
     question_test_case_results = results[:]
     # Summarize results
     total_errors = (
-        number_of_execution_errors
-        + number_of_timeouts
-        + number_of_assertion_errors
+        number_of_execution_errors + number_of_timeouts + number_of_assertion_errors
     )
     overall_accuracy = (
         ((total_instances - total_errors) / total_instances * 100)
@@ -467,15 +500,15 @@ def main():
 
     # Generate the report + update data_list
     save_report_and_status(
-        report_file_path, 
-        question_test_case_results, 
+        report_file_path,
+        question_test_case_results,
         data_list,
         number_of_execution_errors,
         number_of_timeouts,
         number_of_assertion_errors,
         overall_accuracy,
         timestamp,
-        ephemeral_db_logger
+        ephemeral_db_logger,
     )
 
     print("Overall report generated:", report_file_path)
@@ -485,8 +518,8 @@ def main():
         output_jsonl_file = f"{base_output_folder}_output_with_status.jsonl"
         with open(output_jsonl_file, "w") as f:
             for i, data in enumerate(data_list):
-                data['status'] = question_test_case_results[i]['status']
-                data['error_message'] = question_test_case_results[i]['error_message']
+                data["status"] = question_test_case_results[i]["status"]
+                data["error_message"] = question_test_case_results[i]["error_message"]
                 f.write(json.dumps(data) + "\n")
 
     # Close all pools, drop ephemeral DBs
@@ -497,6 +530,7 @@ def main():
 
     drop_ephemeral_dbs(ephemeral_db_pool_dict, "123123", ephemeral_db_logger)
     ephemeral_db_logger.info("All ephemeral databases have been dropped.")
+
 
 if __name__ == "__main__":
     main()

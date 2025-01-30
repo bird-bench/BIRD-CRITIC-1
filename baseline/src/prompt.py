@@ -20,7 +20,3 @@ def assistant_prompt(json_data):
 {error_sql_str}
 # Corrected SQL:
 """
-
-
-# Corrected SQL:
-# ```sql

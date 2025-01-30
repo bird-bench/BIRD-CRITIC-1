@@ -1,4 +1,4 @@
-# Bird Critic
+# BIRD-CRITIC-1.0-Flash
 
 <p align="center">
   <img src="materials/red_bird_single.webp" 
@@ -11,25 +11,51 @@
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-teal.svg)](https://www.python.org/downloads/release/python-310/)
 [![OpenAI 1.40+](https://img.shields.io/badge/OpenAI-1.40+-beige.svg)](https://pypi.org/project/openai/)
 
-## Overview
-**BIRD-Critic** is the first SQL debugging benchmark designed to answer a critical question: *Can large language models (LLMs) resolve real-world user bugs in database applications?* To create this benchmark, we curated realistic bug cases from StackOverflow.
 
-We are releasing a preview version of BIRD-Critic, which includes **141 data instances**. These data instances focuses on Stack Overflow issues, where we explore and collect SQL debugging scenarios, distill problem definitions, reproduce bugs and solutions in the BIRD environment, and design test cases for evaluation. 
 
-## Dataset Introduction
+BIRD-Critic is the first SQL debugging benchmark designed to answer a critical question:
+**Can large language models (LLMs) fix user issues in real-world database applications?** \
+Each task in BIRD-CRITIC has been verified by human experts on the following dimensions:
+1) Reproduction of errors on BIRD env to prevent data leakage.
+2) Carefully curate test case functions for each task specifically. 
+   - **Soft EX**: This metric can evaluate SELECT-ONLY tasks.
+   - **Soft EX + Parsing**: This metric can evaluate tasks with user specific requirements or refinements.
+   - **Test Case**: For DBA tasks, such as CRUD (CREAT, READ, UPDATE, DELET), test cases should be promised to evaluate the correct logic. This is also effective for user issues requiring multiple sequential SQLs to resolve. 
+   - **Query Execution Plan**: For user tasks involving efficiency improvement or runtime errors, QEP can be introduced to evaluate solution SQLs on algorithm level.
+4) Fast Eval Sandbox via PostgreSQL template & docker.
+5) Created new RDBs in different scale and professional domains.
 
-For the preview version, we use the **BIRD-SQL dev database**, see more information on [the official BIRD website](https://bird-bench.github.io/).
+We are releasing a lite version of BIRD-Critic, `bird-critic-1.0-flash-exp`, which includes 200 high-quality user issues on PostgreSQL when developing real-world applications. We curate tasks by:
+- Collecting and understanding realistic user issues.
+- Distilling problem definitions and SQL knowledge.
+- Reproducing bugs and solutions in the BIRD environment.
+- Designing test cases for evaluation.
 
-Each data instance includes the following key components:
-  - `db_id`: The name of the database.
-  - `query`: The user query rewritten in the BIRD environment.
-  - `error_sql`: The buggy SQL query written by the user.
-  - `sol_sql`: The ground truth SQL solution.
-  - `preprocess_sql`: List of SQL queries to execute before solution_sql/prediction.
-  - `clean_up_sql`: SQL queries to execute after the test cases, to revise any effect made on the database .
-  - `test_cases`: A set of test cases to validate the predicted corrected SQL.
 
-## Environment Setup
+## Dataset Details
+
+### Dataset Description
+
+- **Curated by:** BIRD Team & Google Cloud
+- **License:** [cc-by-sa-4.0](https://creativecommons.org/licenses/by-sa/4.0/)
+- **HuggingFace Dataset Card:** [bird-critic-1.0-flash-exp](https://huggingface.co/datasets/birdsql/bird-critic-1.0-flash-exp)
+
+### Dataset Uses
+
+To avoid data leakage by auto-crawling, we do not include GT solution sqls and test cases along with data.
+please email [bird.bench23@gmail.com](mailto:bird.bench23@gmail.com) or [bird.bench25@gmail.com](mailto:bird.bench25@gmail.com) for full set, which will be sent automatically.
+
+
+### use the Dataset from HuggingFace
+```python
+from datasets import load_dataset
+
+dataset = load_dataset("birdsql/bird-critic-1.0-flash-exp")
+
+print(dataset["train"][0])
+```
+
+## Code Usage
 ### Generation
 To run the baseline code you need to install the following dependencies:
 ```bash
@@ -41,7 +67,7 @@ pip install -r requirements.txt
 cd run
 bash generate_prompt.sh
 
-# Inference, need to set the API key in config.py
+# LLM Inference, need to set the API key in config.py
 bash run_baseline.sh
 ```
 The output will be save in the [`./baseline/outputs/final_output/`](./baseline/outputs/final_output/)
@@ -60,7 +86,6 @@ docker compose up --build
 ```bash
 docker compose exec so_eval_env bash
 cd run
-# You need to modify the JSONL location in the run_eval.sh
 bash run_eval.sh 
 ```
 The output will be save in the [`./evaluation/outputs/`](./evaluation/outputs/)

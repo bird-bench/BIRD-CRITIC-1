@@ -3,6 +3,7 @@ import os
 import argparse
 from tqdm import tqdm
 from prompt import assistant_prompt
+from datasets import load_dataset
 
 
 # Utility functions
@@ -53,7 +54,12 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
+    # Load the data from the JSONL file
     data_list = load_jsonl(args.data_path)
+
+    # or to load the data from the Hugging Face dataset
+    # dataset = load_dataset("birdsql/bird-critic-1.0-flash-exp")
+    # data_list = dataset["train"]
 
     # final_data_list = filter_instances(data_list)
     final_data_list = data_list

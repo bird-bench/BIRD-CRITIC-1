@@ -47,6 +47,7 @@ declare -A DATABASE_MAPPING=(
     ["student_club_template"]="income budget zip_code expense member attendance event major"
     ["superhero_template"]="gender superpower publisher superhero colour attribute hero_power race alignment hero_attribute"
     ["codebase_community_template"]="postlinks posthistory badges posts users tags votes comments"
+    ["erolp_template"]="learners institutions curricula educational_resources external_factors outcomes enrollment curriculum_resources resource_usage performance_predictions target_labels"
 )
 
 # Lowercased ordered list of tables based on dependency analysis
@@ -58,7 +59,8 @@ TABLE_ORDER=(
     satscores examination transactions_1k order patient district comments superhero frpm income
     gasstations constructorstandings constructorresults league driverstandings users posts client customers
     atom bond budget races attribute player major team account race publisher gender alignment colour
-    constructors country drivers circuits
+    constructors country drivers circuits  learners institutions curricula educational_resources external_factors outcomes enrollment
+    curriculum_resources resource_usage performance_predictions target_labels
 )
 
 ############################
