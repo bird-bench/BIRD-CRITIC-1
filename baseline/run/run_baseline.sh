@@ -1,4 +1,5 @@
 prompt_path="../prompts/assistant.jsonl"
+# You have to change the model name to the model you want to use and set the API key in the config.py file
 model="gpt-4o-2024-0806"
 inter_output_path="../outputs/inter_output/${model}_assistant_inter_output.jsonl"
 mkdir -p ../outputs/inter_output
