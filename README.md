@@ -46,7 +46,7 @@ To avoid data leakage by auto-crawling, we do not include GT solution sqls and t
 please email [bird.bench23@gmail.com](mailto:bird.bench23@gmail.com) or [bird.bench25@gmail.com](mailto:bird.bench25@gmail.com) for full set, which will be sent automatically.
 
 
-### use the Dataset from HuggingFace
+### Use the Dataset from HuggingFace
 ```python
 from datasets import load_dataset
 
