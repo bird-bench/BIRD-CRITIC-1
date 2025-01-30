@@ -1,8 +1,5 @@
 prompt_path="../prompts/assistant.jsonl"
-# model="gpt-4o"
-model="claude"
-# model="gemini"
-# model="deepseek"
+model="gpt-4o-2024-0806"
 inter_output_path="../outputs/inter_output/${model}_assistant_inter_output.jsonl"
 
 python ../src/call_api.py --prompt_path $prompt_path --output_path $inter_output_path --model_name $model

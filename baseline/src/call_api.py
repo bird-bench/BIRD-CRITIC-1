@@ -123,31 +123,23 @@ def call_api_model(
     """
     Sets up the correct backend client + model engine, then calls 'api_request'.
     """
-    if model_name == "gpt-4o":
-        engine = "gpt-4o-2024-08-06"
+    if "gpt" in model_name:
+        engine = model_name
         client = OpenAI(
-            base_url=model_config["gpt-4o"]["base_url"],
-            api_key=model_config["gpt-4o"]["api_key"],
+            base_url=model_config[model_name]["base_url"],
+            api_key=model_config[model_name]["api_key"],
         )
         backend = "openai"
 
-    elif model_name == "deepseek":
-        engine = "deepseek-chat"
-        client = OpenAI(
-            base_url=model_config["deepseek"]["base_url"],
-            api_key=model_config["deepseek"]["api_key"],
-        )
-        backend = "openai"
-
-    elif model_name == "claude":
-        engine = "claude-3-5-sonnet-20241022"
+    elif "claude" in model_name:
+        engine = model_name
         client = anthropic.Anthropic(
-            api_key=model_config["claude"],
+            api_key=model_config[model_name],
         )
         backend = "anthropic"
 
-    elif model_name == "gemini":
-        engine = "gemini-1.5-flash"
+    elif "gemini" in model_name:
+        engine = model_name
         client = genai.GenerativeModel(engine)
         genai.configure(api_key=GEMINI_API_KEYS[1])
         backend = "genai"

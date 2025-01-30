@@ -63,6 +63,11 @@ cd baseline
 conda create -n bird_critic python=3.10 -y
 conda activate bird_critic
 pip install -r requirements.txt
+```
+
+You also need to setup the model name (eg., **gpt-4o-2024-08-06**) with the API key in the `config.py`(./baseline/src/config.py)
+ file. Then you can run the following command to generate the output:
+```bash
 # Generate the prompt
 cd run
 bash generate_prompt.sh
@@ -71,6 +76,7 @@ bash generate_prompt.sh
 bash run_baseline.sh
 ```
 The output will be save in the [`./baseline/outputs/final_output/`](./baseline/outputs/final_output/)
+
 
 ### Evaluation
 We use **docker** to provide a consistent environment for running the benchmark. To set up the environment, follow these steps:
@@ -82,7 +88,9 @@ We use **docker** to provide a consistent environment for running the benchmark.
 cd evaluation
 docker compose up --build
 ```
-4. Run the evaluation script inside the so_eval_env container
+4. Interact with the PostgreSQL database
+Use the `perform_query_on_postgresql_databases()` function in the `evaluation/src/db_utils.py`(./evaluation/src/db_utils.py) file to interact with the PostgreSQL database. `query` is the SQL query you want to run, and `db_name` is the name of the database you want to run the query on. The function will return the result of the query.
+5. Run the evaluation script inside the so_eval_env container
 ```bash
 docker compose exec so_eval_env bash
 cd run
