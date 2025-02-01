@@ -1,4 +1,4 @@
-# BIRD-CRITIC-1.0-Flash
+# BIRD-CRITIC 1.0 (SQL)
 
 <p align="center">
   <img src="materials/red_bird_single.webp" 
@@ -7,23 +7,31 @@
 
 
 
-[![License](https://img.shields.io/badge/License-CC%20By%20NC%204.0-orange.svg)](https://creativecommons.org/licenses/by-nc/4.0/)
+[![License](https://img.shields.io/badge/License-CC%20By%20SA%204.0-orange.svg)](https://creativecommons.org/licenses/by-sa/4.0/deed.en)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-teal.svg)](https://www.python.org/downloads/release/python-310/)
 [![OpenAI 1.40+](https://img.shields.io/badge/OpenAI-1.40+-beige.svg)](https://pypi.org/project/openai/)
 
 
+## 🧸 Overview
 
-BIRD-Critic is the first SQL debugging benchmark designed to answer a critical question:
-**Can large language models (LLMs) fix user issues in real-world database applications?** \
+BIRD-Critic 1.0 introduces a novel SQL benchmark designed to evaluate a key capability: **Can large language models (LLMs) diagnose and solve user issues within real-world database environments?**
+
+The benchmark comprises 600 tasks for development and 200 held-out out-of-distribution (OOD) tests. BIRD-CRITIC 1.0 is built on realistic user issues across 4 prominent open-source SQL dialects: MySQL, PostgreSQL, SQL Server, and Oracle. It expands beyond simple SELECT queries to cover a wider range of SQL operations, reflecting actual application scenarios. Finally, an optimized execution-based evaluation environment is included for rigorous and efficient validation.
+
+### ✅ Verification Process
+
 Each task in BIRD-CRITIC has been verified by human experts on the following dimensions:
-1) Reproduction of errors on BIRD env to prevent data leakage.
-2) Carefully curate test case functions for each task specifically. 
+
+1) Reproduction of errors on the BIRD environment to prevent data leakage.
+2) Carefully curated test case functions for each task specifically.
    - **Soft EX**: This metric can evaluate SELECT-ONLY tasks.
-   - **Soft EX + Parsing**: This metric can evaluate tasks with user specific requirements or refinements.
-   - **Test Case**: For DBA tasks, such as CRUD (CREAT, READ, UPDATE, DELET), test cases should be promised to evaluate the correct logic. This is also effective for user issues requiring multiple sequential SQLs to resolve. 
-   - **Query Execution Plan**: For user tasks involving efficiency improvement or runtime errors, QEP can be introduced to evaluate solution SQLs on algorithm level.
-4) Fast Eval Sandbox via PostgreSQL template & docker.
-5) Created new RDBs in different scale and professional domains.
+   - **Soft EX + Parsing**: This metric can evaluate tasks with user-specific requirements or refinements.
+   - **Test Case**: For DBA tasks, such as CRUD (CREATE, READ, UPDATE, DELETE), test cases are designed to evaluate the correctness of the logic. This is also effective for user issues requiring multiple sequential SQL queries to resolve.
+   - **Query Execution Plan**: For user tasks involving efficiency improvement or runtime errors, QEP (Query Execution Plan) can be used to evaluate solution SQL queries at the algorithm level.
+3) Fast Eval Sandbox via PostgreSQL template & docker.
+4) Created new RDBs in different scales and professional domains.
+
+### 🐣 Lite Version
 
 We are releasing a lite version of BIRD-Critic, `bird-critic-1.0-flash-exp`, which includes 200 high-quality user issues on PostgreSQL when developing real-world applications. We curate tasks by:
 - Collecting and understanding realistic user issues.
@@ -31,8 +39,16 @@ We are releasing a lite version of BIRD-Critic, `bird-critic-1.0-flash-exp`, whi
 - Reproducing bugs and solutions in the BIRD environment.
 - Designing test cases for evaluation.
 
+## 🦅 Full Sets of BIRD-CRITIC 1.0
 
-## Dataset Details
+The BIRD-CRITIC 1.0 benchmark is available in the following configurations:
+
+1.  `bird-critic-1.0-flash-exp`: A lite version consisting of 200 instances on PostgreSQL.
+2.  `bird-critic-1.0-open`: The full version containing 600 instances across MySQL, PostgreSQL, SQL Server, and Oracle.
+3.  `bird-critic-1.0-postgresql`: A 600-instance version specifically for PostgreSQL.
+4.  `bird-critic-1.0-bigquery`: A lite version containing between 100 and 200 instances for BigQuery.
+
+## 📦 Dataset Details
 
 ### Dataset Description
 
@@ -55,7 +71,7 @@ dataset = load_dataset("birdsql/bird-critic-1.0-flash-exp")
 print(dataset["flash"][0])
 ```
 
-## Code Usage
+## 💨 Quick Eval
 ### Generation
 To run the baseline code you need to install the following dependencies:
 ```bash
