@@ -117,7 +117,7 @@ If you want the log file for each instance, you can set the `--logging` to `true
 ## 📋 Todo Lists
 
 - [x] Release lite version, bird-critic-1.0-flash (200).
-- [ ] Open source code, leaderboard page.
+- [x] Open source code, leaderboard page.
 - [ ] Release Full bird-critic-1.0-open (600 w/ 5 dialects).
 - [ ] Release Full bird-critic-1.0-postgresql (600 pg tasks).
 - [ ] Update agent baselines.
