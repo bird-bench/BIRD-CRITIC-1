@@ -113,3 +113,16 @@ bash run_eval.sh
 ```
 The output will be save in the [`./evaluation/outputs/`](./evaluation/outputs/)
 If you want the log file for each instance, you can set the `--logging` to `true` in the `run_eval.sh` script.
+
+## 📋 Todo Lists
+
+- [x] Release lite version, bird-critic-1.0-flash (200).
+- [ ] Open source code, leaderboard page.
+- [ ] Release Full bird-critic-1.0-open (600 w/ 5 dialects).
+- [ ] Release Full bird-critic-1.0-postgresql (600 pg tasks).
+- [ ] Update agent baselines.
+- [ ] BIRD-Pro v0.5
+- [ ] BIRD-CRITIC 1.5 / 2.0 on track!
+
+## Created By:
+BIRD Team & Google Cloud
