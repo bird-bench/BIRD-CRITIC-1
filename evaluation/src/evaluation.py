@@ -423,7 +423,7 @@ def main():
 
     # or to load the data from the Hugging Face dataset
     # dataset = load_dataset("birdsql/bird-critic-1.0-flash-exp")
-    # data_list = dataset["train"]
+    # data_list = dataset["flash"]
 
     if not data_list:
         print("No data found in the JSONL file.")

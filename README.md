@@ -52,7 +52,7 @@ from datasets import load_dataset
 
 dataset = load_dataset("birdsql/bird-critic-1.0-flash-exp")
 
-print(dataset["train"][0])
+print(dataset["flash"][0])
 ```
 
 ## Code Usage
