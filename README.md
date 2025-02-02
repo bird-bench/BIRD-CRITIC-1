@@ -8,8 +8,10 @@
 
 
 [![License](https://img.shields.io/badge/License-CC%20By%20SA%204.0-orange.svg)](https://creativecommons.org/licenses/by-sa/4.0/deed.en)
+[![HuggingFace](https://img.shields.io/badge/Dataset-HuggingFace-FFD21E.svg)](https://huggingface.co/datasets/birdsql/bird-critic-1.0-flash-exp/)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-teal.svg)](https://www.python.org/downloads/release/python-310/)
 [![OpenAI 1.40+](https://img.shields.io/badge/OpenAI-1.40+-beige.svg)](https://pypi.org/project/openai/)
+
 
 
 ## 🧸 Overview
@@ -50,7 +52,7 @@ We are releasing a lite version of BIRD-Critic, `bird-critic-1.0-flash-exp`, whi
 | 5 | Qwen2.5-Coder-32B-Instruct | 23.5 | 🔸 Advanced |
 | 6 | gemini-2.0-flash-thinking-exp | 19.5 | 🔸 Advanced |
 
-> Full leaderboard can be found [here](https://huggingface.co/datasets/birdsql/bird-critic-1.0-flash-exp/)
+> Full result can be found [here](https://huggingface.co/datasets/birdsql/bird-critic-1.0-flash-exp/)
 
 ## 🦅 Full Sets of BIRD-CRITIC 1.0
 
