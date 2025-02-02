@@ -1,4 +1,4 @@
-# BIRD-CRITIC 1.0 (SQL)
+# BIRD-CRITIC 1.0 (SQL)  <img src="materials/hku-logo.jpg" alt="HKU Logo" width="50" style="vertical-align:middle;margin-left:10px;"> <img src="materials/google-cloud-logo.png" alt="Google Cloud Logo" width="50" style="vertical-align:middle;margin-left:10px;">
 
 <p align="center">
   <img src="materials/red_bird_single.webp" 
@@ -39,6 +39,19 @@ We are releasing a lite version of BIRD-Critic, `bird-critic-1.0-flash-exp`, whi
 - Reproducing bugs and solutions in the BIRD environment.
 - Designing test cases for evaluation.
 
+### Model Performance Results on BIRD-CRITIC 1.0 Flash
+
+| Rank | Model Name | Score | Level |
+|------|------------|-------|-----------|
+| 1 | o1-preview-2024-09-12 | **38.5** | 🏆 Leading |
+| 2 | deepseek-reasoner (r1) | 34.0 | 🌟 Elite |
+| 3 | claude-3-5-sonnet | 24.0 | 🔸 Advanced |
+| 4 | gemini-2.0-flash-exp | 24.0 | 🔸 Advanced |
+| 5 | Qwen2.5-Coder-32B-Instruct | 23.5 | 🔸 Advanced |
+| 6 | gemini-2.0-flash-thinking-exp | 19.5 | 🔸 Advanced |
+
+> Full leaderboard can be found [here](https://huggingface.co/datasets/birdsql/bird-critic-1.0-flash-exp/)
+
 ## 🦅 Full Sets of BIRD-CRITIC 1.0
 
 The BIRD-CRITIC 1.0 benchmark is available in the following configurations:
@@ -52,6 +65,19 @@ The BIRD-CRITIC 1.0 benchmark is available in the following configurations:
 
 ### Dataset Description
 
+- **Database:** The database can be download from [the Google Drive](https://drive.google.com/drive/folders/1O4svFGkE8_Ps60EQeyrCTN6LVOWudjgm?usp=sharing). Check the [Quick Eval](#quick-eval) section for more details.
+- **data:** Each data instance contain the following main parts:
+   - `db_id`: The name of the database.  
+   - `query`: The user query is rewritten in the BIRD environment.  
+   - `error_sql`: The buggy SQL query written by the user.  
+   - `sol_sql`: The ground truth SQL solution.  
+   - `preprocess_sql`: SQL queries to run before executing the solution or prediction.  
+   - `clean_up_sql`: SQL queries to run after the test cases to revert any changes made to the database.  
+   - `test_cases`: A set of test cases to validate the predicted corrected SQL.
+   - `efficiency`: True if this question needs optimization, measure the cost by Query Execution Plan (QEP)
+   - `external_data`: For the external JSON data if present
+- **baseline:** The baseline code is available in the [`./baseline`](./baseline) directory.
+- **evaluation:** The evaluation code is available in the [`./evaluation`](./evaluation) directory.
 - **Curated by:** BIRD Team & Google Cloud
 - **License:** [cc-by-sa-4.0](https://creativecommons.org/licenses/by-sa/4.0/)
 - **HuggingFace Dataset Card:** [bird-critic-1.0-flash-exp](https://huggingface.co/datasets/birdsql/bird-critic-1.0-flash-exp)
@@ -96,7 +122,7 @@ The output will be save in the [`./baseline/outputs/final_output/`](./baseline/o
 ### Evaluation
 We use **docker** to provide a consistent environment for running the benchmark. To set up the environment, follow these steps:
 
-1. First download the BIRD Dev PostgreSQL database from [the Google Drive](https://drive.google.com/drive/folders/1O4svFGkE8_Ps60EQeyrCTN6LVOWudjgm?usp=sharing).
+1. First download the PostgreSQL database from [the Google Drive](https://drive.google.com/drive/folders/1O4svFGkE8_Ps60EQeyrCTN6LVOWudjgm?usp=sharing).
 2. Unzip the folder and save it in the [`./evaluation`](./evaluation) named with postgre_table_dumps
 3. Build the docker compose
 ```bash
