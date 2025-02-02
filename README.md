@@ -50,7 +50,7 @@ We are releasing a lite version of BIRD-Critic, `bird-critic-1.0-flash-exp`, whi
 | 5 | Qwen2.5-Coder-32B-Instruct | 23.5 | 🔸 Advanced |
 | 6 | gemini-2.0-flash-thinking-exp | 19.5 | 🔸 Advanced |
 
-> Full leaderboard can be found [here](https://huggingface.co/datasets/birdsql/bird-critic-1.0-flash-exp/)
+> More results can be found [here](https://huggingface.co/datasets/birdsql/bird-critic-1.0-flash-exp/)
 
 ## 🦅 Full Sets of BIRD-CRITIC 1.0
 
