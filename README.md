@@ -7,13 +7,23 @@
 
 
 
-[![License](https://img.shields.io/badge/License-CC%20By%20SA%204.0-orange.svg)](https://creativecommons.org/licenses/by-sa/4.0/deed.en)
-[![Leaderboard](https://img.shields.io/badge/Leaderboard-2025-28a745.svg)](https://bird-critic.github.io/)
-[![HuggingFace](https://img.shields.io/badge/Dataset-HuggingFace-FFD21E.svg)](https://huggingface.co/datasets/birdsql/bird-critic-1.0-flash-exp/)
-[![Python 3.10+](https://img.shields.io/badge/Python-3.10+-teal.svg)](https://www.python.org/downloads/release/python-310/)
-[![OpenAI 1.40+](https://img.shields.io/badge/OpenAI-1.40+-beige.svg)](https://pypi.org/project/openai/)
-
-
+<div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+  <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.en">
+    <img src="https://img.shields.io/badge/License-CC%20By%20SA%204.0-orange.svg" alt="License">
+  </a>
+  <a href="https://bird-critic.github.io/">
+    <img src="https://img.shields.io/badge/Leaderboard-2025-28a745.svg" alt="Leaderboard">
+  </a>
+  <a href="https://huggingface.co/datasets/birdsql/bird-critic-1.0-flash-exp/">
+    <img src="https://img.shields.io/badge/Dataset-HuggingFace-FFD21E.svg" alt="HuggingFace">
+  </a>
+  <a href="https://www.python.org/downloads/release/python-310/">
+    <img src="https://img.shields.io/badge/Python-3.10+-teal.svg" alt="Python">
+  </a>
+  <a href="https://pypi.org/project/openai/">
+    <img src="https://img.shields.io/badge/OpenAI-1.40+-beige.svg" alt="OpenAI">
+  </a>
+</div>
 
 ## 🧸 Overview
 
