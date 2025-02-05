@@ -8,6 +8,7 @@
 
 
 [![License](https://img.shields.io/badge/License-CC%20By%20SA%204.0-orange.svg)](https://creativecommons.org/licenses/by-sa/4.0/deed.en)
+[![Leaderboard](https://img.shields.io/badge/Leaderboard-2025-28a745.svg)](https://bird-critic.github.io/)
 [![HuggingFace](https://img.shields.io/badge/Dataset-HuggingFace-FFD21E.svg)](https://huggingface.co/datasets/birdsql/bird-critic-1.0-flash-exp/)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-teal.svg)](https://www.python.org/downloads/release/python-310/)
 [![OpenAI 1.40+](https://img.shields.io/badge/OpenAI-1.40+-beige.svg)](https://pypi.org/project/openai/)
