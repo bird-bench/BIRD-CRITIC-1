@@ -111,19 +111,19 @@ print(dataset["flash"][0])
 ```
 
 ## 💨 Quick Eval
-### Generation
+### Environment Setup
 To run the baseline code you need to install the following dependencies:
 ```bash
-cd baseline
 conda create -n bird_critic python=3.10 -y
 conda activate bird_critic
 pip install -r requirements.txt
 ```
 
+### Generation
 You also need to setup the model name (eg., **gpt-4o-2024-08-06**) with the API key in the `config.py` file. Then you can run the following command to generate the output:
 ```bash
 # Generate the prompt
-cd run
+cd baseline/run
 bash generate_prompt.sh
 
 # LLM Inference, need to set the API key in config.py
