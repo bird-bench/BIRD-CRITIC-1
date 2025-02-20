@@ -31,6 +31,11 @@ BIRD-Critic 1.0 introduces a novel SQL benchmark designed to evaluate a key capa
 
 The benchmark comprises 600 tasks for development and 200 held-out out-of-distribution (OOD) tests. BIRD-CRITIC 1.0 is built on realistic user issues across 4 prominent open-source SQL dialects: MySQL, PostgreSQL, SQL Server, and Oracle. It expands beyond simple SELECT queries to cover a wider range of SQL operations, reflecting actual application scenarios. Finally, an optimized execution-based evaluation environment is included for rigorous and efficient validation.
 
+<p align="center">
+  <img src="materials/example.png" 
+       style="width: 100%; min-width: 100px; display: block; margin: auto; ">
+</p>
+
 ### ✅ Verification Process
 
 Each task in BIRD-CRITIC has been verified by human experts on the following dimensions:
