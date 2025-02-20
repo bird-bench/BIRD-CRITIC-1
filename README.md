@@ -2,7 +2,7 @@
 
 <p align="center">
   <img src="materials/red_bird_single.webp" 
-       style="width: 30%; min-width: 100px; display: block; margin: auto; border-radius: 15px;">
+       style="width: 30%; min-width: 100px; display: block; margin: auto; border-radius: 15px !important;">
 </p>
 
 
