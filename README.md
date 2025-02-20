@@ -1,9 +1,8 @@
 # BIRD-CRITIC 1.0 (SQL)  <img src="materials/hku-logo.jpg" alt="HKU Logo" width="50" style="vertical-align:middle;margin-left:10px;"> <img src="materials/google-cloud-logo.png" alt="Google Cloud Logo" width="50" style="vertical-align:middle;margin-left:10px;">
 
 <p align="center">
-  <svg width="30%" viewBox="0 0 100 100" style="min-width: 100px; border-radius: 15px; overflow: hidden;">
-    <image href="materials/red_bird_single.webp" width="100%" height="100%"/>
-  </svg>
+  <img src="materials/red_bird_single.png" 
+       style="width: 30%; min-width: 100px; display: block; margin: auto; border-radius: 15px !important;">
 </p>
 
 
