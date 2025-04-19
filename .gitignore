@@ -1,0 +1,5 @@
+# ignore all dialect table dump folders
+evaluation/mysql_table_dumps/
+evaluation/oracle_table_dumps/
+evaluation/postgre_table_dumps/
+evaluation/mssql_table_dumps/

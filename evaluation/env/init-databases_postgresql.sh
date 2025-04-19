@@ -10,61 +10,51 @@ done
 echo "PostgreSQL is ready!"
 
 ############################
-# 0. Create template database: sql_test_template 
+# 0. Create template DB: sql_test_template
 ############################
 echo "Creating template database: sql_test_template with UTF8 encoding (formerly sql_test)"
 psql -U root -tc "SELECT 1 FROM pg_database WHERE datname='sql_test_template'" | grep -q 1 \
   || psql -U root -c "CREATE DATABASE sql_test_template WITH OWNER=root ENCODING='UTF8' TEMPLATE=template0;"
 
-# In the template database, create required schemas
+# Create schemas in sql_test_template
 echo "Creating required schemas: test_schema and test_schema_2 in sql_test_template"
 psql -U root -d sql_test_template -c "CREATE SCHEMA IF NOT EXISTS test_schema;"
 psql -U root -d sql_test_template -c "CREATE SCHEMA IF NOT EXISTS test_schema_2;"
 
-# Create hstore and citext extensions 
+# Create hstore, citext extensions
 echo "Creating hstore and citext extensions in sql_test_template..."
 psql -U root -d sql_test_template -c "CREATE EXTENSION IF NOT EXISTS hstore;"
 psql -U root -d sql_test_template -c "CREATE EXTENSION IF NOT EXISTS citext;"
 
-# Set default_text_search_config to pg_catalog.english
+# Set default_text_search_config
 echo "Setting default_text_search_config to pg_catalog.english in sql_test_template..."
 psql -U root -d sql_test_template -c "ALTER DATABASE sql_test_template SET default_text_search_config = 'pg_catalog.english';"
 
 echo "NOTE: For two-phase transaction support, set 'max_prepared_transactions' > 0 in postgresql.conf."
 
 ############################
-# 1. Define database mappings and table order
+# 1. Define DB → tables mapping
 ############################
 declare -A DATABASE_MAPPING=(
     ["debit_card_specializing_template"]="customers gasstations products yearmonth transactions_1k"
-    ["financial_template"]="loan client district trans account card order disp"
-    ["formula_1_template"]="circuits status drivers driverstandings races constructors constructorresults laptimes qualifying pitstops seasons constructorstandings results"
+    ["financial_template"]="district client account disp loan trans card order"
+    ["formula_1_template"]="circuits status drivers driverstandings seasons constructors races constructorresults laptimes qualifying pitstops constructorstandings results"
     ["california_schools_template"]="schools satscores frpm"
-    ["card_games_template"]="legalities cards rulings set_translations sets foreign_data"
-    ["european_football_2_template"]="team_attributes player match league country player_attributes team"
-    ["thrombosis_prediction_template"]="laboratory patient examination"
-    ["toxicology_template"]="bond molecule atom connected"
-    ["student_club_template"]="income budget zip_code expense member attendance event major"
-    ["superhero_template"]="gender superpower publisher superhero colour attribute hero_power race alignment hero_attribute"
-    ["codebase_community_template"]="postlinks posthistory badges posts users tags votes comments"
+    ["card_games_template"]="legalities cards rulings sets set_translations foreign_data"
+    ["european_football_2_template"]="team league country player team_attributes player_attributes match"
+    ["thrombosis_prediction_template"]="patient laboratory examination"
+    ["toxicology_template"]="molecule bond atom connected"
+    ["student_club_template"]="zip_code event major budget member income expense attendance"
+    ["superhero_template"]="gender alignment colour attribute publisher superpower race superhero hero_power hero_attribute"
+    ["codebase_community_template"]="tags postlinks users posthistory badges comments posts votes"
     ["erolp_template"]="learners institutions curricula educational_resources external_factors outcomes enrollment curriculum_resources resource_usage performance_predictions target_labels"
-)
-
-# Lowercased ordered list of tables based on dependency analysis
-TABLE_ORDER=(
-    hero_power votes disp foreign_data attendance loan myperms postlinks superpower match molecule
-    qualifying badges yearmonth connected event my_table set_translations rulings expense card
-    laptimes posthistory cards results hero_attribute legalities tags player_attributes laboratory
-    member status products proccd trans zip_code seasons schools team_attributes sets pitstops
-    satscores examination transactions_1k order patient district comments superhero frpm income
-    gasstations constructorstandings constructorresults league driverstandings users posts client customers
-    atom bond budget races attribute player major team account race publisher gender alignment colour
-    constructors country drivers circuits  learners institutions curricula educational_resources external_factors outcomes enrollment
-    curriculum_resources resource_usage performance_predictions target_labels
+    ["esophageal_template"]="patients demographics lifestyle_and_risk_factors patient_addresses clinical_status icd_classifications patient_icd_codes staging_systems patient_staging pathology_and_surgery treatment_and_followup"
+    ["global_atlas_template"]="country city province economy population politics religion ethnicgroup spoken language countrypops countryothername countrylocalname provpops provinceothername provincelocalname citypops cityothername citylocalname continent borders encompasses organization ismember"
+    ["spotify_template"]="sp_artists sp_albums sp_album_ctb sp_tracks sp_album_tracks sp_track_artists sp_track_info sp_audio_feats"
 )
 
 ############################
-# 2. Create template databases and import table data
+# 2. Create template DBs and import data
 ############################
 for DB_TEMPLATE in "${!DATABASE_MAPPING[@]}"; do
     echo "Creating template database: $DB_TEMPLATE"
@@ -72,66 +62,97 @@ for DB_TEMPLATE in "${!DATABASE_MAPPING[@]}"; do
       || psql -U root -c "CREATE DATABASE ${DB_TEMPLATE} WITH OWNER=root ENCODING='UTF8' TEMPLATE=template0;"
 done
 
-# Import table data into a database
-import_table() {
-    local table_name_lower=$(echo "$1" | tr '[:upper:]' '[:lower:]')
-    local db_lower=$(echo "$2" | tr '[:upper:]' '[:lower:]')
-    local table_file=$(find /docker-entrypoint-initdb.d/postgre_table_dumps -iname "${table_name_lower}.sql")
-
-    echo "Importing table '$1' into database '$2'"
-
-    if [[ -f "$table_file" ]]; then
-        if ! psql -U root -d "$db_lower" -f "$table_file" 2>>/tmp/error.log; then
-            echo "Error importing table '$1' into database '$2'. Check /tmp/error.log for details."
+# Function to import files from database-specific folders
+import_db_files() {
+    local db_template="$1"
+    local db_folder="/docker-entrypoint-initdb.d/postgre_table_dumps/${db_template}"
+    
+    echo "Importing files for ${db_template} from ${db_folder}"
+    
+    # Check if the folder exists
+    if [[ ! -d "${db_folder}" ]]; then
+        echo "Warning: Folder ${db_folder} does not exist, skipping database ${db_template}"
+        return
+    fi
+    
+    # Special case for global_atlas_template
+    if [[ "${db_template}" == "global_atlas_template" ]]; then
+        # Check if the schema and inputs files exist
+        local schema_file="${db_folder}/global_atlas-schema.sql"
+        local inputs_file="${db_folder}/global_atlas-inputs.sql"
+        
+        if [[ -f "${schema_file}" && -f "${inputs_file}" ]]; then
+            echo "Importing global_atlas schema file to ${db_template}..."
+            psql -U root -d "${db_template}" -f "${schema_file}" 2>>/tmp/error.log \
+                || echo "Error importing schema file for ${db_template}. Check /tmp/error.log for details."
+            
+            echo "Importing global_atlas data file to ${db_template}..."
+            psql -U root -d "${db_template}" -f "${inputs_file}" 2>>/tmp/error.log \
+                || echo "Error importing data file for ${db_template}. Check /tmp/error.log for details."
+        else
+            # If the special files don't exist, fall back to importing individual table files
+            echo "Special global_atlas files not found, falling back to individual table imports."
+            import_table_files "${db_template}" "${db_folder}"
         fi
     else
-        echo "Warning: Table file for '$1' not found in /docker-entrypoint-initdb.d/postgre_table_dumps, skipping."
+        # Regular case: import all table files in the folder
+        import_table_files "${db_template}" "${db_folder}"
     fi
 }
 
-# Import tables in the order specified in TABLE_ORDER
-for table_name in "${TABLE_ORDER[@]}"; do
-    for DB_TEMPLATE in "${!DATABASE_MAPPING[@]}"; do
-        if [[ " ${DATABASE_MAPPING[$DB_TEMPLATE]} " =~ " ${table_name} " ]]; then
-            import_table "$table_name" "$DB_TEMPLATE"
-            break
+# Function to import individual table files
+import_table_files() {
+    local db_template="$1"
+    local db_folder="$2"
+    local tables="${DATABASE_MAPPING[$db_template]}"
+    
+    for table in $tables; do
+        local sql_file="${db_folder}/${table}.sql"
+        if [[ -f "$sql_file" ]]; then
+            echo "Importing ${sql_file} into database ${db_template}"
+            if ! psql -U root -d "${db_template}" -f "${sql_file}" 2>>/tmp/error.log; then
+                echo "Error importing ${sql_file} into database ${db_template}. Check /tmp/error.log for details."
+            fi
+        else
+            echo "Warning: SQL file ${sql_file} not found for table ${table}"
         fi
     done
+}
+
+# Import data for each database
+for DB_TEMPLATE in "${!DATABASE_MAPPING[@]}"; do
+    import_db_files "${DB_TEMPLATE}"
 done
 
-# Check for errors during import
 if [[ -s /tmp/error.log ]]; then
     echo "Errors occurred during import:"
     cat /tmp/error.log
 fi
 
-rm -f /tmp/error.log
+# rm -f /tmp/error.log
 
 ############################
-# 3. Set these template databases as 'datistemplate = true'
+# 3. Mark these template DBs as 'datistemplate = true'
 ############################
-echo "Marking these template databases as 'datistemplate = true' so they can be used as official templates..."
+echo "Marking these template databases as 'datistemplate = true'..."
 for DB_TEMPLATE in "${!DATABASE_MAPPING[@]}"; do
   psql -U root -d postgres -c "UPDATE pg_database SET datistemplate = true WHERE datname = '${DB_TEMPLATE}';" || true
 done
 
 ############################
-# Log completion message
+# Example usage
 ############################
-echo "All template databases created. To reset a DB from template, for example 'financial':"
+echo "All template databases created. For example, to clone 'financial_template' into 'financial':"
 echo "    dropdb financial || true"
 echo "    createdb financial --template=financial_template"
 echo ""
-echo "Done."
+echo "Done creating template DBs."
 
-echo "Now creating a real DB from each template DB..."
+echo "Now creating real DB from each template DB..."
 
 for DB_TEMPLATE in "${!DATABASE_MAPPING[@]}"; do
-  # real DB name = template DB name without '_template'
   REAL_DB="${DB_TEMPLATE%_template}"
-
   echo "Checking if real database '${REAL_DB}' exists..."
-  # If the real DB does not exist, create it from the template DB
   EXISTS=$(psql -U root -tc "SELECT 1 FROM pg_database WHERE datname='${REAL_DB}'" | grep -c 1 || true)
   if [[ "$EXISTS" -eq 0 ]]; then
     echo "Creating real database '${REAL_DB}' from template '${DB_TEMPLATE}'"
@@ -142,8 +163,3 @@ for DB_TEMPLATE in "${!DATABASE_MAPPING[@]}"; do
 done
 
 echo "Done creating real DBs."
-
-
-
-echo "ADD new database:"
-psql -U root -c "CREATE DATABASE XXXX WITH OWNER=root;"

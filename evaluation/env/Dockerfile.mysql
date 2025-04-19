@@ -1,0 +1,10 @@
+# Dockerfile
+FROM mysql:8.4.0
+
+ENV MYSQL_ROOT_PASSWORD=123123
+
+# Copy the initialization script to the entrypoint directory so it runs on startup
+COPY ./env/init-databases_mysql.sh /docker-entrypoint-initdb.d/
+
+# Set permissions for the initialization script
+RUN chmod +x /docker-entrypoint-initdb.d/init-databases_mysql.sh

@@ -1,0 +1,34 @@
+# Based on official SQL Server 2022 image
+FROM mcr.microsoft.com/mssql/server:2022-latest
+
+# 1) Environment variables: accepting EULA, setting SA password, specifying version (for local testing only)
+#    The password must be >= 8 characters, otherwise startup will fail
+ENV ACCEPT_EULA=Y
+ENV MSSQL_SA_PASSWORD="Y.sa123123"
+ENV MSSQL_PID=Developer
+
+# 2) Switch to root user
+USER root
+
+# 3) Install packages required for mssql-tools18
+RUN apt-get update && apt-get install -y curl apt-transport-https gnupg2
+
+# 4) Add repository and key according to Microsoft official documentation
+#    Reference: https://learn.microsoft.com/sql/linux/sql-server-lin- macos-apache-docs 
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+RUN curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list \
+    | tee /etc/apt/sources.list.d/msprod.list
+
+# 5) Update again and install mssql-tools18 + unixodbc-dev
+RUN apt-get update && apt-get install -y mssql-tools18 unixodbc-dev
+
+# 6) Optional: Add mssql-tools18/bin to global PATH (for root user)
+ENV PATH="$PATH:/opt/mssql-tools18/bin"
+
+
+# 8) Expose SQL Server default port
+EXPOSE 1433
+
+COPY ./env/init-databases_mssql.sh /usr/config/entrypoint.sh
+RUN chmod +x /usr/config/entrypoint.sh
+ENTRYPOINT ["/usr/config/entrypoint.sh"]

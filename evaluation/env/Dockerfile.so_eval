@@ -4,12 +4,44 @@ FROM python:3.10
 # Set the main working directory to /app
 WORKDIR /app
 
+# Copy requirements.txt and install dependencies
+COPY ./env/requirements.txt /app/
+RUN pip install -r /app/requirements.txt
+
+# Install MySQL client
+RUN apt-get update && apt-get install -y default-mysql-client
+
+# Install MSSQL client
+RUN pip install pymssql
+RUN apt-get update && apt-get install -y freetds-dev
 # Install the PostgreSQL client so 'dropdb', 'createdb', and 'psql' are available
 RUN apt-get update && apt-get install -y postgresql-client
 
-# Copy requirements.txt and install dependencies
-COPY ./env/requirements.txt /app
-RUN pip install -r /app/requirements.txt
+
+
+# 1) Environment variables: accepting EULA, setting SA password, specifying version (for local testing only)
+#    The password must be >= 8 characters, otherwise startup will fail
+ENV ACCEPT_EULA=Y
+ENV MSSQL_SA_PASSWORD="Y.sa123123"
+ENV MSSQL_PID=Developer
+
+# 2) Switch to root user
+USER root
+
+# 3) Install packages required for mssql-tools18
+RUN apt-get update && apt-get install -y curl apt-transport-https gnupg2
+
+# 4) Add repository and key according to Microsoft official documentation
+#    Reference: https://learn.microsoft.com/sql/linux/sql-server-lin- macos-apache-docs 
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+RUN curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list \
+    | tee /etc/apt/sources.list.d/msprod.list
+
+# 5) Update again and install mssql-tools18 + unixodbc-dev
+RUN apt-get update && apt-get install -y mssql-tools18 unixodbc-dev
+
+# 6) Optional: Add mssql-tools18/bin to global PATH (for root user)
+ENV PATH="$PATH:/opt/mssql-tools18/bin"
 
 # Set entrypoint to keep the container running for testing
 CMD ["tail", "-f", "/dev/null"]

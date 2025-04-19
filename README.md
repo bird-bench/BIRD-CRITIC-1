@@ -107,13 +107,16 @@ please email [bird.bench23@gmail.com](mailto:bird.bench23@gmail.com) or [bird.be
 
 
 ### Use the Dataset from HuggingFace
-```python
-from datasets import load_dataset
-
-dataset = load_dataset("birdsql/bird-critic-1.0-flash-exp")
-
-print(dataset["flash"][0])
+```bash
+cd baseline/data
+python pull_data.py \
+  --schema_path path/to/open_schema.jsonl \
+  --input_path path/to/input.jsonl \ # Path to the input JSONL file (may be empty if you want to download the dataset from HuggingFace)
+  --output_folder path/to/output_dir # output folder of the split files
 ```
+python /Volumes/SN770/BIRD-CRITIC-1/baseline/data/pull_data.py \
+  --schema_path /Volumes/SN770/BIRD-CRITIC-1/baseline/data/open_schema.jsonl \
+  --output_folder /Volumes/SN770/BIRD-CRITIC-1/baseline/data
 
 ## 💨 Quick Eval
 ### Environment Setup

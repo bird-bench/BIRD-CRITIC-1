@@ -2,23 +2,7 @@ import argparse
 import json
 import re
 import sys
-
-
-def extract_sql_from_response(response_string):
-    """
-    Extract all SQL code blocks wrapped with ```sql and ``` from the response string.
-    Returns a list of SQL statements.
-    """
-    sql_pattern = re.compile(
-        r"```sql\s*(.*?)```",
-        re.IGNORECASE | re.DOTALL,
-    )
-    # Find all matches
-    sql_statements = sql_pattern.findall(response_string)
-    # Strip whitespace from each statement
-    sql_statements = [stmt.strip() for stmt in sql_statements]
-
-    return sql_statements
+from util import sql_response_extract
 
 
 def process_file(input_file, output_file):
@@ -35,7 +19,7 @@ def process_file(input_file, output_file):
                 response = data.get("response", "")
 
                 # Extract SQL statements
-                sql_list = extract_sql_from_response(response)
+                sql_list = sql_response_extract(response)
                 print(
                     f"Extracted {len(sql_list)} SQL statements from line {line_number}"
                 )

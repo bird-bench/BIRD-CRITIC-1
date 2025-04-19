@@ -1,20 +1,68 @@
 version: "3.8"
 
 services:
-  postgresql:
+  # mysql:
+  #   build:
+  #     context: .
+  #     dockerfile: ./env/Dockerfile.mysql
+  #   container_name: bird_critic_mysql
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: 123123
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+  #     - ./mysql_table_dumps:/docker-entrypoint-initdb.d/mysql_table_dumps
+  #   ports:
+  #     - "3306:3306"
+
+  # postgresql:
+  #   build:
+  #     context: .
+  #     dockerfile: ./env/Dockerfile.postgresql
+  #   container_name: bird_critic_postgresql
+  #   environment:
+  #     POSTGRES_USER: root
+  #     POSTGRES_PASSWORD: 123123
+  #     TZ: "Asia/Hong_Kong"
+  #   volumes:
+  #     - postgresql_data:/var/lib/postgresql/data
+  #     - ./postgre_table_dumps:/docker-entrypoint-initdb.d/postgre_table_dumps
+  #   command:
+  #     - "-c"
+  #     - "max_connections=300"
+  #     - "-c"
+  #     - "shared_buffers=256MB"
+  #   ports:
+  #     - "5432:5432"
+
+  mssql:
     build:
       context: .
-      dockerfile: ./env/Dockerfile.postgresql
-    container_name: bird_critic_postgresql
+      dockerfile: ./env/Dockerfile.mssql
+    container_name: bird_critic_sqlserver
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: 123123
-      TZ: "Asia/Hong_Kong"
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Y.sa123123"
+      MSSQL_PID: "Developer"
     volumes:
-      - postgresql_data:/var/lib/postgresql/data
-      - ./postgre_table_dumps:/docker-entrypoint-initdb.d/postgre_table_dumps
+      - sqlserver_data:/var/opt/mssql
+      - ./mssql_table_dumps:/app/mssql_table_dumps
     ports:
-      - "5432:5432"
+      - "1433:1433"
+
+  # oracle:
+  #   build:
+  #     context: .
+  #     dockerfile: ./env/Dockerfile.oracle
+  #   container_name: oracle19
+  #   environment:
+  #     ORACLE_SID: ORCLCDB
+  #     ORACLE_PDB: ORCLPDB1
+  #     ORACLE_PWD: mypassword1
+  #   ports:
+  #     - "1521:1521"
+  #   volumes:
+  #     - oracle_data:/opt/oracle/oradata
+  #     - ./oracle_table_dumps:/oracle_table_dumps
 
   so_eval_env:
     build:
@@ -24,9 +72,17 @@ services:
     volumes:
       - ./:/app/
       - ./postgre_table_dumps:/app/postgre_table_dumps
+      - ./mssql_table_dumps:/app/mssql_table_dumps
+      - ./mysql_table_dumps:/app/mysql_table_dumps
     depends_on:
-      - postgresql
+      # - mysql
+      # - postgresql
+      - mssql
+      # - oracle
     command: ["tail", "-f", "/dev/null"]
 
 volumes:
-  postgresql_data:
+  # mysql_data:
+  # postgresql_data:
+  sqlserver_data:
+  # oracle_data:
