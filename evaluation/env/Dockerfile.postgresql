@@ -1,10 +1,14 @@
 # Dockerfile.postgresql
 FROM postgres:14.12
 
-# Set up environment variables for user and password only
+# Set up environment variables for user and password
 ENV POSTGRES_USER=root
 ENV POSTGRES_PASSWORD=123123
 
+# Install PostGIS packages for PostgreSQL 14
+RUN apt-get update \
+    && apt-get install -y postgis postgresql-14-postgis-3 \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy the initialization script to the entrypoint directory
 COPY ./env/init-databases_postgresql.sh /docker-entrypoint-initdb.d/

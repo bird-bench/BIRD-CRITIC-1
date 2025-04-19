@@ -1,0 +1,18 @@
+FROM 3036197201/oracle19:latest
+# If you use MacOS, you can pull from this docker hub `docker pull 3036197201/oracle19`
+# FROM oracle/database:19.3.0-ee 
+# Otherwise, refer to the official Oracle Docker image documentation to build the image https://github.com/oracle/docker-images
+
+
+ENV ORACLE_SID=ORCLCDB
+ENV ORACLE_PDB=ORCLPDB1
+ENV ORACLE_PWD=mypassword1
+
+USER root
+
+# Copy the initialization script to the entrypoint directory so it runs on startup
+COPY ./env/init-databases_oracle.sh /opt/oracle/scripts/setup/
+RUN chmod +x /opt/oracle/scripts/setup/init-databases_oracle.sh
+
+USER oracle
+EXPOSE 1521
