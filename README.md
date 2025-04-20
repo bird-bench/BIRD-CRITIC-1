@@ -73,7 +73,7 @@ The open version of BIRD-CRITIC 1.0, `bird-critic-1.0-open`, is a comprehensive 
 | 5 |gemini-2.0-flash-thinking-exp-01-21 | 30.17 | 🌟 Elite|
 | 6 | grok-3-beta | 29.83 | 💎 Superior |
 
-> More results can be found [here](https://huggingface.co/datasets/birdsql/bird-critic-1.0-open).
+> Complete results of Open version can be found [here](https://huggingface.co/datasets/birdsql/bird-critic-1.0-open).
 > Bird-CRITIC 1.0 Flash result can be found [here](https://huggingface.co/datasets/birdsql/bird-critic-1.0-flash-exp/)
 
 ## 🦅 Full Sets of BIRD-CRITIC 1.0
