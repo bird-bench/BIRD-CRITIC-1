@@ -89,7 +89,7 @@ The BIRD-CRITIC 1.0 benchmark is available in the following configurations:
 
 ### Dataset Description
 
-- **Database:** The database can be download from [the Google Drive](https://drive.google.com/drive/folders/1O4svFGkE8_Ps60EQeyrCTN6LVOWudjgm?usp=sharing). Check the [Quick Eval](#quick-eval) section for more details.
+- **Database:** The complete database can be download from [the Google Drive](https://drive.google.com/drive/folders/1nJReLrvZVVrnfgBYwwNEgYvLroPGbcPD?usp=sharing). Check the [Quick Eval](#quick-eval) section for more details.
 - **data:** Each data instance contain the following main parts:
    - `db_id`: The name of the database.  
    - `query`: The user query is rewritten in the BIRD environment.  
