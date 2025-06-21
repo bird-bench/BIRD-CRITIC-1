@@ -213,10 +213,9 @@ If you want the log file for each instance, you can set the `--logging` to `true
 - [x] Release lite version, bird-critic-1.0-flash (200).
 - [x] Open source code, leaderboard page.
 - [x] Release Full bird-critic-1.0-open (600 w/ 4 dialects).
-- [ ] Release Full bird-critic-1.0-postgresql (600 pg tasks).
-- [ ] Update agent baselines.
-- [ ] BIRD-Pro v0.5
-- [ ] BIRD-CRITIC 1.5 / 2.0 on track!
+- [x] Release Full bird-critic-1.0-postgresql (600 pg tasks).
+- [ ] SIX-GYM (**S**ql-f**IX**), with 2000+ gym-like training environemnt.
+- [ ] Update Agentic (SQL-Act) Baseline
 
 ## Created By:
 BIRD Team & Google Cloud
