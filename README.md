@@ -24,6 +24,13 @@
   </a>
 </div>
 
+## News
+
+- 📢 **[2025-06-09]** We release [**bird-interact-lite**](https://huggingface.co/datasets/birdsql/bird-interact-lite), feature multi-turn conversational and agentic interaction for real-world ambiguous and challenging text-to-SQL tasks. 
+- 📢 **[2025-06-08]** We release [**bird-critic-1.0-postgresql**](https://huggingface.co/datasets/birdsql/bird-critic-1.0-postgresql), a single-dialect SQL issue debugging set with 530 complex tasks. 
+- 📢 **[2025-05-30]** We are pleased to release [**LiveSQLBench-Base-Lite**](https://huggingface.co/datasets/birdsql/livesqlbench-base-lite), featuring 18 end-user level databases and 270 tasks (180 SELECT-only, 90 Management tasks). Each task involves unambiguous and straightforward user queries grounded in external knowledge, with medium to hard complexity SQL statements.
+
+
 ## 🧸 Overview
 
 BIRD-Critic 1.0 introduces a novel SQL benchmark designed to evaluate a key capability: **Can large language models (LLMs) diagnose and solve user issues within real-world database environments?**
