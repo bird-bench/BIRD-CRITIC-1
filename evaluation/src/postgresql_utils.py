@@ -69,20 +69,15 @@ def perform_query_on_postgresql_databases(query, db_name, conn=None):
 
     try:
         cursor.execute(query)
-        lower_q = query.strip().lower()
         conn.commit()
 
-        if lower_q.startswith("select") or lower_q.startswith("with"):
-            # Fetch up to MAX_ROWS + 1 to see if there's an overflow
+        try:
             rows = cursor.fetchmany(MAX_ROWS + 1)
             if len(rows) > MAX_ROWS:
                 rows = rows[:MAX_ROWS]
             result = rows
-        else:
-            try:
-                result = cursor.fetchall()
-            except psycopg2.ProgrammingError:
-                result = None
+        except psycopg2.ProgrammingError:
+            result = None
 
         return (result, conn)
 

@@ -183,18 +183,13 @@ def perform_query_on_mysql_databases(query, db_name, conn=None):
         if any(kw in lower_q for kw in MYSQL_COMMIT_KEYWORDS):
             conn.commit()
 
-        # If it starts with SELECT or WITH, we attempt to fetch up to MAX_ROWS
-        if lower_q.startswith("select") or lower_q.startswith("with"):
+        try:
             rows = cursor.fetchmany(MAX_ROWS + 1)
             if len(rows) > MAX_ROWS:
                 rows = rows[:MAX_ROWS]
             result = rows
-        else:
-            # For non-select queries, try fetching in case of RETURNING or so
-            try:
-                result = cursor.fetchall()
-            except pymysql.err.ProgrammingError:
-                result = None
+        except pymysql.err.ProgrammingError:
+            result = None
 
         return result, conn
 
