@@ -26,6 +26,7 @@
 
 ## News
 
+- 📢 **[2025-06-28]** We release our paper [**SWE-SQL** (a.k.a BIRD-CRITIC)](https://arxiv.org/abs/2506.18951) on arxiv. 
 - 📢 **[2025-06-09]** We release [**bird-interact-lite**](https://huggingface.co/datasets/birdsql/bird-interact-lite), feature multi-turn conversational and agentic interaction for real-world ambiguous and challenging text-to-SQL tasks. 
 - 📢 **[2025-06-08]** We release [**bird-critic-1.0-postgresql**](https://huggingface.co/datasets/birdsql/bird-critic-1.0-postgresql), a single-dialect SQL issue debugging set with 530 complex tasks. 
 - 📢 **[2025-05-30]** We are pleased to release [**LiveSQLBench-Base-Lite**](https://huggingface.co/datasets/birdsql/livesqlbench-base-lite), featuring 18 end-user level databases and 270 tasks (180 SELECT-only, 90 Management tasks). Each task involves unambiguous and straightforward user queries grounded in external knowledge, with medium to hard complexity SQL statements.
@@ -215,12 +216,23 @@ You have to specify the dialect you want to evaluate in the `run_eval.sh` script
 The output report file will be saved in the same folder as your input file. 
 If you want the log file for each instance, you can set the `--logging` to `true` in the `run_eval.sh` script.
 
+## 📄 Paper
+If you find our work helpful, please cite as:
+```
+@article{li2025swe,
+  title={SWE-SQL: Illuminating LLM Pathways to Solve User SQL Issues in Real-World Applications},
+  author={Li, Jinyang and Li, Xiaolong and Qu, Ge and Jacobsson, Per and Qin, Bowen and Hui, Binyuan and Si, Shuzheng and Huo, Nan and Xu, Xiaohan and Zhang, Yue and others},
+  journal={arXiv preprint arXiv:2506.18951},
+  year={2025}
+}
+```
+
 ## 📋 Todo Lists
 
 - [x] Release lite version, bird-critic-1.0-flash (200).
 - [x] Open source code, leaderboard page.
-- [x] Release Full bird-critic-1.0-open (600 w/ 4 dialects).
-- [x] Release Full bird-critic-1.0-postgresql (600 pg tasks).
+- [x] Release Full bird-critic-1.0-open (570 w/ 4 dialects).
+- [x] Release Full bird-critic-1.0-postgresql (530 pg tasks).
 - [ ] Release SIX-GYM (**S**ql-f**IX**), with 2000+ gym-like training environment.
 - [ ] Release trained agentic baseline BIRD-Fixer.
 - [ ] Update Agentic (SQL-Act) Baseline.
