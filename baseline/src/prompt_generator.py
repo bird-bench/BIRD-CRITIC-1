@@ -11,7 +11,7 @@ def write_prompts(prompts, data_list, prompt_path, limit):
     new_directory(os.path.dirname(prompt_path))
     with open(prompt_path, "w") as f:
         for i in range(limit):
-            instance = data_list[i]
+            instance = data_list[i].copy()
             instance["prompt"] = prompts[i]
             f.write(json.dumps(instance, ensure_ascii=False) + "\n")
 
