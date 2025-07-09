@@ -26,6 +26,7 @@
 
 ## News
 
+- 📢 **[2025-07-09]** We release the human performance scores on our [**website**](https://bird-critic.github.io/)! The scores displayed across all three leaderboards reflect human evaluators (database experts) who were allowed to use standard tools (database textbooks, official documentation, or IDEs) but not AI assistants. When another group with the same expertise was permitted to use AI tools (ChatGPT, Claude, or Gemini), the performance increased to **83.33** on Open, **87.90** on PG, and **90.00** on Flash, demonstrating the significant potential of human-AI collaboration in SQL problem-solving.
 - 📢 **[2025-06-28]** We release our paper [**SWE-SQL** (a.k.a BIRD-CRITIC)](https://arxiv.org/abs/2506.18951) on arxiv. 
 - 📢 **[2025-06-09]** We release [**bird-interact-lite**](https://huggingface.co/datasets/birdsql/bird-interact-lite), feature multi-turn conversational and agentic interaction for real-world ambiguous and challenging text-to-SQL tasks. 
 - 📢 **[2025-06-08]** We release [**bird-critic-1.0-postgresql**](https://huggingface.co/datasets/birdsql/bird-critic-1.0-postgresql), a single-dialect SQL issue debugging set with 530 complex tasks. 
