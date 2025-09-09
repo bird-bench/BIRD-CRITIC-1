@@ -1,46 +1,49 @@
 # Dockerfile.python
+
 FROM python:3.10
 
-# Set the main working directory to /app
-WORKDIR /app
+# Set the main working directory
+WORKDIR /app/SO_evaluation
 
-# Copy requirements.txt and install dependencies
+# Copy requirements.txt and install Python dependencies
 COPY ./env/requirements.txt /app/
 RUN pip install -r /app/requirements.txt
+RUN pip install pymssql
 
 # Install MySQL client
 RUN apt-get update && apt-get install -y default-mysql-client
 
-# Install MSSQL client
-RUN pip install pymssql
-RUN apt-get update && apt-get install -y freetds-dev
-# Install the PostgreSQL client so 'dropdb', 'createdb', and 'psql' are available
-RUN apt-get update && apt-get install -y postgresql-client
-
-
-
-# 1) Environment variables: accepting EULA, setting SA password, specifying version (for local testing only)
-#    The password must be >= 8 characters, otherwise startup will fail
+# 1) Environment variables for MSSQL
 ENV ACCEPT_EULA=Y
 ENV MSSQL_SA_PASSWORD="Y.sa123123"
 ENV MSSQL_PID=Developer
 
-# 2) Switch to root user
+# 2) Switch to root user for system package installation
 USER root
 
-# 3) Install packages required for mssql-tools18
-RUN apt-get update && apt-get install -y curl apt-transport-https gnupg2
+# 3) Install all necessary system packages in a single layer
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    gnupg2 \
+    apt-transport-https \
+    default-mysql-client \
+    freetds-dev \
+    postgresql-client \
+    && rm -rf /var/lib/apt/lists/*
 
-# 4) Add repository and key according to Microsoft official documentation
-#    Reference: https://learn.microsoft.com/sql/linux/sql-server-lin- macos-apache-docs 
-RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-RUN curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list \
-    | tee /etc/apt/sources.list.d/msprod.list
+# 4) Add Microsoft GPG key
+RUN curl -sSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /usr/share/keyrings/microsoft.gpg
 
-# 5) Update again and install mssql-tools18 + unixodbc-dev
-RUN apt-get update && apt-get install -y mssql-tools18 unixodbc-dev
+# 5) Add Microsoft repository with the CORRECT format
+RUN echo "deb [arch=amd64,arm64,armhf signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/ubuntu/22.04/prod jammy main" > /etc/apt/sources.list.d/msprod.list
 
-# 6) Optional: Add mssql-tools18/bin to global PATH (for root user)
+# 6) Update package list again and install mssql-tools18
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    mssql-tools18 \
+    unixodbc-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# 7) Add mssql-tools18 to the PATH
 ENV PATH="$PATH:/opt/mssql-tools18/bin"
 
 # Set entrypoint to keep the container running for testing
