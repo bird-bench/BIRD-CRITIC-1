@@ -58,6 +58,7 @@ Each task in BIRD-CRITIC has been verified by human experts on the following dim
 4) Created new RDBs in different scales and professional domains.
 
 
+
 ### 🐣 Lite Version
 
 We are releasing a lite version of BIRD-Critic, `bird-critic-1.0-flash-exp`, which includes 200 high-quality user issues on PostgreSQL when developing real-world applications. We curate tasks by:
@@ -68,8 +69,7 @@ We are releasing a lite version of BIRD-Critic, `bird-critic-1.0-flash-exp`, whi
 
 ### 🦜 Open Version
 
-The open version of BIRD-CRITIC 1.0, `bird-critic-1.0-open`, is a comprehensive benchmark that includes 600 tasks across 4 SQL dialects: MySQL, PostgreSQL, SQL Server, and Oracle. It covers a wide range of SQL operations and user issues.
-
+The open version of BIRD-CRITIC 1.0, `bird-critic-1.0-open`, is a comprehensive benchmark that includes 570 tasks across 4 SQL dialects: MySQL, PostgreSQL, SQL Server, and Oracle. It covers a wide range of SQL operations and user issues.
 
 ### Model Performance Results on BIRD-CRITIC 1.0 Open
 
@@ -85,13 +85,24 @@ The open version of BIRD-CRITIC 1.0, `bird-critic-1.0-open`, is a comprehensive 
 > Complete results of Open version can be found [here](https://huggingface.co/datasets/birdsql/bird-critic-1.0-open).
 > Bird-CRITIC 1.0 Flash result can be found [here](https://huggingface.co/datasets/birdsql/bird-critic-1.0-flash-exp/)
 
+### 🕊️ Postgresql Version
+`bird-critic-1.0-pg`, is a dataset containing 530 high-quality user issues focused on real-world PostgreSQL database applications.
+
+### Agent Performance Results on BIRD-CRITIC 1.0 PG
+
+![Agent Performance](./materials/agent_performance-1.png)
+
+**Key Findings:**
+- Agentic workflows significantly improve LLM performance on debugging tasks through iterative environment interaction
+- SQLACT consistently outperforms ToolACT across all models, demonstrating the advantage of SQL's richer action space for handling complex debugging scenarios
+
 ## 🦅 Full Sets of BIRD-CRITIC 1.0
 
 The BIRD-CRITIC 1.0 benchmark is available in the following configurations:
 
 1.  `bird-critic-1.0-flash-exp`: A lite version consisting of 200 instances on PostgreSQL.
-2.  `bird-critic-1.0-open`: The full version containing 600 instances across MySQL, PostgreSQL, SQL Server, and Oracle.
-3.  `bird-critic-1.0-postgresql`: A 600-instance version specifically for PostgreSQL.
+2.  `bird-critic-1.0-open`: The full version containing 570 instances across MySQL, PostgreSQL, SQL Server, and Oracle.
+3.  `bird-critic-1.0-postgresql`: A 530-instance version specifically for PostgreSQL.
 4.  `bird-critic-1.0-bigquery`: A lite version containing between 100 and 200 instances for BigQuery.
 
 ## 📦 Dataset Details
