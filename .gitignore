@@ -5,3 +5,4 @@ evaluation/postgre_table_dumps/
 evaluation/mssql_table_dumps/
 **/.DS_Store
 .DS_Store
+.temp

@@ -1,5 +1,6 @@
 from datetime import date, datetime
 import json
+import re
 from mysql_utils import perform_query_on_mysql_databases, execute_queries
 
 
@@ -78,8 +79,8 @@ def check_sql_function_usage(sqls, required_keywords):
 def remove_distinct(sql_list):
     """
     Remove all occurrences of the DISTINCT keyword (in any case form)
-    from a single list of SQL query strings. This is a brute-force
-    approach without using regular expressions.
+    from a single list of SQL query strings, preserving all whitespace
+    and comments.
 
     Parameters:
     -----------
@@ -91,19 +92,12 @@ def remove_distinct(sql_list):
     list of str
         A new list of SQL queries with all 'DISTINCT' keywords removed.
     """
-
     cleaned_queries = []
     for query in sql_list:
-        tokens = query.split()
-        filtered_tokens = []
-        for token in tokens:
-            # Check if this token is 'distinct' (case-insensitive)
-            if token.lower() != "distinct":
-                filtered_tokens.append(token)
-        # Rebuild the query string without 'DISTINCT'
-        cleaned_query = " ".join(filtered_tokens)
+        # Use regex to remove DISTINCT as a whole word (case-insensitive)
+        # \b ensures word boundaries, so DISTINCTROW won't match
+        cleaned_query = re.sub(r'\bDISTINCT\b', '', query, flags=re.IGNORECASE)
         cleaned_queries.append(cleaned_query)
-
     return cleaned_queries
 
 
