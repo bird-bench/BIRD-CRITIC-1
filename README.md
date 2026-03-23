@@ -26,6 +26,7 @@
 
 ## News
 
+- 📢 **[2026-03-24]** We release the **BIRD-Critic GT & Test Cases Auto-Reply System**, supporting automatic delivery of full datasets (including sol_sql and test_cases) via email requests to 📧 bird.bench25@gmail.com with subject tag [bird-critic-1 GT&Test Cases].
 - 📢 **[2026-03-23]** We release [**BIRD-Critic-SQLite**](https://huggingface.co/datasets/birdsql/bird-critic-1.0-sqlite), a dataset containing 500 high-quality user issues focused on real-world SQLite database applications.
 - 📢 **[2026-01-08]** We recently updated the evaluation code (specifically the `remove_distinct` function). Please pull the latest code from our GitHub repository.
 - 📢 **[2025-07-09]** We release the human performance scores on our [**website**](https://bird-critic.github.io/)! The scores displayed across all three leaderboards reflect human evaluators (database experts) who were allowed to use standard tools (database textbooks, official documentation, or IDEs) but not AI assistants. When another group with the same expertise was permitted to use AI tools (ChatGPT, Claude, or Gemini), the performance increased to **83.33** on Open, **87.90** on PG, and **90.00** on Flash, demonstrating the significant potential of human-AI collaboration in SQL problem-solving.
@@ -130,8 +131,7 @@ The BIRD-CRITIC 1.0 benchmark is available in the following configurations:
 
 ### Dataset Uses
 
-To avoid data leakage by auto-crawling, we do not include GT solution sqls and test cases along with data.
-please email [bird.bench23@gmail.com](mailto:bird.bench23@gmail.com) or [bird.bench25@gmail.com](mailto:bird.bench25@gmail.com) for full set, which will be sent automatically.
+To avoid data leakage by auto-crawling, certain fields (e.g., sol_sql, test_cases) are excluded from the public dataset. For the full dataset, please email: 📧 [bird.bench25@gmail.com](mailto:bird.bench25@gmail.com) with subject tag [bird-critic-1 GT&Test Cases], which will be sent automatically within 30 mins.
 
 
 ### Use the Dataset from HuggingFace
